@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  center
+    div(id="loginForm")
+      h1(id="loginForm") Login
+      form(class="loginForm", method="POST", action="/login")
+        input(type="input", class="loginForm", name="loginEmail")
+        input(type="password", class="loginForm", name="loginPass")
+        input(type="submit", value="Submit", id="loginFormSubmitButton")
