@@ -6,6 +6,7 @@ var http = require('http');
 var path = require('path');
 
 var authRoutes = require('./routes/auth');
+var webApi = require('./routes/webApi');
 
 var sessionsStorage = require('connect-redis')(express);
 
@@ -33,6 +34,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.all('/login', authRoutes.login);
 app.all('/logout', authRoutes.logout);
+app.all('/webapi', webApi.routing);
 
 app.all('/test', function(req, res) {
   console.log(req.session);

@@ -3,3 +3,9 @@ extends layout
 block content
   a(href="http://37.230.112.90/logout") Logout
   p user: #{user}
+  form(method="POST", action="/webapi")
+    input(type="hidden", name="action", value="addService")
+    input(type="input", name="account")
+    select(name="service")
+      option(value="twitter") Twitter
+    input(type="submit", value="Submit")
