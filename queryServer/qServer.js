@@ -1,6 +1,9 @@
 var http = require('http');
 var querystring = require('querystring');
 var hd = require('hero-data');
+
+var cTwitter = require('./qS_twitter.js');
+
 var redis = require("redis"),
     client = redis.createClient();
     client.select(6);
@@ -19,26 +22,32 @@ function mongoConnect() {
 
 mongoConnect();
 
-function checkData() {
-  var post_data = {nickname:'rootools'};
-  post_data = querystring.stringify(post_data);
-  var post_options = { host: '127.0.0.1',
-                       port: 1337,
-                       path: '/',
-                       method: 'POST',
-                       headers: { 'Content-Type': 'application/x-www-form-urlencoded',  
-                                'Content-Length': post_data.length}
-                     };
+function getData(service, auth, cb) {
+  if(service == 'twitter') {
+    var options = {
+        host: '127.0.0.1',
+        port: 1337,
+        path: '/?user='+auth};
+  }
 
-  var post_req = http.request(post_options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      console.log(JSON.parse(chunk));
+  callback = function(res) {
+    var str = '';
+    res.on('data', function(chunk) {
+      str += chunk;
     });
-  });
 
-  post_req.write(post_data);
-  post_req.end();
+    res.on('end', function() {
+      cb(JSON.parse(str));
+    });
+  }
+
+  http.request(options, callback).end();
+
 }
 
-checkData();
+getData('twitter', 'rootools', function(data) {
+  var uid = 'iyh1xfsMNwYp3DigmBuX';
+  cTwitter.checkTwitterAchievements(uid, data, db, function(res) {
+//    console.log(res);
+  });
+});
