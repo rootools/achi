@@ -28,7 +28,6 @@ exports.login = function(req, res) {
           req.session.auth = true;
           req.session.uid = doc.uid;
           req.session.email = doc.email;
-          req.session.nickname = doc.nickname;
           res.redirect('http://37.230.112.90/');
         } else {
           res.render('login', { title: 'Login' });

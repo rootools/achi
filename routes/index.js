@@ -18,6 +18,6 @@ exports.index = function(req, res){
   if(!req.session.auth || req.session.auth == false) {
     res.redirect('http://37.230.112.90/login');
   } else {
-    res.render('index', { title: 'Express' , user: req.session.nickname});
+    res.render('index', { title: 'Express' , user: req.session.email});
   }
 };

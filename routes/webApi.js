@@ -29,7 +29,6 @@ function routing(req, res) {
 }
 
 function addService(req, res) {
-  console.log(req.body);
   testService(req.session.uid, req.body.service, function(check) {
     if(check) {
       db.collection('services_connections', function(err,collection) {
@@ -45,7 +44,6 @@ function addService(req, res) {
 }
 
 function testService(uid, service, cb) {
-  console.log(uid, service);
   db.collection('services_connections', function(err,collection) {
     collection.findOne({uid: uid, service:service}, function(err, doc) {
       if(err == null && doc == null) {
