@@ -11,6 +11,7 @@ var redis = require("redis"),
 var db;
 
 var queryLauncherHandler = 0;
+var createQueryHandler = 0;
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
@@ -24,38 +25,24 @@ function mongoConnect() {
 
 mongoConnect();
 
-function getServiceConnections(uid, cb) {
-  db.collection('services_connections', function(err, collection) {
-    collection.find({},{service:1, service_login:1, checked:1}).toArray(function(err, doc) {
-      cb(doc, uid);
-    });
-  });
-}
-
 function updateQuery(uid, service) {
   var now = new Date().getTime();
   client.del(uid+'|'+service);
-  db.collection('users_profile', function(err, collection) {
-    collection.update({uid: uid},{$set: {lastupdate:now}});
+  db.collection('services_connections', function(err, collection) {
+    collection.update({uid: uid, service:service},{$set: {lastupdate:now}});
   });
 }
 
 function createQuery() {
-  db.collection('users_profile', function(err, collection) {
-    collection.find({},{uid:1, lastupdate:1}).toArray(function(err, doc) {
-      var now = new Date().getTime();
+  var now = new Date().getTime();
+  db.collection('services_connections', function(err, collection) {
+    collection.find({checked: true},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+      createQueryHandler = doc.length;
       for(var i=0;i<doc.length;i++) {
         if(doc[i].lastupdate == '' || doc[i].lastupdate + 1800000 < now) {
-          getServiceConnections(doc[i].uid, function(servList, uid) {
-            for(var r=0;r<servList.length;r++) {
-              if(servList[r].checked == false) {
-                checkServiceAuthor(uid, servList[r].service);
-              } else {
-                client.set(uid+'|'+servList[r].service, now);
-              }
-            }
-          });
+          client.set(doc[i].uid+'|'+doc[i].service, now);
         }
+        createQueryHandler--;
       }
     });
   });
@@ -86,12 +73,13 @@ function queryLauncher() {
 
 setInterval(function() {
   console.log('Run createQuery');
-  createQuery();
+  if(createQueryHandler == 0) {
+    createQuery();
+  }
 }, 1800000);
 
 setInterval(function() {
   console.log('Run queryLauncher');
-  console.log(queryLauncherHandler);
   if(queryLauncherHandler == 0) {
     queryLauncher();
   }
