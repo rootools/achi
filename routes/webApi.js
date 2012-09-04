@@ -32,7 +32,7 @@ function addService(req, res) {
   testService(req.session.uid, req.body.service, function(check) {
     if(check) {
       db.collection('services_connections', function(err,collection) {
-        collection.insert({uid: req.session.uid, service:req.body.service, service_login: req.body.account, addtime:new Date().getTime()}, function(err, doc) {
+        collection.insert({uid: req.session.uid, service:req.body.service, service_login: req.body.account, addtime:new Date().getTime(), checked: false}, function(err, doc) {
           errorist(res, 'Database Error', 'OK');
         });
       });

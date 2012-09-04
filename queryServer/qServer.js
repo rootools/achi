@@ -26,7 +26,7 @@ mongoConnect();
 
 function getServiceConnections(uid, cb) {
   db.collection('services_connections', function(err, collection) {
-    collection.find({},{service:1, service_login:1}).toArray(function(err, doc) {
+    collection.find({},{service:1, service_login:1, checked:1}).toArray(function(err, doc) {
       cb(doc, uid);
     });
   });
@@ -48,7 +48,11 @@ function createQuery() {
         if(doc[i].lastupdate == '' || doc[i].lastupdate + 1800000 < now) {
           getServiceConnections(doc[i].uid, function(servList, uid) {
             for(var r=0;r<servList.length;r++) {
-              client.set(uid+'|'+servList[r].service, now);
+              if(servList[r].checked == false) {
+                checkServiceAuthor(uid, servList[r].service);
+              } else {
+                client.set(uid+'|'+servList[r].service, now);
+              }
             }
           });
         }
@@ -115,8 +119,16 @@ function getData(service, auth, cb) {
   http.request(options, callback).end();
 }
 
-/*getData('twitter', 'rootools', function(data) {
-  var uid = 'iyh1xfsMNwYp3DigmBuX';
-  cTwitter.checkTwitterAchievements(uid, data, db, function(res) {
+function checkServiceAuthor(uid, service) {
+  db.collection('services_connections', function(err, collection) {
+    collection.findOne({uid:uid, service:service},{service_login:1}, function(err, doc) {
+      getData(service, doc.service_login, function(data) {
+        if(service == 'twitter') {
+          if(data.url == 'http://achi.info/') {
+            collection.update({uid:uid, service:service},{$set: {checked: true}});
+          }
+        }
+      });
+    });
   });
-});*/
+}
