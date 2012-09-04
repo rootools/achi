@@ -33,9 +33,9 @@ function checkTwitterAchievements(uid, data, db, cb) {
         var runTest = eval('twit_'+notRecieved[i]);
         runTest(uid, data, notRecieved[i], db);
       }
+      cb('done');
     });
 
-  cb();
 }
 
 // Write 10 tweets
@@ -45,9 +45,16 @@ function twit_0OeqcxuY778XB5fHDJPRlk2EwWzFLd(uid, data, aid, db) {
   }
 }
 
-function twit_XvEsAGN7V9nc5xmyl2Nltcd9kQHqnf(uid, data, aid, db) {
 // Write 20 tweets
+function twit_XvEsAGN7V9nc5xmyl2Nltcd9kQHqnf(uid, data, aid, db) {
   if(data.statuses_count > 20) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Write 1000 tweets
+function twit_KPrphso661IztHM4OYqi5Zb0IBSYZ6(uid, data, aid, db) {
+  if(data.statuses_count > 1000) {
     writeToDB(uid, aid, db);
   }
 }

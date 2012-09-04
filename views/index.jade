@@ -9,3 +9,8 @@ block content
     select(name="service")
       option(value="twitter") Twitter
     input(type="submit", value="Submit")
+  hr
+  each item in achivList
+    h4= item.service
+    each achiv in item.achievements
+      p= achiv.aid

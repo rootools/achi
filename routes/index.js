@@ -14,10 +14,21 @@ function mongoConnect() {
 
 mongoConnect();
 
+function getUserAchievements(uid, cb) {
+  var achivList = {};
+  db.collection('users_achievements', function(err, collection) {
+    collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
+      cb(doc);
+    });
+  });
+}
+
 exports.index = function(req, res){
   if(!req.session.auth || req.session.auth == false) {
     res.redirect('http://37.230.112.90/login');
   } else {
-    res.render('index', { title: 'Express' , user: req.session.email});
+    getUserAchievements(req.session.uid, function(achivList) {    
+      res.render('index', { title: 'Express' , user: req.session.email, achivList:achivList});
+    });
   }
 };
