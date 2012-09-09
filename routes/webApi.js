@@ -55,6 +55,23 @@ function testService(uid, service, cb) {
   });
 }
 
+function getAchievementsList(req, res) {
+  db.collection('achievements', function(err,collection) {
+    collection.find({service:req.body.service}).toArray(function(err, data) {
+      res.end(JSON.stringify(data));
+    });
+  });
+}
+
+function userAchievementsList(req, res) {
+  db.collection('users_achievements', function(err,collection) {
+    collection.findOne({uid:req.session.uid, service:req.body.service},{achievements:1},function(err ,data) {
+      res.end(JSON.stringify(data));
+    });
+  });
+}
+
+
 function errorist(res, errS, normalS) {
   if(err != null) {
     res.end(errS);

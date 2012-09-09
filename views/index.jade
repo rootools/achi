@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  script(src="javascripts/dashboard.js")
   a(href="http://37.230.112.90/logout") Logout
   p user: #{user}
   form(method="POST", action="/webapi")
@@ -10,7 +11,9 @@ block content
       option(value="twitter") Twitter
     input(type="submit", value="Submit")
   hr
-  each item in achivList
-    h4= item.service
-    each achiv in item.achievements
-      p= achiv.aid
+  div(id="dashboard")
+    div(id="dashboard_menu")
+      .dashboard_menu_button= "main"
+      each item in achivList
+        .dashboard_menu_button= item.service
+    div(id="dashboard_list")

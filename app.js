@@ -22,7 +22,6 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ store: new sessionsStorage({db: 7}), secret: 'lolcat' }));
-//  app.use(express.session());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
@@ -35,11 +34,10 @@ app.get('/', routes.index);
 app.all('/login', authRoutes.login);
 app.all('/logout', authRoutes.logout);
 app.all('/webapi', webApi.routing);
-
-app.all('/test', function(req, res) {
-  console.log(req.session);
-  res.end('');
+app.all('/web', function(req, res) {
+  res.sendfile('./public/html/index.html');
 });
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

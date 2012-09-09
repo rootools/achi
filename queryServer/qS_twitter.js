@@ -40,21 +40,27 @@ function checkTwitterAchievements(uid, data, db, cb) {
 
 // Write 10 tweets
 function twit_0OeqcxuY778XB5fHDJPRlk2EwWzFLd(uid, data, aid, db) {
-  if(data.statuses_count > 10) {
+  if(data.statuses_count >= 10) {
     writeToDB(uid, aid, db);
   }
 }
 
 // Write 20 tweets
 function twit_XvEsAGN7V9nc5xmyl2Nltcd9kQHqnf(uid, data, aid, db) {
-  if(data.statuses_count > 20) {
+  if(data.statuses_count >= 20) {
     writeToDB(uid, aid, db);
   }
 }
 
 // Write 1000 tweets
 function twit_KPrphso661IztHM4OYqi5Zb0IBSYZ6(uid, data, aid, db) {
-  if(data.statuses_count > 1000) {
+  if(data.statuses_count >= 1000) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+function twit_rr0vF2Bn6a5vUbzHM8rAXDPFJSn4CN(uid, data, aid, db) {
+  if(data.statuses_count >= 5000) {
     writeToDB(uid, aid, db);
   }
 }

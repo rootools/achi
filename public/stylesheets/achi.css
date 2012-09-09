@@ -15,18 +15,3 @@ input#loginFormSubmitButton {
   width: 150px;
   height: 40px;
 }
-
-div {
-  border: 1px solid;
-  margin: 5px;
-}
-
-div#dashboard_menu, div#dashboard_list {
-  position: relative;
-  float: left;
-}
-
-div.dashboard_menu_button {
-  background-color: #c0c0c0;
-  padding: 10px;
-}
