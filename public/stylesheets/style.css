@@ -21,12 +21,55 @@ div {
   margin: 5px;
 }
 
+
 div#dashboard_menu, div#dashboard_list {
   position: relative;
   float: left;
 }
 
+div#dashboard_menu {
+  width: 6%;
+}
+
+div#dashboard_list {
+  width: 75%;
+}
+
 div.dashboard_menu_button {
   background-color: #c0c0c0;
   padding: 10px;
+}
+
+/* Achievement Badg style */
+
+div.achievementBadg {
+  position: relative;
+  float: left;
+  width: 100%;
+  border: 1px solid red;
+}
+
+div.achievementIcon {
+  width: 64px;
+  height: 64px;
+  background-image: url(../images/ico.png);
+}
+
+div.achievementIcon, div.achievementInfoZone {
+  position: relative;
+  float: left;
+}
+
+div.achievementPointZone {
+  position: relative;
+  float: right;
+  width: 10%;
+}
+
+div.achievementInfoZone {
+  width: 80%;
+}
+
+div.earned_false {
+  opacity: 0.5;
 }

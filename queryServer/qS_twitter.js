@@ -52,6 +52,27 @@ function twit_XvEsAGN7V9nc5xmyl2Nltcd9kQHqnf(uid, data, aid, db) {
   }
 }
 
+// Write 50 tweets
+function twit_3If5vxaBvbLReTJEpv6t7cyw5tj3eD(uid, data, aid, db) {
+  if(data.statuses_count >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Write 100 tweets
+function twit_w89OmGa81LGju9cxd2ilNtce755PBb(uid, data, aid, db) {
+  if(data.statuses_count >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Write 500 tweets
+function twit_TqeQglkzvQluyvPd9ca5RsZxXDNYOa(uid, data, aid, db) {
+  if(data.statuses_count >= 500) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 // Write 1000 tweets
 function twit_KPrphso661IztHM4OYqi5Zb0IBSYZ6(uid, data, aid, db) {
   if(data.statuses_count >= 1000) {
@@ -59,8 +80,16 @@ function twit_KPrphso661IztHM4OYqi5Zb0IBSYZ6(uid, data, aid, db) {
   }
 }
 
+// Write 5000 tweets
 function twit_rr0vF2Bn6a5vUbzHM8rAXDPFJSn4CN(uid, data, aid, db) {
   if(data.statuses_count >= 5000) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Write 10000 tweets
+function twit_9uNB3eic259fYtH1fW9UjN4hZA7vRE(uid, data, aid, db) {
+  if(data.statuses_count >= 10000) {
     writeToDB(uid, aid, db);
   }
 }

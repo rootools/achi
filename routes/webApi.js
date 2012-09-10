@@ -57,7 +57,7 @@ function testService(uid, service, cb) {
 
 function getAchievementsList(req, res) {
   db.collection('achievements', function(err,collection) {
-    collection.find({service:req.body.service}).toArray(function(err, data) {
+    collection.find({service:req.body.service}).sort({position: 1}).toArray(function(err, data) {
       res.end(JSON.stringify(data));
     });
   });
