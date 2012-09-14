@@ -16,8 +16,9 @@ function getAchievementsList(service) {
 function renderAchievementsList(fullAchievementsList, userAchievementsList) {
   var dashboard_list = document.getElementById('dashboard_list');
   dashboard_list.innerHTML = '';
-  var html = '<table border=1>';
+  var html = '';
 
+  var toRenderAchievementsList = [];
   for(var i=0;i<fullAchievementsList.length;i++) {
     var achievement = fullAchievementsList[i];
     for(var r=0;r<userAchievementsList.length;r++) {
@@ -30,14 +31,31 @@ function renderAchievementsList(fullAchievementsList, userAchievementsList) {
         achievement.time = 'never';
       }
     }
-    html += generateAchievement(achievement);
+    toRenderAchievementsList.push(achievement);
   }
+  var toRenderAchievementsList = checkVisibleAchievements(toRenderAchievementsList);
+  for(var i=0;i<toRenderAchievementsList.length;i++) {
+    html += generateAchievement(toRenderAchievementsList[i]);
+  }
+
   dashboard_list.innerHTML = html;
+}
+
+function checkVisibleAchievements(arr) {
+  for(var i=0;i<arr.length;i++) {
+    if(arr[i].earned == true && arr[i+1].earned == false && arr[i].child == arr[i+1].aid) {
+      arr[i].visible = 'block';
+      arr[i+1].visible = 'block';
+    } else {
+      if(arr[i].visible != 'block') { arr[i].visible = 'none';} 
+    }
+  }
+  return arr;
 }
 
 function generateAchievement(achievement) {
   var html = ''
-  html += '<div class="achievementBadg earned_'+achievement.earned+'" id='+achievement.aid+'>';
+  html += '<div class="achievementBadg earned_'+achievement.earned+'" id='+achievement.aid+' style="display:'+achievement.visible+'">';
 
     html += '<div class="achievementIcon"></div>';
 
