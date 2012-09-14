@@ -11,9 +11,10 @@ block content
       option(value="twitter") Twitter
     input(type="submit", value="Submit")
   hr
-  div(id="dashboard")
-    div(id="dashboard_menu")
-      .dashboard_menu_button= "main"
-      each item in achivList
-        .dashboard_menu_button= item.service
-    div(id="dashboard_list")
+  center
+    div(id="dashboard")
+      div(id="dashboard_menu")
+        .dashboard_menu_button= "main"
+        each item in achivList
+          .dashboard_menu_button= item.service
+      div(id="dashboard_list")

@@ -16,11 +16,9 @@ input#loginFormSubmitButton {
   height: 40px;
 }
 
-div {
-  border: 1px solid;
-  margin: 5px;
+div#dashboard {
+  width: 800px;
 }
-
 
 div#dashboard_menu, div#dashboard_list {
   position: relative;
@@ -28,16 +26,21 @@ div#dashboard_menu, div#dashboard_list {
 }
 
 div#dashboard_menu {
-  width: 6%;
+  width: 150px;
 }
 
 div#dashboard_list {
-  width: 75%;
+  width: 600px;
 }
 
 div.dashboard_menu_button {
-  background-color: #c0c0c0;
+  cursor: pointer;
+  background-color: #00B4CC;
   padding: 10px;
+}
+
+div.dashboard_menu_button:hover {
+  background-color: #008C9E;
 }
 
 /* Achievement Badg style */
@@ -46,7 +49,7 @@ div.achievementBadg {
   position: relative;
   float: left;
   width: 100%;
-  border: 1px solid red;
+  margin-bottom: 5px;
 }
 
 div.achievementIcon {
@@ -63,11 +66,11 @@ div.achievementIcon, div.achievementInfoZone {
 div.achievementPointZone {
   position: relative;
   float: right;
-  width: 10%;
+  width: 70px;
 }
 
 div.achievementInfoZone {
-  width: 80%;
+  width: 400px;
 }
 
 div.earned_false {
