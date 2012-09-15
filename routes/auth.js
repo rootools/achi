@@ -17,7 +17,7 @@ mongoConnect();
 exports.login = function(req, res) {
 
   if(req.session.auth && req.session.auth == true) {
-    res.redirect('http://37.230.112.90/');
+    res.redirect('http://rootools.ru/');
   }
 
   if(req.body.loginEmail && req.body.loginPass) {
@@ -28,7 +28,7 @@ exports.login = function(req, res) {
           req.session.auth = true;
           req.session.uid = doc.uid;
           req.session.email = doc.email;
-          res.redirect('http://37.230.112.90/');
+          res.redirect('http://rootools.ru/');
         } else {
           res.render('login', { title: 'Login' });
         }
@@ -41,5 +41,5 @@ exports.login = function(req, res) {
 
 exports.logout = function(req, res) {
   req.session.auth = false;
-  res.redirect('http://37.230.112.90/login');
+  res.redirect('http://rootools.ru/login');
 };

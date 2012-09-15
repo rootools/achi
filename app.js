@@ -7,7 +7,7 @@ var path = require('path');
 
 var authRoutes = require('./routes/auth');
 var webApi = require('./routes/webApi');
-
+var add_service = require('./routes/add_service');
 var sessionsStorage = require('connect-redis')(express);
 
 var app = express();
@@ -34,10 +34,8 @@ app.get('/', routes.index);
 app.all('/login', authRoutes.login);
 app.all('/logout', authRoutes.logout);
 app.all('/webapi', webApi.routing);
-app.all('/web', function(req, res) {
-  res.sendfile('./public/html/index.html');
-});
 
+app.all('/add_service/vk', add_service.vk);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

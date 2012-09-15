@@ -39,6 +39,7 @@ function renderAchievementsList(fullAchievementsList, userAchievementsList) {
   }
 
   dashboard_list.innerHTML = html;
+  setAchievementBadgListenters(toRenderAchievementsList);
 }
 
 function checkVisibleAchievements(arr) {
@@ -71,6 +72,13 @@ function generateAchievement(achievement) {
     html += '</div>';
   html += '</div>';
   return html;
+}
+
+function setAchievementBadgListenters(achivList) {
+  $('.achievementBadg').bind('click', function() {
+    var id = $(this).attr('id');
+    console.log(achivList);
+  });
 }
 
 $(function() {

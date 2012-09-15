@@ -46,6 +46,7 @@ div.dashboard_menu_button:hover {
 /* Achievement Badg style */
 
 div.achievementBadg {
+  cursor: pointer;
   position: relative;
   float: left;
   width: 100%;

@@ -25,7 +25,7 @@ function getUserAchievements(uid, cb) {
 
 exports.index = function(req, res){
   if(!req.session.auth || req.session.auth == false) {
-    res.redirect('http://37.230.112.90/login');
+    res.redirect('http://rootools.ru/login');
   } else {
     getUserAchievements(req.session.uid, function(achivList) {    
       res.render('index', { title: 'Express' , user: req.session.email, achivList:achivList});
