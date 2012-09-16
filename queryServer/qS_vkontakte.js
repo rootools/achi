@@ -46,6 +46,13 @@ function vk_0NwF1LKsXAcLNWIdmadLThRksh7k4l(uid, data, aid, db) {
   }
 }
 
+// Add 50 friends
+function vk_3bgyKw50Y0OKG7KJ3UPDL9NwSwNp14(uid, data, aid, db) {
+  if(data.friendsCount >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'vkontakte'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {

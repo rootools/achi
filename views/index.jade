@@ -2,8 +2,7 @@ extends layout
 
 block content
   script(src="javascripts/dashboard.js")
-  script(src="javascripts/vk_auth.js")
-  a(href="http://37.230.112.90/logout") Logout
+  a(href="/logout") Logout
   p user: #{user}
   form(method="POST", action="/webapi")
     input(type="hidden", name="action", value="addService")
