@@ -15,6 +15,7 @@ function getData(access_token, uid, cb) {
   async.series([
     function(callback) {
       getSingleStat(vk, uid, function(data) {
+        data.audioCount = parseFloat(data.audioCount);
         callback(null, data);
       });
     },
@@ -30,7 +31,7 @@ function getData(access_token, uid, cb) {
     }], function(err, data) {
       for(var i=0;i<data.length;i++) {
         for(var key in data[i]) {
-          response[key] = parseFloat(data[i][key]);
+          response[key] = data[i][key];
         }
       }
       cb(response);
