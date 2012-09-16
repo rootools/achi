@@ -19,13 +19,18 @@ function getData(access_token, uid, cb) {
       });
     },
     function(callback) {
-      getMaxPostLike(vk, uid, function(data) {
+      getMaxLike('wall.get', {count:100}, vk, uid, function(data) {
+        callback(null, data);
+      });
+    },
+    function(callback) {
+      getMaxLike('photos.getAll', {count:100, extended:1}, vk, uid, function(data) {
         callback(null, data);
       });
     }], function(err, data) {
       for(var i=0;i<data.length;i++) {
         for(var key in data[i]) {
-          response[key] = data[i][key];
+          response[key] = parseFloat(data[i][key]);
         }
       }
       cb(response);
@@ -47,39 +52,59 @@ function getSingleStat(vk, uid, cb) {
   });
 }
 
-function getMaxPostLike(vk, uid, cb) {
+function getMaxLike(method, options, vk, uid, cb) {
+  if(method == 'photos.getAll') {
+    var name_cb = 'maxPhotoLike';
+  }
+  if(method == 'wall.get') {
+    var name_cb = 'maxPostLike';
+  }
+
   var dirtyArray = [];
-  var maxPostLike = 0;
-  vk('wall.get', {count: 100}, function(err, data) {
+  var cb_obj = {};
+  vk(method, options, function(err, data) {
     dirtyArray.push(data);
     var queue = data[0] / 100;
     queue = queue -(queue%1);
-    
+    if(queue < 1) {
+      cb_obj[name_cb] = calcMaxLike(dirtyArray);
+      cb(cb_obj);
+    }
+
     var q = async.queue(function(task, callback) {
-      vk('wall.get', task, function(err, data) {
+      vk(method, task, function(err, data) {
         dirtyArray.push(data)
         callback(data);
       });
     }, queue);
 
     q.drain = function(data) {
-      for(var i=0;i<dirtyArray.length;i++) {
-        for(var r=0;r<dirtyArray[i].length;r++) {
-          var count = dirtyArray[i][r].likes;
-          //STUPID BUG!!!
-          for(var key in count) {
-            if(count[key] > maxPostLike) { maxPostLike = count[key]; }
-          }
-        }
-      }
-      cb({maxPostLike:maxPostLike});
+      cb_obj[name_cb] = calcMaxLike(dirtyArray);
+      cb(cb_obj);
     }
 
     var handler = 100;
     while(handler < data[0]) {
-      q.push({count:100, offset: handler}, function(err,data) { });
+      options.offset = handler;
+      q.push(options, function(err,data) {});
       handler = handler + 100;
     }
 
+    function calcMaxLike(array) {
+      var maxLike = 0;
+
+      for(var i=0;i<array.length;i++) {
+        for(var r=0;r<array[i].length;r++) {
+          var count = array[i][r].likes;
+          //STUPID BUG!!!
+          for(var key in count) {
+            if(count[key] > maxLike) { maxLike = count[key]; }
+          }
+        }
+      }
+      return maxLike;
+    }
+
   });
+
 }
