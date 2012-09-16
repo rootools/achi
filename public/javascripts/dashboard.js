@@ -7,6 +7,7 @@ function sync(param, cb) {
 function getAchievementsList(service) {
   sync({action:"getAchievementsList", service:service}, function(fullAchievementsList) {
     sync({action:"userAchievementsList", service:service}, function(userAchievementsList) {
+      if(userAchievementsList.achievements == undefined) {userAchievementsList.achievements = [];}
       if(userAchievementsList == null) { userAchievementsList = {}; userAchievementsList.achievements = []; }
       renderAchievementsList(fullAchievementsList, userAchievementsList.achievements);
     });

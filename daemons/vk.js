@@ -1,10 +1,16 @@
-var async = require('async');
-var uid = 69445640;
-var access_token = '9acbbaaf9ee812a79ee812a7959ec7a49f99ee89ee516b97e044438d91889aa';
+var http = require('http');
+var util = require('util');
+var url = require('url');
 
-getData(access_token, uid, function(data) {
-  console.log(data);
-});
+var async = require('async');
+
+http.createServer(function (req, res) {
+  var query = url.parse(req.url, true).query;
+  getData(query.access_token, query.uid, function(data) {
+    res.end(JSON.stringify(data));
+  });
+}).listen(1347, '127.0.0.1');
+
 
 function getData(access_token, uid, cb) {
   var response = {};
@@ -42,7 +48,7 @@ function getSingleStat(vk, uid, cb) {
   var code = 'var friendsCount = API.friends.get().length;';
   code += 'var groupsCount = API.groups.get().length;';
   code += 'var photosCount = API.photos.getAll({no_service_albums:0})[0];';
-  code += 'var wallCount = API.wall.get({filter:"owner"})[0];';
+  code += 'var wallCount = API.wall.get()[0];';
   code += 'var audioCount = API.audio.getCount({oid:'+uid+'});';
   code += 'var videoCount = API.video.get()[0];'
   code += 'var response = {friendsCount: friendsCount, groupsCount:groupsCount, photosCount:photosCount, wallCount:wallCount, audioCount:audioCount, videoCount:videoCount};';

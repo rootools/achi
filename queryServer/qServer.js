@@ -3,6 +3,7 @@ var querystring = require('querystring');
 var hd = require('hero-data');
 
 var cTwitter = require('./qS_twitter.js');
+var cVkontakte = require('./qS_vkontakte');
 
 var redis = require("redis"),
     client = redis.createClient();
@@ -36,7 +37,7 @@ function updateQuery(uid, service) {
 function createQuery() {
   var now = new Date().getTime();
   db.collection('services_connections', function(err, collection) {
-    collection.find({checked: true},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+    collection.find({valid: true},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
       createQueryHandler = doc.length;
       for(var i=0;i<doc.length;i++) {
         if(doc[i].lastupdate == '' || doc[i].lastupdate + 1800000 < now) {
@@ -63,6 +64,12 @@ function queryLauncher() {
                 queryLauncherHandler--;
                 updateQuery(uid, service);
               });  
+            }
+            if(service == 'vkontakte') {
+              cVkontakte.checkVkontakteAchievements(uid, result, db, function(res) {
+                queryLauncherHandler--;
+                updateQuery(uid, service);
+              });
             }
           });
         });
@@ -92,6 +99,13 @@ function getData(service, auth, cb) {
         port: 1337,
         path: '/?user='+auth};
   }
+  
+  if(service == 'vkontakte') {
+    var options = {
+        host: '127.0.0.1',
+        port: 1347,
+        path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
+  }
 
   callback = function(res) {
     var str = '';
@@ -105,18 +119,4 @@ function getData(service, auth, cb) {
   }
 
   http.request(options, callback).end();
-}
-
-function checkServiceAuthor(uid, service) {
-  db.collection('services_connections', function(err, collection) {
-    collection.findOne({uid:uid, service:service},{service_login:1}, function(err, doc) {
-      getData(service, doc.service_login, function(data) {
-        if(service == 'twitter') {
-          if(data.url == 'http://achi.info/') {
-            collection.update({uid:uid, service:service},{$set: {checked: true}});
-          }
-        }
-      });
-    });
-  });
 }
