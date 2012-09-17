@@ -59,15 +59,6 @@ function createQuery() {
   });
 }
 
-setInterval(function() {
-  if(q) { 
-    if(q.length() = 0) {
-      console.log('Run createQuery');
-      createQuery();
-    }
-  }
-}, 300000);
-
 function getData(service, auth, cb) {
   if(service == 'twitter') {
     var options = {
@@ -96,3 +87,10 @@ function getData(service, auth, cb) {
 
   http.request(options, callback).end();
 }
+
+setInterval(function() {
+  if(q == undefined || q.length() == 0) {
+    console.log('Run createQuery');
+    createQuery();
+  }
+}, 300000);
