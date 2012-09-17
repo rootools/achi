@@ -1,18 +1,13 @@
 var http = require('http');
 var querystring = require('querystring');
+var async = require('async');
 var hd = require('hero-data');
 
 var cTwitter = require('./qS_twitter.js');
 var cVkontakte = require('./qS_vkontakte');
 
-var redis = require("redis"),
-    client = redis.createClient();
-    client.select(6);
-
+var q;
 var db;
-
-var queryLauncherHandler = 0;
-var createQueryHandler = 0;
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
@@ -28,7 +23,6 @@ mongoConnect();
 
 function updateQuery(uid, service) {
   var now = new Date().getTime();
-  client.del(uid+'|'+service);
   db.collection('services_connections', function(err, collection) {
     collection.update({uid: uid, service:service},{$set: {lastupdate:now}});
   });
@@ -36,61 +30,43 @@ function updateQuery(uid, service) {
 
 function createQuery() {
   var now = new Date().getTime();
+
   db.collection('services_connections', function(err, collection) {
-    collection.find({valid: true},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
-      createQueryHandler = doc.length;
+    collection.find({valid: true, lastupdate: {$lt:now - 1800000}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+      q = async.queue(function(task, callback) {
+        getData(task.service, task.service_login, function(data) {
+          if(task.service == 'twitter') {
+              cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
+                updateQuery(task.uid, task.service);
+                callback();
+              });
+            }
+            if(task.service == 'vkontakte') {
+              cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
+                updateQuery(task.uid, task.service);
+                callback();
+              });
+            }
+
+        });
+      }, doc.length);
+
       for(var i=0;i<doc.length;i++) {
-        if(doc[i].lastupdate == '' || doc[i].lastupdate + 1800000 < now) {
-          client.set(doc[i].uid+'|'+doc[i].service, now);
-        }
-        createQueryHandler--;
+        q.push(doc[i], function(err){});
       }
+
     });
   });
 }
 
-function queryLauncher() {
-  client.keys('*', function(err, queryList) {
-    queryLauncherHandler = queryList.length;
-    for(var i=0;i<queryList.length;i++) {
-      var data = queryList[i].split('|');
-      var uid = data[0];
-      var service = data[1];
-      db.collection('services_connections', function(err, collection) {
-        collection.findOne({uid:uid, service:service},{service_login:1}, function(err, doc) {
-          getData(service, doc.service_login, function(result) {
-            if(service == 'twitter') {
-              cTwitter.checkTwitterAchievements(uid, result, db, function(res) {
-                queryLauncherHandler--;
-                updateQuery(uid, service);
-              });  
-            }
-            if(service == 'vkontakte') {
-              cVkontakte.checkVkontakteAchievements(uid, result, db, function(res) {
-                queryLauncherHandler--;
-                updateQuery(uid, service);
-              });
-            }
-          });
-        });
-      });
+setInterval(function() {
+  if(q) { 
+    if(q.length() = 0) {
+      console.log('Run createQuery');
+      createQuery();
     }
-  });  
-}
-
-setInterval(function() {
-  console.log('Run createQuery');
-  if(createQueryHandler == 0) {
-    createQuery();
   }
-}, 1800000);
-
-setInterval(function() {
-  console.log('Run queryLauncher');
-  if(queryLauncherHandler == 0) {
-    queryLauncher();
-  }
-}, 900000);
+}, 300000);
 
 function getData(service, auth, cb) {
   if(service == 'twitter') {
