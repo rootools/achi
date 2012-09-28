@@ -53,6 +53,27 @@ function vk_3bgyKw50Y0OKG7KJ3UPDL9NwSwNp14(uid, data, aid, db) {
   }
 }
 
+// Add 100 friends
+function vk_ExX284q5Iz7O4v94JcjaI7uDTZYdHQ(uid, data, aid, db) {
+  if(data.friendsCount >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 500 friends
+function vk_xbELzMG28H5oUA7zvocKcxasDrmvIh(uid, data, aid, db) {
+  if(data.friendsCount >= 500) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 1000 friends
+function vk_0bgDLLMfiBCRDihXblZthw8YEyJ7qs(uid, data, aid, db) {
+  if(data.friendsCount >= 1000) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'vkontakte'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {

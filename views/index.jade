@@ -4,13 +4,9 @@ block content
   script(src="javascripts/dashboard.js")
   a(href="/logout") Logout
   p user: #{user}
-  form(method="POST", action="/webapi")
-    input(type="hidden", name="action", value="addService")
-    input(type="input", name="account")
-    select(name="service")
-      option(value="twitter") Twitter
-    input(type="submit", value="Submit")
-  a(href="/add_service/vk") VK add
+  a(href="/add_service/vk") VK Add
+  br
+  a(href="/add_service/twitter") Twitter Add
   hr
   center
     div(id="dashboard")

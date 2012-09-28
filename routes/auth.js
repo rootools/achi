@@ -15,7 +15,6 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
-
   if(req.session.auth && req.session.auth == true) {
     res.redirect('http://rootools.ru/');
   }
