@@ -47,6 +47,7 @@ exports.vk = function(req, res) {
 
       response.on('end', function() {
         var data = JSON.parse(str);
+        delete data.expires_in;
         add_service(req.session, data, 'vkontakte');
       });
     }
@@ -74,13 +75,38 @@ exports.twitter = function(req, res) {
   }
 }
 
-function add_service(session, data, service) {
-  if(service == 'vkontakte') {
-    var account = { access_token: data.access_token, user_id: data.user_id};
+exports.facebook = function(req, res) {
+  if(!req.query.code) {  
+    res.redirect('https://www.facebook.com/dialog/oauth?client_id=258024554279925&redirect_uri=http://rootools.ru/add_service/facebook&state=123&scope=publish_actions');
+  } 
+  if(req.query.code) {
+    var code = req.query.code;
+
+    var options = {
+      host: 'graph.facebook.com',
+      method: 'GET',
+      path: '/oauth/access_token?client_id=258024554279925&redirect_uri=http://rootools.ru/add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+req.query.code
+    }
+
+    var callback = function(response) {
+      var str = '';
+
+      response.on('data', function(chunk) {
+        str += chunk;
+      });
+
+      response.on('end', function() {
+        var data = querystring.parse(str).access_token;
+        add_service(req.session, data, 'facebook');
+      });
+    }
+
+    https.request(options, callback).end();
+    res.redirect('http://rootools.ru/');
   }
-  if(service = 'twitter') {
-    var account = data;
-  }
+}
+
+function add_service(session, account, service) {
   testService(session.uid, service, function(check) {
     db.collection('services_connections', function(err,collection) {
       if(check == true) {
