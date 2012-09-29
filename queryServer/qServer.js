@@ -64,7 +64,7 @@ function getData(service, auth, cb) {
     var options = {
         host: '127.0.0.1',
         port: 1337,
-        path: '/?user='+auth};
+        path: '/?oauth_token='+auth.oauth_token+'&oauth_token_secret='+auth.oauth_token_secret};
   }
   
   if(service == 'vkontakte') {

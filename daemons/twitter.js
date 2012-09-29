@@ -1,18 +1,25 @@
 var http = require('http');
 var util = require('util');
 var url = require('url');
-var twitter = require('twitter');
+var oauth = require('oauth').OAuth;
 
-var twit = new twitter({
-  consumer_key: 'CXWNIxTwg8vyTmtETDbPMA',
-  consumer_secret: 'd4rgsi9dvbMhUgYVT3kbQD0L9lZ8I8NO8dG2oqOHY',
-  access_token_key: '39984798-Lgxe5ff90d0DJDGr1sLctWnu4zsLMu8iwMjXFzcKo',
-  access_token_secret: 'SDsrDcwkxS3ihuD0yJLq1QWOVSPxv7kwipc3xIJg'
-});
+var twitterOA = new oauth(
+  'https://api.twitter.com/oauth/request_token',
+  'https://api.twitter.com/oauth/access_token',
+  'CXWNIxTwg8vyTmtETDbPMA',
+  'd4rgsi9dvbMhUgYVT3kbQD0L9lZ8I8NO8dG2oqOHY',
+  '1.0',
+  'http://rootools.ru/add_service/twitter',
+  'HMAC-SHA1'
+);
 
 http.createServer(function (req, res) {
+
   var query = url.parse(req.url, true).query;
-  twit.get('/users/show.json', {include_entities:true, screen_name:query.user}, function(data) {
+
+  twitterOA.get('http://twitter.com/account/verify_credentials.json', query.oauth_token, query.oauth_token_secret, function(err, data) {
+    data = JSON.parse(data);
+
     var profile = {};
     profile.statuses_count = data.statuses_count;
     profile.followers_count = data.followers_count;
@@ -22,5 +29,6 @@ http.createServer(function (req, res) {
     profile.favourites_count = data.favourites_count;
     res.end(JSON.stringify(profile));
   });
+
 }).listen(1337, '127.0.0.1');
 

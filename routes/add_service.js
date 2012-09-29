@@ -2,7 +2,6 @@ var https = require('https');
 var querystring = require('querystring');
 
 var oauth = require('oauth').OAuth;
-var twitter = require('twitter');
 
 var twitterOA = new oauth(
   'https://api.twitter.com/oauth/request_token',
@@ -13,14 +12,6 @@ var twitterOA = new oauth(
   'http://rootools.ru/add_service/twitter',
   'HMAC-SHA1'
 );
-
-var twit = new twitter({
-  consumer_key: 'CXWNIxTwg8vyTmtETDbPMA',
-  consumer_secret: 'd4rgsi9dvbMhUgYVT3kbQD0L9lZ8I8NO8dG2oqOHY',
-  access_token_key: '39984798-Lgxe5ff90d0DJDGr1sLctWnu4zsLMu8iwMjXFzcKo',
-  access_token_secret: 'SDsrDcwkxS3ihuD0yJLq1QWOVSPxv7kwipc3xIJg'
-});
-
 
 var db;
 
@@ -66,14 +57,19 @@ exports.vk = function(req, res) {
 }
 
 exports.twitter = function(req, res) {
+  console.log(req.query);
   if(req.query.oauth_token) {
-    var data = {oauth_token: req.query.oauth_token, oauth_verifier: req.query.oauth_verifier};
-    add_service(req.session, data, 'twitter');
-    res.redirect('http://rootools.ru/');
+    twitterOA.getOAuthAccessToken(req.query.oauth_token, req.session.request_twitter_oauth_token_secret, req.query.oauth_verifier, function(err, oauth_token, oauth_token_secret, results) {
+      console.log(err, oauth_token, oauth_token_secret, results);
+      var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };
+      add_service(req.session, data, 'twitter');
+      res.redirect('http://rootools.ru/');
+    });
   } else {
 
-    twitterOA.getOAuthRequestToken(function(error, oauth_token, oauth_token_secret, results){
-      res.redirect('https://twitter.com/oauth/authenticate?oauth_token='+oauth_token)
+    twitterOA.getOAuthRequestToken(function(error, request_oauth_token, request_oauth_token_secret, results){
+      req.session.twitter_request_oauth_token_secret = request_oauth_token_secret;
+      res.redirect('https://api.twitter.com/oauth/authorize?oauth_token='+request_oauth_token);
     });
   }
 }
@@ -88,7 +84,7 @@ function add_service(session, data, service) {
   testService(session.uid, service, function(check) {
     db.collection('services_connections', function(err,collection) {
       if(check == true) {
-        collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate:''}, function(err, doc) {});
+        collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {});
       } else {
         collection.update({uid: session.uid, service:service},{$set: {service_login: account, valid: true}}, function(err,doc) {});
       }
