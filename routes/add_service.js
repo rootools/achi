@@ -60,9 +60,9 @@ exports.twitter = function(req, res) {
   console.log(req.query);
   if(req.query.oauth_token) {
     twitterOA.getOAuthAccessToken(req.query.oauth_token, req.session.request_twitter_oauth_token_secret, req.query.oauth_verifier, function(err, oauth_token, oauth_token_secret, results) {
-      console.log(err, oauth_token, oauth_token_secret, results);
       var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };
       add_service(req.session, data, 'twitter');
+      delete req.session.twitter_request_oauth_token_secret;
       res.redirect('http://rootools.ru/');
     });
   } else {
