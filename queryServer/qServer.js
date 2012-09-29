@@ -40,14 +40,17 @@ function createQuery() {
                 updateQuery(task.uid, task.service);
                 callback();
               });
-            }
-            if(task.service == 'vkontakte') {
-              cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
-                updateQuery(task.uid, task.service);
-                callback();
-              });
-            }
-
+          }
+          if(task.service == 'vkontakte') {
+            cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
+              updateQuery(task.uid, task.service);
+              callback();
+            });
+          }
+          if(task.service == 'facebook') {
+            console.log(data);
+            callback();
+          }
         });
       }, doc.length);
 
@@ -74,6 +77,13 @@ function getData(service, auth, cb) {
         path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
   }
 
+  if(service == 'facebook') {
+    var options = {
+        host: '127.0.0.1',
+        port: 1357,
+        path: '/?access_token='+auth};
+  }
+
   callback = function(res) {
     var str = '';
     res.on('data', function(chunk) {
@@ -93,4 +103,4 @@ setInterval(function() {
     console.log('Run createQuery');
     createQuery();
   }
-}, 300000);
+}, 5000);
