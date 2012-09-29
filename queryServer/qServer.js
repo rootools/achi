@@ -5,6 +5,7 @@ var hd = require('hero-data');
 
 var cTwitter = require('./qS_twitter.js');
 var cVkontakte = require('./qS_vkontakte');
+var cFacebook = require('./qS_facebook');
 
 var q;
 var db;
@@ -48,8 +49,11 @@ function createQuery() {
             });
           }
           if(task.service == 'facebook') {
-            console.log(data);
-            callback();
+            console.log(task);
+            cFacebook.checkFacebookAchievements(task.uid, data, db, function(res) {
+              updateQuery(task.uid, task.service);
+              callback();
+            });
           }
         });
       }, doc.length);

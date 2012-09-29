@@ -109,24 +109,31 @@ exports.facebook = function(req, res) {
 function add_service(session, account, service) {
   testService(session.uid, service, function(check) {
     db.collection('services_connections', function(err,collection) {
+    db.collection('users_achievements', function(err, ua_collection) {
       if(check == true) {
         collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {});
+        ua_collection.insert({uid:session.uid, service:service, achievements: []}, function(err, doc) {});
       } else {
         collection.update({uid: session.uid, service:service},{$set: {service_login: account, valid: true}}, function(err,doc) {});
       }
-      });
+    });
+    });
   });
 }
 
 function testService(uid, service, cb) {
-  db.collection('services_connections', function(err,collection) {
-    collection.findOne({uid: uid, service:service}, function(err, doc) {
-      if(err == null && doc == null) {
+  db.collection('services_connections', function(sc_err,sc_collection) {
+  db.collection('users_achievements', function(ua_err, ua_collection) {
+    sc_collection.findOne({uid: uid, service:service}, function(sc_err, sc_doc) {
+    ua_collection.findOne({uid: uid, service:service}, function(ua_err, ua_doc) {
+      if(sc_err == null && sc_doc == null && ua_err == null && ua_doc == null) {
         cb(true);
       } else {
         cb(false);
       }
     });
+    });
+  });
   });
 }
 

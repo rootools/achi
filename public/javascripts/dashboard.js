@@ -32,12 +32,13 @@ function renderAchievementsList(fullAchievementsList, userAchievementsList) {
         achievement.time = 'never';
       }
     }
-    toRenderAchievementsList.push(achievement);
+//    toRenderAchievementsList.push(achievement);
+    html += generateAchievement(achievement);
   }
-  var toRenderAchievementsList = checkVisibleAchievements(toRenderAchievementsList);
-  for(var i=0;i<toRenderAchievementsList.length;i++) {
-    html += generateAchievement(toRenderAchievementsList[i]);
-  }
+//  var toRenderAchievementsList = checkVisibleAchievements(toRenderAchievementsList);
+//  for(var i=0;i<toRenderAchievementsList.length;i++) {
+//    html += generateAchievement(toRenderAchievementsList[i]);
+//  }
 
   dashboard_list.innerHTML = html;
   setAchievementBadgListenters(toRenderAchievementsList);
