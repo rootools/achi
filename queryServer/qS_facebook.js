@@ -29,7 +29,6 @@ function checkFacebookAchievements(uid, data, db, cb) {
           }
         }
       }
-      console.log(res);
       for(var i=0;i<notRecieved.length;i++) {
         var runTest = eval('fb_'+notRecieved[i]);
         runTest(uid, data, notRecieved[i], db);

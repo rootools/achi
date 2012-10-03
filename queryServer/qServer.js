@@ -49,7 +49,6 @@ function createQuery() {
             });
           }
           if(task.service == 'facebook') {
-            console.log(task);
             cFacebook.checkFacebookAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
               callback();
@@ -107,4 +106,4 @@ setInterval(function() {
     console.log('Run createQuery');
     createQuery();
   }
-}, 5000);
+}, 300000);

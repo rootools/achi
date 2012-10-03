@@ -1,0 +1,14 @@
+body {
+  padding: 20px;
+}
+
+div.service_menu {
+  position: relative;
+  float: left;
+  margin: 10px;
+}
+
+div#menu, div#content {
+  position: relative;
+  width: 100%;
+}

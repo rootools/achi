@@ -44,6 +44,7 @@ function getData(query, access_token, cb) {
 
     response.on('end', function() {
       str = JSON.parse(str);
+      console.log(str);
       cb(str);
     });
   }
