@@ -52,4 +52,11 @@ exports.editor_api = function(req, res) {
       res.end();
     });
   }
+
+  if(req.body.command == 'edit_achiv') {
+    db.collection('achievements', function(err, collection) {
+      collection.update({aid:req.body.aid},{$set:{name:req.body.name, description:req.body.description, position:req.body.position}}, function(err, doc) {});
+      res.redirect('http://rootools.ru:3000/');
+    });
+  }
 };

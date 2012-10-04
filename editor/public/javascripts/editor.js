@@ -106,7 +106,9 @@ function showEditWindow(achiv) {
   html += '<div class="input-control text"><input type="text" name="name" value="'+achiv.name+'"/><span class="helper"></span></div>';
   html += '<div class="input-control text"><input type="text" name="description" value="'+achiv.descr+'"/><span class="helper"></span></div>';
   html += '<div class="input-control text"><input type="text" name="position" value="'+achiv.position+'"/><span class="helper"></span></div>';
-  html += '<center><button>save</button><button id="button_window_close">close</button></center>';
+  html += '<input type="hidden" name="aid" value="'+achiv.aid+'" />';
+  html += '<input type="hidden" name="command" value="edit_achiv" />';
+  html += '<center><button type="submit">save</button><button id="button_window_close">close</button></center>';
   html += '</div>';
   $('#content').append(html);
   $('#table_achiv').css({'width':'49%', 'position':'relative', 'float':'left'});
@@ -116,6 +118,7 @@ function showEditWindow(achiv) {
     $('#window_edit').remove();
     $('#table_achiv').css({'width':'100%', 'position':'', 'float':''});
   });
+
 }
 
 $(function() {
