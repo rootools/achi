@@ -17,3 +17,10 @@ img.table_icon {
   width: 24px;
   height: 24px;
 }
+
+div#window_edit {
+  padding: 10px;
+  margin: 20px 0;
+  margin-left: 2%;
+  border: 1px solid #cccccc;
+}

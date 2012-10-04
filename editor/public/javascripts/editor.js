@@ -9,7 +9,7 @@ function getAchivList(service) {
   var content = document.getElementById('content');
   content.innerHTML = ''
 
-  var html = '<table class="bordered"><tr><th>aid</th><th>name</th><th>description</th><th>position</th><th>edit</th><th>del</th></tr>';
+  var html = '<table id="table_achiv" class="bordered"><tr><th>aid</th><th>name</th><th>description</th><th>position</th><th>edit</th><th>del</th></tr>';
   getData({command: 'get_achiv_list', service:service}, function(data) {
     for(var i=0;i<data.length;i++) {
       html += '<tr id="'+data[i].aid+'"><td>'+data[i].aid+'</td><td>'+data[i].name+'</td><td>'+data[i].description+'</td><td>'+data[i].position+'</td><td id="table_edit"><img src="images/edit.png" class="table_icon"></td><td id="table_del"><img src="images/remove.png" class="table_icon"></td></tr>';
@@ -42,7 +42,6 @@ function getService() {
     
     $('.service_menu').bind('click', function() {
       var id = this.id.split('_')[2];
-      console.log(id);
       getAchivList(id);
     });
 
@@ -76,7 +75,6 @@ function addNewAchiv(services) {
 }
 
 function tdClick(elem) {
-  console.log(elem.parentNode.id, elem.id);
 
   if(elem.id == 'table_del') {
     getData({command: 'delete_row', aid: elem.parentNode.id}, function(data) {
@@ -85,6 +83,39 @@ function tdClick(elem) {
       });
     });
   }
+
+  if(elem.id == 'table_edit') {
+    var achiv = {};
+    achiv.aid = elem.parentNode.childNodes[0].innerHTML;
+    achiv.name = elem.parentNode.childNodes[1].innerHTML;
+    achiv.descr = elem.parentNode.childNodes[2].innerHTML;
+    achiv.position = elem.parentNode.childNodes[3].innerHTML;
+
+    console.log(achiv);
+
+    showEditWindow(achiv);
+  }
+}
+
+function showEditWindow(achiv) {
+  var html = '';
+  
+  html += '<div id="window_edit">';
+  html += '<center><h3>aid:'+achiv.aid+'</h3></center>';
+  html += '<form method="POST" action="/editor_api">';
+  html += '<div class="input-control text"><input type="text" name="name" value="'+achiv.name+'"/><span class="helper"></span></div>';
+  html += '<div class="input-control text"><input type="text" name="description" value="'+achiv.descr+'"/><span class="helper"></span></div>';
+  html += '<div class="input-control text"><input type="text" name="position" value="'+achiv.position+'"/><span class="helper"></span></div>';
+  html += '<center><button>save</button><button id="button_window_close">close</button></center>';
+  html += '</div>';
+  $('#content').append(html);
+  $('#table_achiv').css({'width':'49%', 'position':'relative', 'float':'left'});
+  $('#window_edit').css({'width':'49%', 'position':'relative', 'float':'left'});
+  
+  $('#button_window_close').bind('click', function() {
+    $('#window_edit').remove();
+    $('#table_achiv').css({'width':'100%', 'position':'', 'float':''});
+  });
 }
 
 $(function() {
