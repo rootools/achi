@@ -12,3 +12,8 @@ div#menu, div#content {
   position: relative;
   width: 100%;
 }
+
+img.table_icon {
+  width: 24px;
+  height: 24px;
+}

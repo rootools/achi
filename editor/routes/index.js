@@ -38,4 +38,18 @@ exports.editor_api = function(req, res) {
       });
     });
   }
+
+  if(req.body.command == 'add_new_achiv') {
+    db.collection('achievements', function(err, collection) {
+      collection.insert({aid:req.body.aid, name:req.body.name, description:req.body.description, position: req.body.position, service:req.body.service},function(err, doc) {});
+      res.redirect('http://rootools.ru:3000/');
+    });
+  }
+
+  if(req.body.command == 'delete_row') {
+    db.collection('achievements', function(err, collection) {
+      collection.remove({aid:req.body.aid}, function(err, doc) {});
+      res.end();
+    });
+  }
 };
