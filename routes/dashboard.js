@@ -46,7 +46,7 @@ function getAllAchievementsCount(cb) {
 	});
 }
 
-// return 'icon', 'time' and points of last 6 achievenments
+// return 'name', 'icon', 'service', 'time' and 'points' of last 6 achievenments
 function getLatestAchievements(data, cb) {
 	var achivArray = [];
 	for(var key in data) {
@@ -61,12 +61,27 @@ function getLatestAchievements(data, cb) {
 
 	var result = [];
 
-	
-	for(var key in lastAchivArray) {
-		result.push({time:moment(lastAchivArray[key].time).format('DD-MM-YYYY'), points: 10, icon:'/images/label.png'});
+	var handler = lastAchivArray.length;
+
+	var callback = function(i) {
+		return function(err, doc) {
+			result.push({time:lastAchivArray[i].time, points:doc.points, icon:doc.icon, name:doc.name, service:doc.service});
+			handler--;
+			if(handler == 0) {
+				result.sort(function(a,b){ return a.time - b.time; }).reverse();
+				for(var key in result) {
+					result[key].time = moment(result[key].time).format('DD/MM/YYYY');
+				}
+				cb(result);
+			}
+		}
 	}
-	
-	cb(result);	
+
+	db.collection('achievements', function(err, collection) {
+		for(var key in lastAchivArray) {
+			collection.findOne({aid:lastAchivArray[key].aid},{points:1, icon:1, service:1, name:1}, callback(key));
+		}
+	});
 }
 
 exports.main = function(req, res) {

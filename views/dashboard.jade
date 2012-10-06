@@ -12,7 +12,7 @@ block content
 					div(class="row")
 						each achiv in lastAchivArray
 							div(class="span2")
-								div(class="tile bg-color-greenLight")
+								div(class="tile bg-color-greenLight", title=achiv.name+'('+achiv.service+')')
 									div(class="tile-content icon")
 										img(src=achiv.icon)
 									div(class="brand")
