@@ -1,0 +1,47 @@
+extends layout
+
+block content
+	script(src="javascripts/dashboard_new.js")
+	div(class="page")
+		div(class="page-header")
+			div(class="page-header-content")
+				h1 #{title}
+		div(class="page-region")
+			div(class="page-region-content")
+				div(class="grid")
+					div(class="row")
+						div(class="span2")
+						div(class="span2")
+							div(class="tile")
+								div(class="tile-content image")
+									img(src="images/unlck.jpg")
+						div(class="span2")
+							div(class="tile")
+								div(class="tile-content image")
+									img(src="images/unlck.jpg")
+						div(class="span2")
+							div(class="tile")
+								div(class="tile-content image")
+									img(src="images/unlck.jpg")
+						div(class="span2")
+							div(class="tile")
+								div(class="tile-content image")
+									img(src="images/unlck.jpg")
+						div(class="span2")
+							div(class="tile")
+								div(class="tile-content image")
+									img(src="images/unlck.jpg")
+						div(class="span2")
+							div(class="tile")
+								div(class="tile-content image")
+									img(src="images/unlck.jpg")
+					div(class="row")
+						div(class="span2")
+						each item in achievements
+							div(class="span4")
+								div(class="tile double bg-color-green")
+									div(class="tile-content")
+										h2=item.service
+										h4='100/350 points'
+									div(class="brand")
+										div(class="badge")=item.earned+'/'+item.full
