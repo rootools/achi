@@ -41,7 +41,7 @@ exports.editor_api = function(req, res) {
 
   if(req.body.command == 'add_new_achiv') {
     db.collection('achievements', function(err, collection) {
-      collection.insert({aid:req.body.aid, name:req.body.name, description:req.body.description, position: req.body.position, service:req.body.service},function(err, doc) {});
+      collection.insert({aid:req.body.aid, name:req.body.name, description:req.body.description, position: req.body.position, service:req.body.service, points:req.body.service.points, icon:req.body.icon},function(err, doc) {});
       res.redirect('http://rootools.ru:3000/');
     });
   }
@@ -55,7 +55,7 @@ exports.editor_api = function(req, res) {
 
   if(req.body.command == 'edit_achiv') {
     db.collection('achievements', function(err, collection) {
-      collection.update({aid:req.body.aid},{$set:{name:req.body.name, description:req.body.description, position:req.body.position}}, function(err, doc) {});
+      collection.update({aid:req.body.aid},{$set:{name:req.body.name, description:req.body.description, position:req.body.position, points:req.body.points, icon:req.body.icon}}, function(err, doc) {});
       res.redirect('http://rootools.ru:3000/');
     });
   }

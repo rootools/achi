@@ -2,6 +2,11 @@ body {
   font-family: "DejaVu Sans Mono", monospace;
 }
 
+div.page {
+  margin: auto;
+  width: 984px;
+}
+
 div#loginForm {
   width: 300px;
 }

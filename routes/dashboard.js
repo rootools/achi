@@ -1,5 +1,8 @@
 var hd = require('hero-data');
 var passwordHash = require('password-hash');
+var moment = require('moment');
+var async = require('async');
+
 var db;
 
 function mongoConnect() {
@@ -19,8 +22,9 @@ function getUserAchievements(uid, cb) {
   var achivList = {};
   db.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
-    	getLatestAchievements(doc);
-      cb(doc);
+    	getLatestAchievements(doc, function(last) {
+      	cb(doc, last);
+      });
     });
   });
 }
@@ -42,7 +46,8 @@ function getAllAchievementsCount(cb) {
 	});
 }
 
-function getLatestAchievements(data) {
+// return 'icon', 'time' and points of last 6 achievenments
+function getLatestAchievements(data, cb) {
 	var achivArray = [];
 	for(var key in data) {
 		var array = data[key].achievements;
@@ -53,13 +58,21 @@ function getLatestAchievements(data) {
 
 	achivArray.sort(function(a,b){ return a.time - b.time; }).reverse();
 	var lastAchivArray = achivArray.slice(0, 6);
-	console.log(lastAchivArray);
+
+	var result = [];
+
+	
+	for(var key in lastAchivArray) {
+		result.push({time:moment(lastAchivArray[key].time).format('DD-MM-YYYY'), points: 10, icon:'/images/label.png'});
+	}
+	
+	cb(result);	
 }
 
 exports.main = function(req, res) {
 	var achivStat = [];
 
-	getUserAchievements(req.session.uid, function(achivList) {
+	getUserAchievements(req.session.uid, function(achivList, lastAchivArray) {
 		getAllAchievementsCount(function(allAchievements) {
 			for(var i=0;i<achivList.length;i++){
 				var tmpObj = {};
@@ -68,8 +81,9 @@ exports.main = function(req, res) {
 				tmpObj.full = allAchievements[achivList[i].service];
 				achivStat.push(tmpObj);
 			}
-			achivStat.push({service:'main', earned: 12, full: 24});
-			res.render('dashboard', { title: 'Dashboard', achievements: achivStat });
+
+			//achivStat.push({service:'main', earned: 12, full: 24});
+			res.render('dashboard', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
 		});
 	});
 }

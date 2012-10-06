@@ -9,10 +9,11 @@ function getAchivList(service) {
   var content = document.getElementById('content');
   content.innerHTML = ''
 
-  var html = '<table id="table_achiv" class="bordered"><tr><th>aid</th><th>name</th><th>description</th><th>position</th><th>edit</th><th>del</th></tr>';
+  var html = '<table id="table_achiv" class="bordered"><tr><th>aid</th><th>name</th><th>description</th><th>position</th><th>points</th><th>icon</th><th>edit</th><th>del</th></tr>';
   getData({command: 'get_achiv_list', service:service}, function(data) {
+    console.log(data);
     for(var i=0;i<data.length;i++) {
-      html += '<tr id="'+data[i].aid+'"><td>'+data[i].aid+'</td><td>'+data[i].name+'</td><td>'+data[i].description+'</td><td>'+data[i].position+'</td><td id="table_edit"><img src="images/edit.png" class="table_icon"></td><td id="table_del"><img src="images/remove.png" class="table_icon"></td></tr>';
+      html += '<tr id="'+data[i].aid+'"><td>'+data[i].aid+'</td><td>'+data[i].name+'</td><td>'+data[i].description+'</td><td>'+data[i].position+'</td><td>'+data[i].points+'</td><td>'+data[i].icon+'</td><td id="table_edit"><img src="images/edit.png" class="table_icon"></td><td id="table_del"><img src="images/remove.png" class="table_icon"></td></tr>';
     }
     html += '</table>';
     
@@ -67,6 +68,8 @@ function addNewAchiv(services) {
   html += '<div class="input-control text"><input type="text" name="name" placeholder="name"/><span class="helper"></span></div>';
   html += '<div class="input-control text"><input type="text" name="description" placeholder="description"/><span class="helper"></span></div>';
   html += '<div class="input-control text"><input type="text" name="position" placeholder="position"/><span class="helper"></span></div>';
+  html += '<div class="input-control text"><input type="text" name="points" placeholder="points"/><span class="helper"></span></div>';
+  html += '<div class="input-control text"><input type="text" name="icon" placeholder="icon"/><span class="helper"></span></div>';
   html += '<input type="hidden" name="command" value="add_new_achiv">';
   html += '<input type="submit" value="Submit"/>';
   html += '</form>';
@@ -90,7 +93,8 @@ function tdClick(elem) {
     achiv.name = elem.parentNode.childNodes[1].innerHTML;
     achiv.descr = elem.parentNode.childNodes[2].innerHTML;
     achiv.position = elem.parentNode.childNodes[3].innerHTML;
-
+    achiv.points = elem.parentNode.childNodes[4].innerHTML;
+    achiv.icon = elem.parentNode.childNodes[5].innerHTML;
     console.log(achiv);
 
     showEditWindow(achiv);
@@ -106,6 +110,8 @@ function showEditWindow(achiv) {
   html += '<div class="input-control text"><input type="text" name="name" value="'+achiv.name+'"/><span class="helper"></span></div>';
   html += '<div class="input-control text"><input type="text" name="description" value="'+achiv.descr+'"/><span class="helper"></span></div>';
   html += '<div class="input-control text"><input type="text" name="position" value="'+achiv.position+'"/><span class="helper"></span></div>';
+  html += '<div class="input-control text"><input type="text" name="points" value="'+achiv.points+'"/><span class="helper"></span></div>';
+  html += '<div class="input-control text"><input type="text" name="icon" value="'+achiv.icon+'"/><span class="helper"></span></div>';
   html += '<input type="hidden" name="aid" value="'+achiv.aid+'" />';
   html += '<input type="hidden" name="command" value="edit_achiv" />';
   html += '<center><button type="submit">save</button><button id="button_window_close">close</button></center>';
