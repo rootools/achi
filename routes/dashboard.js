@@ -23,11 +23,53 @@ function getUserAchievements(uid, cb) {
   db.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
     	getLatestAchievements(doc, function(last) {
-     		cb(doc, last);
+    		getUserAchievementsPoints(doc, function(points) {
+    			cb(doc, last, points);
+    		});
       });
     });
   });
 }
+
+function getUserAchievementsPoints(data, cb) {
+
+	var pointsList = [];
+	var aids = [];
+
+	for(var i in data) {
+		var serv_obj = {name:'', points: 0};
+
+		for(var r in data[i].achievements) {
+			aids.push(data[i].achievements[r].aid);
+		}
+	}
+
+	var handler = aids.length
+
+	function callback(aid) {
+		db.collection('achievements', function(err, collection) {
+			collection.findOne({aid:aid},{service: 1, points:1}, function(err, doc) {
+				pointsList.push({service:doc.service, points: doc.points});
+				handler--;
+				if(handler == 0) {
+					var response = {};
+					for(var j in pointsList) {
+						if(response[pointsList[j].service] != undefined) {
+							response[pointsList[j].service] += pointsList[j].points;
+						} else {
+							response[pointsList[j].service] = pointsList[j].points;							
+						}
+					}
+					cb(response);
+				}
+			});
+		});
+	}
+	
+	async.forEach(aids, callback, function(err) {});
+	
+}
+
 
 // HASH IT!!
 function getAllAchievementsCount(cb) {
@@ -90,13 +132,14 @@ function getLatestAchievements(data, cb) {
 exports.main = function(req, res) {
 	var achivStat = [];
 
-	getUserAchievements(req.session.uid, function(achivList, lastAchivArray) {
+	getUserAchievements(req.session.uid, function(achivList, lastAchivArray, points) {
 		getAllAchievementsCount(function(allAchievements) {
 			for(var i=0;i<achivList.length;i++){
 				var tmpObj = {};
 				tmpObj.service = achivList[i].service;
 				tmpObj.earned = achivList[i].achievements.length;
 				tmpObj.full = allAchievements[achivList[i].service+'_count'];
+				tmpObj.earnedPoints = points[achivList[i].service];
 				tmpObj.fullPoints = allAchievements[achivList[i].service+'_points'];
 				achivStat.push(tmpObj);
 			}
