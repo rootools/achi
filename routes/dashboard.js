@@ -23,7 +23,7 @@ function getUserAchievements(uid, cb) {
   db.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
     	getLatestAchievements(doc, function(last) {
-      	cb(doc, last);
+     		cb(doc, last);
       });
     });
   });
@@ -33,12 +33,14 @@ function getUserAchievements(uid, cb) {
 function getAllAchievementsCount(cb) {
 	var result = {};
 	db.collection('achievements', function(err, collection) {
-		collection.find({},{service: 1}).toArray(function(err, doc) {
+		collection.find({},{service: 1, points:1}).toArray(function(err, doc) {
 			for(var i=0;i<doc.length;i++){
-				if(result[doc[i].service] != undefined) {
-					result[doc[i].service] += 1;
+				if(result[doc[i].service+'_count'] != undefined) {
+					result[doc[i].service+'_count'] += 1;
+					result[doc[i].service+'_points'] += doc[i].points;
 				} else {
-					result[doc[i].service] = 1;
+					result[doc[i].service+'_count'] = 1;
+					result[doc[i].service+'_points'] = doc[i].points;
 				}
 			}
 			cb(result);
@@ -46,6 +48,7 @@ function getAllAchievementsCount(cb) {
 	});
 }
 
+// HASH IT!!
 // return 'name', 'icon', 'service', 'time' and 'points' of last 6 achievenments
 function getLatestAchievements(data, cb) {
 	var achivArray = [];
@@ -93,10 +96,10 @@ exports.main = function(req, res) {
 				var tmpObj = {};
 				tmpObj.service = achivList[i].service;
 				tmpObj.earned = achivList[i].achievements.length;
-				tmpObj.full = allAchievements[achivList[i].service];
+				tmpObj.full = allAchievements[achivList[i].service+'_count'];
+				tmpObj.fullPoints = allAchievements[achivList[i].service+'_points'];
 				achivStat.push(tmpObj);
 			}
-
 			//achivStat.push({service:'main', earned: 12, full: 24});
 			res.render('dashboard', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
 		});
