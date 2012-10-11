@@ -35,7 +35,8 @@ app.get('/', routes.index);
 app.all('/login', authRoutes.login);
 app.all('/logout', authRoutes.logout);
 app.all('/webapi', webApi.routing);
-app.all('/dashboard', dashboard.main)
+app.all('/dashboard', dashboard.main);
+app.all('/dashboard/:service', dashboard.service);
 
 app.all('/add_service/vk', add_service.vk);
 app.all('/add_service/twitter', add_service.twitter);

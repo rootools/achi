@@ -2,28 +2,23 @@ extends layout
 
 block content
 	script(src="javascripts/dashboard_new.js")
-	div(class="page")
-		div(class="page-header")
-			div(class="page-header-content")
-				h1 #{title}
-		div(class="page-region")
-			div(class="page-region-content")
-				div(class="grid")
-					div(class="row")
-						each achiv in lastAchivArray
-							div(class="span2")
-								div(class="tile bg-color-greenLight", title=achiv.name+'('+achiv.service+')')
-									div(class="tile-content icon")
-										img(src=achiv.icon)
-									div(class="brand")
-										div(class="name")=achiv.time
-										div(class="badge")=achiv.points
-					div(class="row")
-						each item in achievements
-							div(class="span4")
-								div(class="tile double bg-color-greenDark")
-									div(class="tile-content")
-										h2=item.service
-										h4=item.earnedPoints+'/'+item.fullPoints+' points'
-									div(class="brand")
-										div(class="badge")=item.earned+'/'+item.full			
+	div(class="grid")
+		div(class="row")
+			each achiv in lastAchivArray
+				div(class="span2")
+					div(class="tile bg-color-greenLight", title=achiv.name+'('+achiv.service+')')
+						div(class="tile-content icon")
+							img(src=achiv.icon)
+						div(class="brand")
+							div(class="name")=achiv.time
+							div(class="badge")=achiv.points
+		div(class="row")
+			each item in achievements
+				div(class="span4")
+					a(href='/dashboard/'+item.service)
+						div(class="tile double bg-color-greenDark")
+							div(class="tile-content")
+								h2=item.service
+								h4=item.earnedPoints+'/'+item.fullPoints+' points'
+							div(class="brand")
+								div(class="badge")=item.earned+'/'+item.full			

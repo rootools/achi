@@ -115,7 +115,7 @@ function getLatestAchievements(data, cb) {
 			if(handler == 0) {
 				result.sort(function(a,b){ return a.time - b.time; }).reverse();
 				for(var key in result) {
-					result[key].time = moment(result[key].time).format('DD/MM/YYYY');
+					result[key].time = moment(result[key].time).format('DD.MM.YYYY');
 				}
 				cb(result);
 			}
@@ -147,4 +147,37 @@ exports.main = function(req, res) {
 			res.render('dashboard', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
 		});
 	});
+}
+
+exports.service = function(req, res) {
+  getUserAchievementsByService(req.params.service, req.session.uid, function(data){
+  	res.render('dashboard_service', { title: req.params.service, list:data });
+  });
+}
+
+// HASH IT!!
+function getUserAchievementsByService(service, uid, cb) {
+  var achivList = [];
+  db.collection('users_achievements', function(err, collection) {
+    collection.findOne({uid:uid, service:service},{achievements:1}, function(err, udoc) {
+    	db.collection('achievements', function(err, collection) {
+    		collection.find({service:service},{sort: 'position'}).toArray(function(err, doc) {
+    			cb(markedEarnedAchievements(udoc.achievements, doc));
+    		});
+    	});
+    });
+  });
+}
+
+function markedEarnedAchievements(uAch, fAch) {
+	var response = fAch;
+	for(var i in fAch) {
+		for(var r in uAch) {
+			if(uAch[r].aid == fAch[i].aid) {
+				response[i].earned = true;
+				response[i].time = moment(uAch[r].time).format('DD.MM.YYYY');
+			}
+		}
+	}
+	return response;
 }
