@@ -82,3 +82,11 @@ div.achievementInfoZone {
 div.earned_false {
   opacity: 0.5;
 }
+
+tr.table_earned_false {
+  opacity: 0.5;
+}
+
+td.td_achiv_table {
+  border-right: none;
+}

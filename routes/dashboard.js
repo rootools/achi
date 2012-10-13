@@ -151,7 +151,9 @@ exports.main = function(req, res) {
 
 exports.service = function(req, res) {
   getUserAchievementsByService(req.params.service, req.session.uid, function(data){
-  	res.render('dashboard_service', { title: req.params.service, list:data });
+    getServiceInfo(req.params.service, function(serviceInfo) {
+    	res.render('dashboard_service', { title: req.params.service, list:data, service_info:serviceInfo});
+    });
   });
 }
 
@@ -178,6 +180,18 @@ function markedEarnedAchievements(uAch, fAch) {
 				response[i].time = moment(uAch[r].time).format('DD.MM.YYYY');
 			}
 		}
+		if(!response[i].earned) {
+			response[i].earned = false;
+			response[i].time = '';
+		}
 	}
 	return response;
+}
+
+function getServiceInfo(service, cb) {
+  db.collection('services_info', function(err, collection) {
+    collection.findOne({service:service}, function(err, doc) {  
+      cb(doc);
+    });
+  });
 }

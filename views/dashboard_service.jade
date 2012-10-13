@@ -1,20 +1,20 @@
 extends layout
 
 block content
-	script(src="javascripts/dashboard_new.js")
-	div(class="grid")
-		div(class="row")
-			h4="Service Info"
-		div(class="row")
-			table
-				each item in list
-					tr
-						td(width="64px")
-							img(src=item.icon, width="64px", height="64px")
-						td
-							h3=item.name
-							div(class="body-text")=item.description
-						td(width="64px")
-							center
-								h3=item.points
-								div(class="body-text")=item.time
+  script(src="javascripts/dashboard_new.js")
+  div(class="grid")
+    div(class="row")
+      // img(src=service_info.icon)
+    div(class="row")
+      table
+        each item in list
+          tr(class='table_earned_'+item.earned)
+            td(width="64px", class="td_achiv_table")
+              img(src=item.icon, width="64px", height="64px")
+            td(class="td_achiv_table")
+              h3=item.name
+              p(class="tertiary-text")=item.description+'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+            td(width="64px")
+              center
+                h3=item.points
+                div(class="body-text")=item.time
