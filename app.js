@@ -8,6 +8,7 @@ var path = require('path');
 var authRoutes = require('./routes/auth');
 var webApi = require('./routes/webApi');
 var dashboard = require('./routes/dashboard');
+var profile = require('./routes/profile');
 var add_service = require('./routes/add_service');
 var sessionsStorage = require('connect-redis')(express);
 
@@ -37,6 +38,7 @@ app.all('/logout', authRoutes.logout);
 app.all('/webapi', webApi.routing);
 app.all('/dashboard', dashboard.main);
 app.all('/dashboard/:service', dashboard.service);
+app.all('/profile', profile.main);
 
 app.all('/add_service/vk', add_service.vk);
 app.all('/add_service/twitter', add_service.twitter);
