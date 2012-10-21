@@ -13,11 +13,15 @@ var add_service = require('./routes/add_service');
 var sessionsStorage = require('connect-redis')(express);
 
 var app = express();
+var ECT = require('ect');
+var ectRenderer = ECT({ cache: false, watch: true, root: __dirname + '/views' });
+
+app.engine('.ect', ectRenderer.render);
 
 app.configure(function(){
   app.set('port', process.env.PORT || 80);
   app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
+//  app.set('view engine', 'ect');
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());

@@ -144,7 +144,7 @@ exports.main = function(req, res) {
 				achivStat.push(tmpObj);
 			}
 			//achivStat.push({service:'main', earned: 12, full: 24});
-			res.render('dashboard', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
+			res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
 		});
 	});
 }
@@ -152,7 +152,7 @@ exports.main = function(req, res) {
 exports.service = function(req, res) {
   getUserAchievementsByService(req.params.service, req.session.uid, function(data){
     getServiceInfo(req.params.service, function(serviceInfo) {
-    	res.render('dashboard_service', { title: req.params.service, list:data, service_info:serviceInfo});
+    	res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo});
     });
   });
 }

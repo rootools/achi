@@ -34,7 +34,7 @@ exports.login = function(req, res) {
       });
     });
   } else {
-    res.render('login', { title: 'Login' });
+    res.render('login.ect', { title: 'Login' });
   }
 };
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%- @title %></title>
+    <link href="/stylesheets/style.css" rel="stylesheet" />
+    <link href="/stylesheets/modern.css" rel="stylesheet" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+  </head>
+  <body class="modern-ui">
+    <div class="page">
+      <div class="page-header">
+        <div class="page-header-content">
+          <h1><%- @title %></h1>
+        </div>
+      </div>
+      <div class="page-region">
+        <div class="page-region-content">
+          <% content %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

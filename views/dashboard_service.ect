@@ -1,0 +1,32 @@
+<% extend 'layout.ect' %>
+
+<script src="javascripts/dashboard_new.js"></script>
+
+<div class="grid">
+
+  <div class="row">
+    <h3>Service Info</h3>
+  </div>
+
+  <div class="row">
+    <table>
+      <% for item in @list : %>
+        <tr class="table_earned_<%= item.earned %>">
+          <td width="64px" class="td_achiv_table">
+            <img src="<%= item.icon %>" width="64px" height="64px">
+          </td>
+          <td class="td_achiv_table">
+            <h3><%= item.name %></h3>
+            <p class="tertiary-text"><%= item.description %></p>
+          </td>
+          <td width="64px">
+            <center>
+              <h3><%= item.points %></h3>
+              <div class="body-text"><%= item.time %></div>
+            </center>
+          </td> 
+        </tr> 
+      <% end %>
+    </table>
+  </div>
+</div>

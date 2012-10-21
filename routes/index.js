@@ -28,7 +28,7 @@ exports.index = function(req, res){
     res.redirect('http://rootools.ru/login');
   } else {
     getUserAchievements(req.session.uid, function(achivList) {    
-      res.render('index', { title: 'Express' , user: req.session.email, achivList:achivList});
+      res.render('index.ect', { title: 'main' , user: req.session.email, achivList:achivList});
     });
   }
 };
