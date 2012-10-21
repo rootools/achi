@@ -1,0 +1,23 @@
+<% extend 'layout.ect' %>
+
+<div class="grid">
+  <div class="row">
+    <h3>User Info</h3>
+  </div>
+  <div class="row">
+    <button class="bg-color-blue" id="services_list">Services</button>
+    <button class="bg-color-blue" id="friends_list" disabled>Friends</button>
+  </div>
+  <div class="row">
+    <div class="profile_friends_container">
+      <table>
+        <th>Service</th><th>Updated</th>
+        <% for row in @service_list : %>
+          <tr>
+            <td><h3><%= row.service %></h3></td>
+            <td><%= row.lastupdate %></td>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>
