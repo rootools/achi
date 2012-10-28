@@ -140,8 +140,10 @@ exports.main = function(req, res) {
 				tmpObj.earned = achivList[i].achievements.length;
 				tmpObj.full = allAchievements[achivList[i].service+'_count'];
 				tmpObj.earnedPoints = points[achivList[i].service];
+          if(tmpObj.earnedPoints == undefined) {tmpObj.earnedPoints = 0;}
 				tmpObj.fullPoints = allAchievements[achivList[i].service+'_points'];
 				achivStat.push(tmpObj);
+        console.log(tmpObj);
 			}
 			//achivStat.push({service:'main', earned: 12, full: 24});
 			res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });

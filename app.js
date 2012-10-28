@@ -44,7 +44,7 @@ app.all('/dashboard', dashboard.main);
 app.all('/dashboard/:service', dashboard.service);
 app.all('/profile', profile.main);
 
-app.all('/add_service/vk', add_service.vk);
+app.all('/add_service/vkontakte', add_service.vk);
 app.all('/add_service/twitter', add_service.twitter);
 app.all('/add_service/facebook', add_service.facebook);
 

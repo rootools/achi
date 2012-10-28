@@ -29,13 +29,13 @@ mongoConnect();
 
 exports.vk = function(req, res) {
   if(!req.query.code) {
-    res.redirect('http://oauth.vk.com/authorize?client_id=3126840&scope=notify,friends,photos,audio,video,status,wall,groups,notifications,offline&display=popup&response_type=code&tt=12&redirect_uri=http://rootools.ru/add_service/vk');
+    res.redirect('http://oauth.vk.com/authorize?client_id=3126840&scope=notify,friends,photos,audio,video,status,wall,groups,notifications,offline&display=popup&response_type=code&tt=12&redirect_uri=http://rootools.ru/add_service/vkontakte');
   } 
   if(req.query.code) {
     var options = {
       host: 'oauth.vk.com',
       method: 'GET',
-      path: '/access_token?client_id=3126840&client_secret=nlKuMIbXcEV6HqLn1W1n&code='+req.query.code+'&redirect_uri=http://rootools.ru/add_service/vk&'
+      path: '/access_token?client_id=3126840&client_secret=nlKuMIbXcEV6HqLn1W1n&code='+req.query.code+'&redirect_uri=http://rootools.ru/add_service/vkontakte&'
     };
 
     var callback = function(response) {
@@ -58,7 +58,6 @@ exports.vk = function(req, res) {
 }
 
 exports.twitter = function(req, res) {
-  console.log(req.query);
   if(req.query.oauth_token) {
     twitterOA.getOAuthAccessToken(req.query.oauth_token, req.session.request_twitter_oauth_token_secret, req.query.oauth_verifier, function(err, oauth_token, oauth_token_secret, results) {
       var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };

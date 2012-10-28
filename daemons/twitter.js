@@ -14,10 +14,9 @@ var twitterOA = new oauth(
 );
 
 http.createServer(function (req, res) {
-
   var query = url.parse(req.url, true).query;
 
-  twitterOA.get('http://twitter.com/account/verify_credentials.json', query.oauth_token, query.oauth_token_secret, function(err, data) {
+  twitterOA.get('https://api.twitter.com/1.1/account/verify_credentials.json', query.oauth_token, query.oauth_token_secret, function(err, data) {
     data = JSON.parse(data);
 
     var profile = {};

@@ -11,11 +11,17 @@
   <div class="row">
     <div class="profile_friends_container">
       <table>
-        <th>Service</th><th>Updated</th>
+        <th>Service</th><th>Updated</th><th>Added time</th><th>Action</th>
         <% for row in @service_list : %>
           <tr>
             <td><h3><%= row.service %></h3></td>
             <td><%= row.lastupdate %></td>
+            <td><%= row.addtime %></td>
+            <% if row.addtime : %>
+              <td><button disabled class="bg-color-blue">Add</button></td>
+            <% else : %>
+              <td><a href="/add_service/<%= row.service %>"><button class="bg-color-blueDark">Add</button></a></td>
+            <% end %>
         <% end %>
       </table>
     </div>
