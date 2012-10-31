@@ -1,5 +1,55 @@
-<% extend 'layout.ect' %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%- @title %></title>
+    <link href="/stylesheets/style.css" rel="stylesheet" />
+    <link href="/stylesheets/modern.css" rel="stylesheet" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
+  </head>
+  <body class="modern-ui">
+    <div class="page">
+      <div class="page-header">
+        <div class="page-header-content">
+        </div>
+      </div>
+      <div class="page-region">
+        <div class="page-region-content">
+          <div class="grid">
+            <div class="row">
+              <div class="span2"></div>
+              <div class="tile double bg-color-blue login-or-reg" id="login">
+                <div class="tile-content">
+                  <h2>Login</h2>
+                </div>
+                <div class="brand">
+                  <span class="name">Online</span>
+                  <span class="badge">0</span>
+                </div>
+              </div>
+              <div class="tile double bg-color-green login-or-reg" id="register">
+                <div class="tile-content">
+                  <h2>Register</h2>
+                </div>
+                <div class="brand">
+                  <span class="name">Registered</span>
+                  <span class="badge">0</span>
+                </div>
+              </div>              
+            </div>
+            <div class="row">
+              <div class="span2"></div>
+              <div id="login-form"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/javascripts/login.js"></script>
+  </body>
+</html>
 
+
+<!--
 <center>
   <div id="loginForm">
     <form class="loginForm" method="POST" action="/login">
@@ -13,3 +63,4 @@
     </form>
   </div>
 </center>
+-->

@@ -17,7 +17,7 @@ var db;
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
-    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true}),
+    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true, safe: false}),
     db_connector = new mongodb.Db('achi', mongoserver, '');
 
   db_connector.open(function(err, dbs) {

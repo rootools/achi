@@ -7,6 +7,14 @@
   },
   "dependencies": {
     "express": "3.0.0rc3",
-    "jade": "*"
+    "async": "*",
+    "connect-redis": "*",
+    "ect": "*",
+    "moment": "*",
+    "mongodb": "*",
+    "oauth": "*",
+    "password-hash": "*",
+    "redis": "*",
+    "vkontakte": "*"
   }
 }

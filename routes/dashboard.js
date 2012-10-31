@@ -7,7 +7,7 @@ var db;
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
-    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true}),
+    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true, safe: false}),
     db_connector = new mongodb.Db('achi', mongoserver, '');
 
   db_connector.open(function(err, dbs) {
@@ -143,7 +143,6 @@ exports.main = function(req, res) {
           if(tmpObj.earnedPoints == undefined) {tmpObj.earnedPoints = 0;}
 				tmpObj.fullPoints = allAchievements[achivList[i].service+'_points'];
 				achivStat.push(tmpObj);
-        console.log(tmpObj);
 			}
 			//achivStat.push({service:'main', earned: 12, full: 24});
 			res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
