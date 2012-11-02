@@ -14,7 +14,7 @@ var sessionsStorage = require('connect-redis')(express);
 
 var app = express();
 var ECT = require('ect');
-var ectRenderer = ECT({ cache: false, watch: true, root: __dirname + '/views' });
+var ectRenderer = ECT({ cache: false, watch: false, root: __dirname + '/views' });
 
 app.engine('.ect', ectRenderer.render);
 

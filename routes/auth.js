@@ -15,12 +15,12 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
-  if(req.session.auth && req.session.auth == true) {
-    res.redirect('http://rootools.ru/');
-  }
+  db.collection('users', function(err,collection) {
+    if(req.session.auth && req.session.auth == true) {
+      res.redirect('http://rootools.ru/');
+    }
 
-  if(req.body.loginEmail && req.body.loginPass) {
-    db.collection('users', function(err,collection) {
+    if(req.body.loginEmail && req.body.loginPass) {
       collection.findOne({email: req.body.loginEmail}, function(err, doc) {
         var checkPassword = passwordHash.verify(req.body.loginPass, doc.password);
         if(checkPassword == true) {
@@ -29,14 +29,34 @@ exports.login = function(req, res) {
           req.session.email = doc.email;
           res.redirect('http://rootools.ru/');
         } else {
-          res.render('login', { title: 'Login' });
+          res.render('login.ect', { title: 'Login' });
         }
       });
-    });
-  } else {
-    res.render('login.ect', { title: 'Login' });
-  }
+    } else if(req.body.regEmail && req.body.regPass && req.body.regPassVerify) {
+      testUser(req.body.regEmail, function(flag) {
+        if(flag == true) {
+
+        } else {
+          res.render('login.ect', { title: 'Login', error: 'This E-mail allready register' });
+        } 
+      });
+    } else {
+      res.render('login.ect', { title: 'Login' });
+    }
+  });
 };
+
+function testUser(email, cb) {
+  db.collection('users', function(err,collection) {
+    collection.findOne({email: email}, function(err, doc) {
+      if(doc != null) { 
+        cb(false);
+      } else {
+        cb(true);
+      }
+    });
+  });  
+}
 
 exports.logout = function(req, res) {
   req.session.auth = false;
