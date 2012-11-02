@@ -37,11 +37,7 @@
               </div>              
             </div>
             <div class="row">
-              <% if @error : %>
-                <div id="error_show">
-                  <strong class="fg-color-red"><%- @error %></strong>
-                </div>
-              <% end %>
+              <div id="error_show" />
               <div id="login-form"></div>
             </div>
           </div>
@@ -51,20 +47,3 @@
     <script src="/javascripts/login.js"></script>
   </body>
 </html>
-
-
-<!--
-<center>
-  <div id="loginForm">
-    <form class="loginForm" method="POST" action="/login">
-      <div class="input-control text">
-        <input type="input" class="loginForm" name="loginEmail">
-      </div>
-      <div class="input-control password">
-        <input type="password" class="loginForm" name="loginPass">
-      </div>
-      <input type="submit" value="Submit" id="loginFormSubmitButton">
-    </form>
-  </div>
-</center>
--->

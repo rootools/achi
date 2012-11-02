@@ -15,26 +15,27 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
+  
   db.collection('users', function(err,collection) {
-    if(req.session.auth && req.session.auth == true) {
+    if(req.session.auth && req.session.auth === true) {
       res.redirect('http://rootools.ru/');
     }
 
     if(req.body.loginEmail && req.body.loginPass) {
       collection.findOne({email: req.body.loginEmail}, function(err, doc) {
         var checkPassword = passwordHash.verify(req.body.loginPass, doc.password);
-        if(checkPassword == true) {
+        if(checkPassword === true) {
           req.session.auth = true;
           req.session.uid = doc.uid;
           req.session.email = doc.email;
-          res.redirect('http://rootools.ru/');
+          res.end({a:1});
         } else {
-          res.render('login.ect', { title: 'Login', error: 'Incorrect E-mail or Password' });
+          res.end(JSON.stringify({error: 'Error in E-mail or password'}));
         }
       });
     } else if(req.body.regEmail && req.body.regPass && req.body.regPassVerify) {
       testUser(req.body.regEmail, function(flag) {
-        if(flag == true) {
+        if(flag === true) {
 
         } else {
           res.render('login.ect', { title: 'Login', error: 'This E-mail allready register' });
@@ -49,7 +50,7 @@ exports.login = function(req, res) {
 function testUser(email, cb) {
   db.collection('users', function(err,collection) {
     collection.findOne({email: email}, function(err, doc) {
-      if(doc != null) { 
+      if(doc !== null) { 
         cb(false);
       } else {
         cb(true);
