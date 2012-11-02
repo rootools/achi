@@ -94,3 +94,7 @@ tr.table_earned_false {
 td.td_achiv_table {
   border-right: none;
 }
+
+div#error_show {
+  text-align: center;
+}
