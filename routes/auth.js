@@ -29,7 +29,7 @@ exports.login = function(req, res) {
           req.session.email = doc.email;
           res.redirect('http://rootools.ru/');
         } else {
-          res.render('login.ect', { title: 'Login' });
+          res.render('login.ect', { title: 'Login', error: 'Incorrect E-mail or Password' });
         }
       });
     } else if(req.body.regEmail && req.body.regPass && req.body.regPassVerify) {

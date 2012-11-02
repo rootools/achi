@@ -32,5 +32,9 @@ $(function() {
     formZone.innerHTML = html;
   });
 
+  $('.close-error-button').click(function() {
+    $('.error-bar').remove();
+  });
+  
 });
 

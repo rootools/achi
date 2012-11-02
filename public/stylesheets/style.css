@@ -7,6 +7,10 @@ div.page {
   width: 984px;
 }
 
+div.login-error-bar {
+  height: 100px;
+}
+
 div#loginForm {
   width: 300px;
 }

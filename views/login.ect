@@ -11,6 +11,10 @@
       <div class="page-header">
         <div class="page-header-content">
           <% if @error : %>
+            <div class="error-bar bg-color-red">
+              <p><%- @error %></p>
+              <button class="place-right close-error-button">Close</button>
+            </div>
           <% end %>
         </div>
       </div>
@@ -40,6 +44,11 @@
             </div>
             <div class="row">
               <div class="span2"></div>
+              <% if @error : %>
+                <div id="error-show">
+                  <i class="icon-warning place-left"></i><strong class="fg-color-red"><%- @error %></strong>
+                </div>
+              <% end %>
               <div id="login-form"></div>
             </div>
           </div>
