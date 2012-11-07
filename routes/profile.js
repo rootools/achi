@@ -26,7 +26,7 @@ function getServiceList(uid, cb) {
     },
     added: function(callback) {
       db.collection('services_connections', function(err, collection) {
-        collection.find({}, {service:1, addtime:1, valid:1, lastupdate:1}).toArray(function(err, doc) {
+        collection.find({uid: uid}, {service:1, addtime:1, valid:1, lastupdate:1}).toArray(function(err, doc) {
           callback(null, doc);
         });
       });
@@ -51,4 +51,4 @@ exports.main = function(req, res) {
   getServiceList(req.session.uid, function(service_list) {
     res.render('profile.ect', { title: 'Profile', service_list:service_list} );
   });
-}
+};

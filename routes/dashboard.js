@@ -1,5 +1,3 @@
-var hd = require('hero-data');
-var passwordHash = require('password-hash');
 var moment = require('moment');
 var async = require('async');
 
@@ -19,7 +17,6 @@ mongoConnect();
 
 // HASH IT!!
 function getUserAchievements(uid, cb) {
-  var achivList = {};
   db.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
     	getLatestAchievements(doc, function(last) {
@@ -44,7 +41,7 @@ function getUserAchievementsPoints(data, cb) {
 		}
 	}
 
-	var handler = aids.length
+	var handler = aids.length;
 
 	function callback(aid) {
 		db.collection('achievements', function(err, collection) {
@@ -119,8 +116,8 @@ function getLatestAchievements(data, cb) {
 				}
 				cb(result);
 			}
-		}
-	}
+		};
+	};
 
 	db.collection('achievements', function(err, collection) {
 		for(var key in lastAchivArray) {
@@ -148,7 +145,7 @@ exports.main = function(req, res) {
 			res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
 		});
 	});
-}
+};
 
 exports.service = function(req, res) {
   getUserAchievementsByService(req.params.service, req.session.uid, function(data){
@@ -156,11 +153,10 @@ exports.service = function(req, res) {
     	res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo});
     });
   });
-}
+};
 
 // HASH IT!!
 function getUserAchievementsByService(service, uid, cb) {
-  var achivList = [];
   db.collection('users_achievements', function(err, collection) {
     collection.findOne({uid:uid, service:service},{achievements:1}, function(err, udoc) {
     	db.collection('achievements', function(err, collection) {

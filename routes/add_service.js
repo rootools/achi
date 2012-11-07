@@ -50,12 +50,12 @@ exports.vk = function(req, res) {
         delete data.expires_in;
         add_service(req.session, data, 'vkontakte');
       });
-    }
+    };
 
     https.request(options, callback).end();
-    res.redirect('http://rootools.ru');
+    res.redirect('http://rootools.ru/profile');
   }
-}
+};
 
 exports.twitter = function(req, res) {
   if(req.query.oauth_token) {
@@ -63,7 +63,7 @@ exports.twitter = function(req, res) {
       var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };
       add_service(req.session, data, 'twitter');
       delete req.session.twitter_request_oauth_token_secret;
-      res.redirect('http://rootools.ru/');
+      res.redirect('http://rootools.ru/profile');
     });
   } else {
 
@@ -101,7 +101,7 @@ exports.facebook = function(req, res) {
     }
 
     https.request(options, callback).end();
-    res.redirect('http://rootools.ru/');
+    res.redirect('http://rootools.ru/profile');
   }
 }
 
@@ -109,7 +109,7 @@ function add_service(session, account, service) {
   testService(session.uid, service, function(check) {
     db.collection('services_connections', function(err,collection) {
     db.collection('users_achievements', function(err, ua_collection) {
-      if(check == true) {
+      if(check === true) {
         collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {});
         ua_collection.insert({uid:session.uid, service:service, achievements: []}, function(err, doc) {});
       } else {
@@ -125,7 +125,7 @@ function testService(uid, service, cb) {
   db.collection('users_achievements', function(ua_err, ua_collection) {
     sc_collection.findOne({uid: uid, service:service}, function(sc_err, sc_doc) {
     ua_collection.findOne({uid: uid, service:service}, function(ua_err, ua_doc) {
-      if(sc_err == null && sc_doc == null && ua_err == null && ua_doc == null) {
+      if(sc_err === null && sc_doc === null && ua_err === null && ua_doc === null) {
         cb(true);
       } else {
         cb(false);
