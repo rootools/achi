@@ -49,6 +49,6 @@ function getServiceList(uid, cb) {
 
 exports.main = function(req, res) {
   getServiceList(req.session.uid, function(service_list) {
-    res.render('profile.ect', { title: 'Profile', service_list:service_list} );
+    res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session} );
   });
 };

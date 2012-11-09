@@ -7,8 +7,27 @@ div.page {
   width: 984px;
 }
 
-div.login-error-bar {
-  height: 100px;
+/*
+Menu bar block
+*/
+
+i {
+  margin-right: 5px;
+}
+
+
+div#login_zone {
+  z-index: 999;
+  position: relative;
+  float: right;
+  width: 50%;
+  padding: 10px;
+  display: none;
+}
+
+
+div#error_show {
+  margin-bottom: 10px;
 }
 
 div#loginForm {

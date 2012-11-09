@@ -1,4 +1,3 @@
-var hd = require('hero-data');
 var passwordHash = require('password-hash');
 var db;
 
@@ -15,7 +14,6 @@ function mongoConnect() {
 mongoConnect();
 
 function getUserAchievements(uid, cb) {
-  var achivList = {};
   db.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
       cb(doc);
@@ -24,11 +22,12 @@ function getUserAchievements(uid, cb) {
 }
 
 exports.index = function(req, res){
-  if(!req.session.auth || req.session.auth == false) {
-    res.redirect('http://rootools.ru/login');
+  if(!req.session.auth || req.session.auth === false) {
+    //res.redirect('http://rootools.ru/login');
+    res.render('index.ect', { title: 'main', session: req.session});
   } else {
     getUserAchievements(req.session.uid, function(achivList) {    
-      res.render('index.ect', { title: 'main' , user: req.session.email, achivList:achivList});
+      res.render('index.ect', { title: 'main' , session: req.session, achivList:achivList});
     });
   }
 };

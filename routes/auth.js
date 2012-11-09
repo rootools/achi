@@ -71,5 +71,5 @@ function registerUser(email, pass) {
 
 exports.logout = function(req, res) {
   req.session.auth = false;
-  res.redirect('http://rootools.ru/login');
+  res.redirect('http://rootools.ru/');
 };

@@ -12,12 +12,25 @@
         <div class="page-header-content">
           <h1><%- @title %></h1>
           <div class="horizontal-menu bg-color-white">
+            <% if @session.auth : %>
             <ul class="place-right">
               <li><a href="/"><i class="icon-home"></i>main</a></li>
               <li><a href="/dashboard"><i class="icon-thumbnail-view"></i>dashboard</a></li>
               <li><a href="/profile"><i class="icon-windows-8-login"></i>profile</a></li>
             </ul>
+            <% else : %>
+            <ul class="place-right">
+              <li><a href="/"><i class="icon-home"></i>main</a></li>
+              <li class="login_or_register" id="login"><a href="#"><i class="icon-enter"></i>login</a></li>
+              <li class="login_or_register" id="register"><a href="#"><i class="icon-key"></i>register</a></li>
+            </ul>
+            <script src="/javascripts/login2.js"></script>
+            <% end %>
           </div>
+          <% if @session.auth : %>
+          <% else : %>
+            <div id="login_zone"></div>
+          <% end %>
         </div>
       </div>
       <div class="page-region">

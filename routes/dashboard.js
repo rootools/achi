@@ -19,10 +19,10 @@ mongoConnect();
 function getUserAchievements(uid, cb) {
   db.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
-    	getLatestAchievements(doc, function(last) {
-    		getUserAchievementsPoints(doc, function(points) {
-    			cb(doc, last, points);
-    		});
+      getLatestAchievements(doc, function(last) {
+        getUserAchievementsPoints(doc, function(points) {
+          cb(doc, last, points);
+        });
       });
     });
   });
@@ -34,30 +34,32 @@ function getUserAchievementsPoints(data, cb) {
 	var aids = [];
 
 	for(var i in data) {
-		var serv_obj = {name:'', points: 0};
-
 		for(var r in data[i].achievements) {
 			aids.push(data[i].achievements[r].aid);
 		}
 	}
 
-	var handler = aids.length;
+  if(aids.length === 0) {
+    cb([]);
+  }
+
+  var handler = aids.length;
 
 	function callback(aid) {
 		db.collection('achievements', function(err, collection) {
 			collection.findOne({aid:aid},{service: 1, points:1}, function(err, doc) {
 				pointsList.push({service:doc.service, points: doc.points});
 				handler--;
-				if(handler == 0) {
+				if(handler === 0) {
 					var response = {};
 					for(var j in pointsList) {
-						if(response[pointsList[j].service] != undefined) {
+						if(response[pointsList[j].service] !== undefined) {
 							response[pointsList[j].service] += pointsList[j].points;
 						} else {
 							response[pointsList[j].service] = pointsList[j].points;							
 						}
 					}
-					cb(response);
+          cb(response);
 				}
 			});
 		});
@@ -74,7 +76,7 @@ function getAllAchievementsCount(cb) {
 	db.collection('achievements', function(err, collection) {
 		collection.find({},{service: 1, points:1}).toArray(function(err, doc) {
 			for(var i=0;i<doc.length;i++){
-				if(result[doc[i].service+'_count'] != undefined) {
+				if(result[doc[i].service+'_count'] !== undefined) {
 					result[doc[i].service+'_count'] += 1;
 					result[doc[i].service+'_points'] += doc[i].points;
 				} else {
@@ -90,7 +92,8 @@ function getAllAchievementsCount(cb) {
 // HASH IT!!
 // return 'name', 'icon', 'service', 'time' and 'points' of last 6 achievenments
 function getLatestAchievements(data, cb) {
-	var achivArray = [];
+
+  var achivArray = [];
 	for(var key in data) {
 		var array = data[key].achievements;
 		for(var inKey in array) {
@@ -98,7 +101,11 @@ function getLatestAchievements(data, cb) {
 		}
 	}
 
-	achivArray.sort(function(a,b){ return a.time - b.time; }).reverse();
+  if(achivArray.length === 0) {
+    cb([]);
+  }
+
+  achivArray.sort(function(a,b){ return a.time - b.time; }).reverse();
 	var lastAchivArray = achivArray.slice(0, 6);
 
 	var result = [];
@@ -109,7 +116,7 @@ function getLatestAchievements(data, cb) {
 		return function(err, doc) {
 			result.push({time:lastAchivArray[i].time, points:doc.points, icon:doc.icon, name:doc.name, service:doc.service});
 			handler--;
-			if(handler == 0) {
+			if(handler === 0) {
 				result.sort(function(a,b){ return a.time - b.time; }).reverse();
 				for(var key in result) {
 					result[key].time = moment(result[key].time).format('DD.MM.YYYY');
@@ -137,12 +144,12 @@ exports.main = function(req, res) {
 				tmpObj.earned = achivList[i].achievements.length;
 				tmpObj.full = allAchievements[achivList[i].service+'_count'];
 				tmpObj.earnedPoints = points[achivList[i].service];
-          if(tmpObj.earnedPoints == undefined) {tmpObj.earnedPoints = 0;}
+          if(tmpObj.earnedPoints === undefined) {tmpObj.earnedPoints = 0;}
 				tmpObj.fullPoints = allAchievements[achivList[i].service+'_points'];
 				achivStat.push(tmpObj);
 			}
 			//achivStat.push({service:'main', earned: 12, full: 24});
-			res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray });
+			res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session });
 		});
 	});
 };
@@ -150,7 +157,7 @@ exports.main = function(req, res) {
 exports.service = function(req, res) {
   getUserAchievementsByService(req.params.service, req.session.uid, function(data){
     getServiceInfo(req.params.service, function(serviceInfo) {
-    	res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo});
+      res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo, session: req.session});
     });
   });
 };
@@ -159,11 +166,11 @@ exports.service = function(req, res) {
 function getUserAchievementsByService(service, uid, cb) {
   db.collection('users_achievements', function(err, collection) {
     collection.findOne({uid:uid, service:service},{achievements:1}, function(err, udoc) {
-    	db.collection('achievements', function(err, collection) {
-    		collection.find({service:service},{sort: 'position'}).toArray(function(err, doc) {
-    			cb(markedEarnedAchievements(udoc.achievements, doc));
-    		});
-    	});
+      db.collection('achievements', function(err, collection) {
+        collection.find({service:service},{sort: 'position'}).toArray(function(err, doc) {
+          cb(markedEarnedAchievements(udoc.achievements, doc));
+        });
+      });
     });
   });
 }
