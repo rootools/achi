@@ -15,8 +15,9 @@
             <% if @session.auth : %>
             <ul class="place-right">
               <li><a href="/"><i class="icon-home"></i>main</a></li>
-              <li><a href="/dashboard"><i class="icon-thumbnail-view"></i>dashboard</a></li>
-              <li><a href="/profile"><i class="icon-windows-8-login"></i>profile</a></li>
+              <li><a href="/dashboard"><i class="icon-gift"></i>dashboard</a></li>
+              <li><a href="/profile"><i class="icon-user"></i>profile</a></li>
+              <li><a href="/logout"><i class="icon-exit"></i>logout</a></li>
             </ul>
             <% else : %>
             <ul class="place-right">
@@ -24,7 +25,7 @@
               <li class="login_or_register" id="login"><a href="#"><i class="icon-enter"></i>login</a></li>
               <li class="login_or_register" id="register"><a href="#"><i class="icon-key"></i>register</a></li>
             </ul>
-            <script src="/javascripts/login2.js"></script>
+            <script src="/javascripts/login.js"></script>
             <% end %>
           </div>
           <% if @session.auth : %>

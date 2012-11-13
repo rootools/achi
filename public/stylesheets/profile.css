@@ -1,0 +1,8 @@
+.find_bar {
+  position: relative;
+  float: left;
+}
+
+input#input_find_friend {
+  margin-left: 4px;
+}
