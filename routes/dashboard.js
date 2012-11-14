@@ -47,7 +47,7 @@ function getUserAchievementsPoints(data, cb) {
 
 	function callback(aid) {
 		db.collection('achievements', function(err, collection) {
-			collection.findOne({aid:aid},{service: 1, points:1}, function(err, doc) {
+			collection.findOne({aid:aid},{service: 1, points:1, _id:0}, function(err, doc) {
 				pointsList.push({service:doc.service, points: doc.points});
 				handler--;
 				if(handler === 0) {
@@ -199,3 +199,5 @@ function getServiceInfo(service, cb) {
     });
   });
 }
+
+exports.getUserAchievements = getUserAchievements;

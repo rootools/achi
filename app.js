@@ -10,6 +10,8 @@ var webApi = require('./routes/webApi');
 var dashboard = require('./routes/dashboard');
 var profile = require('./routes/profile');
 var add_service = require('./routes/add_service');
+var upload = require('./routes/upload');
+
 var sessionsStorage = require('connect-redis')(express);
 
 var app = express();
@@ -43,6 +45,7 @@ app.all('/webapi', webApi.routing);
 app.all('/dashboard', dashboard.main);
 app.all('/dashboard/:service', dashboard.service);
 app.all('/profile', profile.main);
+app.all('/upload', upload.main);
 
 app.all('/add_service/vkontakte', add_service.vk);
 app.all('/add_service/twitter', add_service.twitter);

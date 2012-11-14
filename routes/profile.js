@@ -2,6 +2,8 @@ var async = require('async');
 var moment = require('moment');
 var db;
 
+var dashboard = require('./dashboard.js');
+
 function mongoConnect() {
   var mongodb = require("mongodb"),
     mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true, safe: false}),
@@ -47,8 +49,20 @@ function getServiceList(uid, cb) {
     });
 }
 
+function pointsSum(uid, cb) {
+  dashboard.getUserAchievements(uid, function(doc, last, data) {
+    var sum = 0;
+    for(var i in data) {
+      sum += data[i];
+    }
+    cb(sum);
+  });
+}
+
 exports.main = function(req, res) {
-  getServiceList(req.session.uid, function(service_list) {
-    res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session} );
+  pointsSum(req.session.uid, function(points) {
+    getServiceList(req.session.uid, function(service_list) {
+      res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, uid: req.session.uid} );
+    });
   });
 };
