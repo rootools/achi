@@ -1,5 +1,4 @@
-var hd = require('hero-data');
-var passwordHash = require('password-hash');
+var dashboard = require('./dashboard.js');
 var db;
 
 function mongoConnect() {
@@ -15,7 +14,7 @@ function mongoConnect() {
 mongoConnect();
 
 function routing(req, res) {
-  if(req.session.auth == true) {
+  if(req.session.auth === true) {
     try {
       var runFunc = eval(req.body.action);
       runFunc(req, res);
@@ -46,7 +45,7 @@ function addService(req, res) {
 function testService(uid, service, cb) {
   db.collection('services_connections', function(err,collection) {
     collection.findOne({uid: uid, service:service}, function(err, doc) {
-      if(err == null && doc == null) {
+      if(err === null && doc === null) {
         cb(true);
       } else {
         cb(false);
@@ -73,11 +72,32 @@ function userAchievementsList(req, res) {
 
 
 function errorist(res, errS, normalS) {
-  if(err != null) {
+  if(err !== null) {
     res.end(errS);
   } else {
     res.end(normalS);
   }
+}
+
+function find_by_email(req, res) {
+  var email = req.body.email;
+  db.collection('users', function(err,collection) {
+    collection.findOne({email: email},{uid: 1, _id: 0, email: email}, function(err, doc) {
+      if(doc === null) {
+        res.end(JSON.stringify({error: 'Did not match'}));
+      } else {
+        dashboard.getUserAchievements(doc.uid, function(smth, last, data) {
+          var sum = 0;
+          for(var i in data) {
+            sum += data[i];
+          }
+          doc.points = sum;
+          doc.last = last[0].name;
+          res.end(JSON.stringify(doc));
+        });
+      }
+    });
+  });
 }
 
 exports.routing = routing;

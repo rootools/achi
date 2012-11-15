@@ -108,7 +108,7 @@ function getLatestAchievements(data, cb) {
   achivArray.sort(function(a,b){ return a.time - b.time; }).reverse();
 	var lastAchivArray = achivArray.slice(0, 6);
 
-	var result = [];
+  var result = [];
 
 	var handler = lastAchivArray.length;
 
