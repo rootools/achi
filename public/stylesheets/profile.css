@@ -22,11 +22,11 @@
   float: left;
 }
 
-#input_find_friend, #input_me_edit_image_url {
+#input_find_friend, #button_clear_find_friend {
   margin-left: 4px;
 }
 
-#process_info, #error_search_friends_result {
+#error_search_friends_result {
   position: relative;
   float: left;
   margin-top: 5px;
@@ -39,4 +39,8 @@
 
 #add_friend_tile_points {
   margin-bottom: 14px;
+}
+
+#me_edit_info {
+  margin-bottom: 10px;
 }

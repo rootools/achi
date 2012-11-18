@@ -2,6 +2,19 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 var easyimg = require('easyimage');
+var db;
+
+function mongoConnect() {
+  var mongodb = require("mongodb"),
+    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true, safe: false, strict: false}),
+    db_connector = new mongodb.Db('achi', mongoserver, '');
+
+  db_connector.open(function(err, dbs) {
+    db = dbs;
+  });
+}
+
+mongoConnect();
 
 function upload_profile_photo_from_url(download_url, uid, cb) {
   var dir = './public/images/users_photo/';
@@ -18,14 +31,34 @@ function upload_profile_photo_from_url(download_url, uid, cb) {
   http.get(options, function(res) {
     res.on('data', function(data) {
       file.write(data);
-    }).on('end', function() {
+    });
+    
+    res.on('end', function() {
       file.end();
       convertImage(dir, file_name, uid, function(status) {
-        cb({});
+        write_to_db(uid, function(status) {
+          cb({});
+        });
       });
     });
-  });
   
+  });
+}
+
+function write_to_db(uid, cb) {
+  db.collection('users_profile', function(err,profile) {
+    profile.findOne({uid: uid}, function(err, doc) {
+      if(doc === null) {
+        profile.insert({uid: uid, photo: '/images/users_photo/'+uid+'.jpg'}, function(err, doc) {
+          cb({});
+        });
+      } else {
+        profile.update({uid: uid},{$set: {photo: '/images/users_photo/'+uid+'.jpg'}}, function(err, doc) {
+          cb({});
+        });
+      }
+    });
+  });
 }
 
 function convertImage(dir, file_name, uid, cb) {

@@ -598,7 +598,7 @@ table {
   color: #2d89ef !important;
 }
 .fg-color-blueLight {
-  color: #44a3aa !important;
+  color: #eff4ff !important;
 }
 .fg-color-blueDark {
   color: #2b5797 !important;
@@ -636,6 +636,9 @@ table {
 .fg-color-darken {
   color: #1d1d1d !important;
 }
+.fg-color-lighten {
+  color: #d5e7ec !important;
+}
 .fg-color-white {
   color: #ffffff !important;
 }
@@ -646,7 +649,7 @@ table {
   background-color: #2d89ef !important;
 }
 .bg-color-blueLight {
-  background-color: #44a3aa !important;
+  background-color: #eff4ff !important;
 }
 .bg-color-blueDark {
   background-color: #2b5797 !important;
@@ -684,6 +687,9 @@ table {
 .bg-color-darken {
   background-color: #1d1d1d !important;
 }
+.bg-color-lighten {
+  background-color: #d5e7ec !important;
+}
 .bg-color-white {
   background-color: #ffffff !important;
 }
@@ -697,7 +703,7 @@ table {
   border-color: #2d89ef !important;
 }
 .border-color-blueLight {
-  border-color: #44a3aa !important;
+  border-color: #eff4ff !important;
 }
 .border-color-blueDark {
   border-color: #2b5797 !important;
@@ -735,6 +741,9 @@ table {
 .border-color-darken {
   border-color: #1d1d1d !important;
 }
+.border-color-lighten {
+  border-color: #d5e7ec !important;
+}
 .border-color-white {
   border-color: #ffffff !important;
 }
@@ -748,7 +757,7 @@ table {
   outline-color: #2d89ef !important;
 }
 .outline-color-blueLight {
-  outline-color: #44a3aa !important;
+  outline-color: #eff4ff !important;
 }
 .outline-color-blueDark {
   outline-color: #2b5797 !important;
@@ -786,6 +795,9 @@ table {
 .outline-color-darken {
   outline-color: #1d1d1d !important;
 }
+.outline-color-lighten {
+  outline-color: #d5e7ec !important;
+}
 .outline-color-white {
   outline-color: #ffffff !important;
 }
@@ -817,6 +829,9 @@ License:	CC BY-SA 3.0 -- http://creativecommons.org/licenses/by-sa/3.0/
   content: attr(data-icon);
   speak: none;
   font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
   -webkit-font-smoothing: antialiased;
 }
 /* Use the following CSS code if you want to have a class per icon */
@@ -826,7 +841,29 @@ License:	CC BY-SA 3.0 -- http://creativecommons.org/licenses/by-sa/3.0/
   font-style: normal;
   speak: none;
   font-weight: normal;
+  display: inline-block;
+  text-decoration: inherit;
+  margin: 0 2px;
   -webkit-font-smoothing: antialiased;
+}
+.icon-large:before {
+  vertical-align: middle;
+  font-size: 1.3333333333333332em;
+  margin-top: -8px;
+}
+button.mini,
+.button.mini {
+  font-size: .9em !important;
+}
+li [class^="icon-"],
+li [class*=" icon-"] {
+  display: inline-block;
+  width: 1.25em;
+  text-align: center;
+}
+li .icon-large:before,
+li .icon-large:before {
+  width: 1.875em;
 }
 .icon-home:before {
   content: "\21";
@@ -1866,20 +1903,17 @@ License:	CC BY-SA 3.0 -- http://creativecommons.org/licenses/by-sa/3.0/
   width: 310px;
   height: 150px;
 }
+/*
 .badge {
-  position: relative;
-  margin: 0 10px 10px 0;
-  display: block;
-  float: none !important;
-  width: 35px;
-  height: 30px;
-  padding-top: 5px;
-  font-family: 'Segoe UI', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
-  font-weight: 400;
-  font-size: 9pt;
-  color: #1d1d1d;
-  text-align: center;
+    .brick;
+    width: @subunit*7;
+    height: @subunit*6;
+    padding-top: @subunit;
+    #font > .control;
+    color: @darken;
+    text-align: center;
 }
+*/
 .square {
   display: block;
   float: left;
@@ -2077,29 +2111,29 @@ License:	CC BY-SA 3.0 -- http://creativecommons.org/licenses/by-sa/3.0/
   color: rgba(0, 0, 0, 0.4);
 }
 #state .link {
-  color: #4f1acb;
+  color: #2e92cf;
 }
 #state .link:hover {
-  color: rgba(79, 26, 203, 0.8);
+  color: rgba(45, 173, 237, 0.8);
 }
 #state .link:active {
-  color: rgba(79, 26, 203, 0.6);
+  color: rgba(45, 173, 237, 0.6);
 }
 a,
 .link {
   font-family: 'Segoe UI', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
   font-weight: 400;
   font-size: 11pt;
-  color: #4f1acb;
+  color: #2e92cf;
   text-decoration: none;
 }
 a:hover,
 .link:hover {
-  color: rgba(79, 26, 203, 0.8);
+  color: rgba(45, 173, 237, 0.8);
 }
 a:active,
 .link:active {
-  color: rgba(79, 26, 203, 0.6);
+  color: rgba(45, 173, 237, 0.6);
 }
 h1,
 h2,
@@ -2676,6 +2710,7 @@ button,
   vertical-align: middle;
   cursor: pointer;
   padding: 4px 10px;
+  position: relative;
 }
 button.standart,
 .button.standart {
@@ -2686,8 +2721,8 @@ button:active,
 .button:active,
 button.default:active,
 .button.default:active {
-  background-color: #000 !important;
-  color: #fff;
+  top: 1px;
+  left: 1px;
 }
 button:disabled,
 .button:disabled,
@@ -2707,6 +2742,10 @@ button:focus,
   outline: 0;
   border: 1px #353535 dotted;
 }
+a.button:hover,
+a.button:active {
+  color: inherit;
+}
 button.mini,
 .button.mini,
 .tool-button.mini {
@@ -2722,15 +2761,6 @@ button.big,
   height: 48px;
   font-size: 1.2em;
 }
-button.big [class*=icon-],
-.button.big [class*=icon-],
-.tool-button.big [class*=icon-] {
-  margin-top: 6px;
-  zoom: 1;
-}
-.tool-button [class*=icon-] {
-  margin-top: 2px !important;
-}
 .tool-button.mini {
   min-width: 22px;
   width: 22px;
@@ -2738,10 +2768,6 @@ button.big [class*=icon-],
 .tool-button.big {
   min-width: 48px;
   width: 48px;
-}
-.tool-button.big [class*=icon-] {
-  margin-top: 2px !important;
-  margin-left: 15px !important;
 }
 .command-button {
   width: 330px;
@@ -2787,6 +2813,7 @@ button.big [class*=icon-],
   vertical-align: middle;
   cursor: pointer;
   padding: 4px 10px;
+  position: relative;
   min-width: 32px;
   min-height: 32px;
   width: 32px;
@@ -2795,14 +2822,17 @@ button.big [class*=icon-],
   position: relative;
   padding: 0;
 }
+.tool-button.mini {
+  font-size: .9em !important;
+}
 .tool-button.standart {
   min-width: 90px;
   min-height: 32px;
 }
 .tool-button:active,
 .tool-button.default:active {
-  background-color: #000 !important;
-  color: #fff;
+  top: 1px;
+  left: 1px;
 }
 .tool-button:disabled,
 .tool-button.disabled {
@@ -2828,10 +2858,6 @@ button.big [class*=icon-],
   min-height: 48px;
   height: 48px;
   font-size: 1.2em;
-}
-.tool-button.big [class*=icon-] {
-  margin-top: 6px;
-  zoom: 1;
 }
 .tool-button img {
   width: 16px;
@@ -2862,6 +2888,7 @@ button.big [class*=icon-],
   vertical-align: middle;
   cursor: pointer;
   padding: 4px 10px;
+  position: relative;
   min-width: 32px;
   min-height: 32px;
   width: 32px;
@@ -2884,15 +2911,6 @@ button.big [class*=icon-],
   height: 48px;
   font-size: 1.2em;
 }
-.toolbar a.big [class*=icon-],
-.toolbar button.big [class*=icon-] {
-  margin-top: 6px;
-  zoom: 1;
-}
-.toolbar a [class*=icon-],
-.toolbar button [class*=icon-] {
-  margin-top: 2px !important;
-}
 .toolbar a.mini,
 .toolbar button.mini {
   min-width: 22px;
@@ -2903,10 +2921,9 @@ button.big [class*=icon-],
   min-width: 48px;
   width: 48px;
 }
-.toolbar a.big [class*=icon-],
-.toolbar button.big [class*=icon-] {
-  margin-top: 2px !important;
-  margin-left: 15px !important;
+.toolbar a.mini,
+.toolbar button.mini {
+  font-size: .9em !important;
 }
 .toolbar a.standart,
 .toolbar button.standart {
@@ -2917,8 +2934,8 @@ button.big [class*=icon-],
 .toolbar button:active,
 .toolbar a.default:active,
 .toolbar button.default:active {
-  background-color: #000 !important;
-  color: #fff;
+  top: 1px;
+  left: 1px;
 }
 .toolbar a:disabled,
 .toolbar button:disabled,
@@ -2950,11 +2967,6 @@ button.big [class*=icon-],
   min-height: 48px;
   height: 48px;
   font-size: 1.2em;
-}
-.toolbar a.big [class*=icon-],
-.toolbar button.big [class*=icon-] {
-  margin-top: 6px;
-  zoom: 1;
 }
 .toolbar a img,
 .toolbar button img {
@@ -3005,6 +3017,7 @@ button.big [class*=icon-],
   vertical-align: middle;
   cursor: pointer;
   padding: 4px 10px;
+  position: relative;
   min-width: 32px;
   min-height: 32px;
   width: 32px;
@@ -3027,15 +3040,6 @@ button.big [class*=icon-],
   height: 48px;
   font-size: 1.2em;
 }
-.toolbar-vertical a.big [class*=icon-],
-.toolbar-vertical button.big [class*=icon-] {
-  margin-top: 6px;
-  zoom: 1;
-}
-.toolbar-vertical a [class*=icon-],
-.toolbar-vertical button [class*=icon-] {
-  margin-top: 2px !important;
-}
 .toolbar-vertical a.mini,
 .toolbar-vertical button.mini {
   min-width: 22px;
@@ -3046,10 +3050,9 @@ button.big [class*=icon-],
   min-width: 48px;
   width: 48px;
 }
-.toolbar-vertical a.big [class*=icon-],
-.toolbar-vertical button.big [class*=icon-] {
-  margin-top: 2px !important;
-  margin-left: 15px !important;
+.toolbar-vertical a.mini,
+.toolbar-vertical button.mini {
+  font-size: .9em !important;
 }
 .toolbar-vertical a.standart,
 .toolbar-vertical button.standart {
@@ -3060,8 +3063,8 @@ button.big [class*=icon-],
 .toolbar-vertical button:active,
 .toolbar-vertical a.default:active,
 .toolbar-vertical button.default:active {
-  background-color: #000 !important;
-  color: #fff;
+  top: 1px;
+  left: 1px;
 }
 .toolbar-vertical a:disabled,
 .toolbar-vertical button:disabled,
@@ -3093,11 +3096,6 @@ button.big [class*=icon-],
   min-height: 48px;
   height: 48px;
   font-size: 1.2em;
-}
-.toolbar-vertical a.big [class*=icon-],
-.toolbar-vertical button.big [class*=icon-] {
-  margin-top: 6px;
-  zoom: 1;
 }
 .toolbar-vertical a img,
 .toolbar-vertical button img {
@@ -3154,6 +3152,236 @@ button.big [class*=icon-],
 .button-set button.active {
   background-color: #008287;
   color: #fff;
+}
+.shortcuts {
+  margin-bottom: 10px;
+}
+.shortcut {
+  width: 92px;
+  height: 92px;
+  display: inline-block;
+  margin: 0 10px 10px 0;
+  vertical-align: top;
+  text-decoration: none;
+  background: #F3F3F3;
+  text-align: center;
+  cursor: pointer;
+  border: 0;
+  border-bottom: 2px transparent solid;
+  position: relative;
+}
+.shortcut:hover {
+  border-color: red;
+}
+.shortcut:active {
+  background: #F3F3F3;
+  top: 1px;
+  left: 1px;
+}
+.shortcut  > .icon {
+  margin-top: .25em;
+  margin-bottom: .25em;
+  font-size: 32px;
+  color: #888;
+}
+.shortcut  > .label {
+  display: block;
+  font-weight: 400;
+  color: #666;
+}
+.shortcut  > .badge {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: #2d89ef;
+  padding: 5px;
+  margin: 0 !important;
+  text-align: center;
+  display: block;
+  font-size: 9pt;
+  color: #fff;
+}
+a.shortcut {
+  padding: 30px 0;
+}
+a.shortcut .label {
+  font-size: 9pt;
+}
+.pagination {
+  width: auto;
+  margin-bottom: 10px;
+}
+.pagination  > ul {
+  margin-left: 0;
+  list-style: none;
+  margin: 0;
+}
+.pagination  > ul li {
+  display: inline-block;
+  margin-right: 1px;
+  position: relative;
+}
+.pagination  > ul li a {
+  font-family: 'Segoe UI', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  font-size: 9pt;
+  min-width: 90px;
+  min-height: 32px;
+  height: 32px;
+  background-color: #ccc;
+  border: 1px transparent solid;
+  color: #353535;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-raduis: 0;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  padding: 4px 10px;
+  position: relative;
+  min-width: 32px;
+  min-height: 32px;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  position: relative;
+  padding: 0;
+  position: relative;
+  display: block;
+  float: left;
+  font-size: 10pt;
+  padding: 5px;
+  min-width: 32px;
+  height: 32px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-right: 1px;
+}
+.pagination  > ul li a.mini {
+  min-height: 24px;
+  min-width: 24px;
+  height: 26px;
+  font-size: .8em;
+}
+.pagination  > ul li a.big {
+  min-height: 48px;
+  height: 48px;
+  font-size: 1.2em;
+}
+.pagination  > ul li a.mini {
+  min-width: 22px;
+  width: 22px;
+}
+.pagination  > ul li a.big {
+  min-width: 48px;
+  width: 48px;
+}
+.pagination  > ul li a.mini {
+  font-size: .9em !important;
+}
+.pagination  > ul li a.standart {
+  min-width: 90px;
+  min-height: 32px;
+}
+.pagination  > ul li a:active,
+.pagination  > ul li a.default:active {
+  top: 1px;
+  left: 1px;
+}
+.pagination  > ul li a:disabled,
+.pagination  > ul li a.disabled {
+  background-color: #eaeaea;
+  color: #bebebe;
+  cursor: not-allowed;
+}
+.pagination  > ul li a.default {
+  background-color: #008287;
+  color: #fff;
+}
+.pagination  > ul li a:focus {
+  outline: 0;
+  border: 1px #353535 dotted;
+}
+.pagination  > ul li a.mini {
+  min-height: 24px;
+  min-width: 24px;
+  height: 26px;
+  font-size: .8em;
+}
+.pagination  > ul li a.big {
+  min-height: 48px;
+  height: 48px;
+  font-size: 1.2em;
+}
+.pagination  > ul li a img {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+.pagination  > ul li a:hover {
+  background-color: #1d1d1d;
+  color: #ffffff;
+}
+.pagination  > ul li a:active {
+  top: 1px;
+  left: 1px;
+}
+.pagination  > ul li.first a,
+.pagination  > ul li.prev a,
+.pagination  > ul li.next a,
+.pagination  > ul li.last a {
+  font-size: 20pt;
+}
+.pagination  > ul li.first a:before,
+.pagination  > ul li.prev a:before,
+.pagination  > ul li.next a:before,
+.pagination  > ul li.last a:before {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  margin-left: -7px;
+  content: "\25C4";
+  font-size: 1.5em;
+}
+.pagination  > ul li.first a:before {
+  content: "\AB";
+  margin-left: -10px;
+}
+.pagination  > ul li.prev a:before {
+  content: "\2039";
+}
+.pagination  > ul li.next a:before {
+  content: "\203A";
+}
+.pagination  > ul li.last a:before {
+  content: "\BB";
+  margin-left: -10px;
+}
+.pagination  > ul li.active a {
+  background-color: #1d1d1d;
+  color: #ffffff;
+}
+.pagination  > ul li.disabled a,
+.pagination  > ul li.spaces a {
+  background-color: #f2f2f2;
+  color: #1e1e1e;
+  cursor: not-allowed;
+}
+.pagination  > ul li.disabled a:active,
+.pagination  > ul li.spaces a:active {
+  top: 0;
+  left: 0;
+}
+.pagination  > ul li.disabled a {
+  color: #1e1e1e;
+}
+.pagination  > ul li.spaces a {
+  background-color: #ffffff;
+  cursor: default;
 }
 /*
  * Metro UI CSS
@@ -3499,13 +3727,15 @@ table.bordered tbody tr:last-child td {
   z-index: 10000;
 }
 .navigation-bar .navigation-bar-inner {
-  padding: 5px 20px 2px 20px;
+  padding: 5px 20px 5px 20px;
   color: #fff;
   font-size: 11pt;
   margin: auto;
   position: relative;
+  *zoom: 1;
 }
 .navigation-bar .navigation-bar-inner  > .brand {
+  position: relative;
   float: left;
   margin-right: 20px;
   margin-top: 3px;
@@ -3520,6 +3750,10 @@ table.bordered tbody tr:last-child td {
   margin-right: 10px;
   margin-top: 3px;
 }
+.navigation-bar .navigation-bar-inner  > .brand .icon img {
+  width: 100%;
+  height: 100%;
+}
 .navigation-bar .navigation-bar-inner  > .brand .name {
   font-family: 'Segoe UI Light', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
   font-weight: 200;
@@ -3528,6 +3762,26 @@ table.bordered tbody tr:last-child td {
   line-height: 24pt;
   font-size: 16pt;
   color: #fff;
+}
+.navigation-bar .navigation-bar-inner  > .brand.sub-menu {
+  cursor: pointer;
+}
+.navigation-bar .navigation-bar-inner  > .brand.sub-menu .dropdown-menu {
+  margin-top: -10px;
+}
+.navigation-bar .navigation-bar-inner  > .brand.sub-menu:after {
+  position: absolute;
+  content: "\3009";
+  display: inline-block;
+  font-size: 10pt;
+  left: 100%;
+  top: 20px;
+  margin-left: 5px;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 .navigation-bar .navigation-bar-inner  > ul {
   margin-left: 0;
@@ -3585,6 +3839,14 @@ table.bordered tbody tr:last-child td {
 }
 .navigation-bar .navigation-bar-inner  > ul  > li.no-hover:hover {
   background-color: transparent;
+}
+.navigation-bar .navigation-bar-inner:before,
+.navigation-bar .navigation-bar-inner:after {
+  display: table;
+  content: "";
+}
+.navigation-bar .navigation-bar-inner:after {
+  clear: both;
 }
 .navigation-bar.fixed-top {
   position: fixed;
@@ -3959,7 +4221,7 @@ table.bordered tbody tr:last-child td {
   background-color: #2d89ef;
 }
 .page-sidebar  > ul > li.sticker.sticker-color-blueLight:before {
-  background-color: #44a3aa;
+  background-color: #eff4ff;
 }
 .page-sidebar  > ul > li.sticker.sticker-color-blueDark:before {
   background-color: #2b5797;
@@ -4157,7 +4419,7 @@ table.bordered tbody tr:last-child td {
 .replies  > div .sticker.sticker-color-blueLight,
 .replies  > li .sticker.sticker-color-blueLight,
 .replies  > span .sticker.sticker-color-blueLight {
-  border-color: #44a3aa !important;
+  border-color: #eff4ff !important;
 }
 .replies  > div .sticker.sticker-color-blueDark,
 .replies  > li .sticker.sticker-color-blueDark,
@@ -4638,11 +4900,19 @@ table.bordered tbody tr:last-child td {
 .tile .tile-status  > .name:hover {
   color: #ffffff;
 }
+.tile .brand  > .name  > [class*=icon-],
+.tile .tile-status  > .name  > [class*=icon-] {
+  font-size: 24px;
+}
 .tile .brand  > .icon,
 .tile .tile-status  > .icon {
   margin: 5px 15px;
   width: 32px;
   height: 32px;
+}
+.tile .brand  > .icon  > [class*=icon-],
+.tile .tile-status  > .icon  > [class*=icon-] {
+  font-size: 32px;
 }
 .tile .brand  > .icon  > img,
 .tile .tile-status  > .icon  > img {
@@ -5105,7 +5375,13 @@ input[type=submit] {
   vertical-align: middle;
   cursor: pointer;
   padding: 4px 10px;
+  position: relative;
   border-radius: 0;
+}
+input[type=button].mini,
+input[type=reset].mini,
+input[type=submit].mini {
+  font-size: .9em !important;
 }
 input[type=button].standart,
 input[type=reset].standart,
@@ -5119,8 +5395,8 @@ input[type=submit]:active,
 input[type=button].default:active,
 input[type=reset].default:active,
 input[type=submit].default:active {
-  background-color: #000 !important;
-  color: #fff;
+  top: 1px;
+  left: 1px;
 }
 input[type=button]:disabled,
 input[type=reset]:disabled,
@@ -5158,12 +5434,6 @@ input[type=submit].big {
   min-height: 48px;
   height: 48px;
   font-size: 1.2em;
-}
-input[type=button].big [class*=icon-],
-input[type=reset].big [class*=icon-],
-input[type=submit].big [class*=icon-] {
-  margin-top: 6px;
-  zoom: 1;
 }
 input[type=submit] {
   background-color: #008287;

@@ -1,11 +1,9 @@
-function sync(path, data, cb) {
-  $.post(path, data, function(data, status, jqXHR) {
-    cb(JSON.parse(jqXHR.responseText));
-  });
-}
-
-
 $(function() {
+  
+  // if url = "http://rootools.ru/profile#messages"
+  if(document.URL.split('#')[1] === 'messages') {
+    showContainer('message_list');
+  }
   
   $('.profile_menu_button').bind('click', function() {
     var elem = this.id;
@@ -15,26 +13,16 @@ $(function() {
     }, 200);
   });
   
-  $('#upload_file').bind('click', function() {
+  $('#me_edit_submit').bind('click', function() {
     var url = document.getElementById('input_me_edit_image_url').value;
-    var process_info = document.getElementById('process_info');
-    if(/^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url)) {
-      process_info.innerHTML = '';
-      process_info.innerHTML = '<strong class="fg-color-green"><i class="icon-warning"></i>Image processing...</strong>';
-      sync('upload', {action: 'upload_profile_photo_from_url', url: url}, function(data) {
-        if(data.error) {
-          var message = '<strong class="fg-color-red"><i class="icon-warning"></i>'+data.error+'</strong>';
-          process_info.innerHTML = '';
-          process_info.innerHTML = message;
-        } else {
-          location.reload();
-        }
-      });
-    } else {
-      var message = '<strong class="fg-color-red"><i class="icon-warning"></i>Invalid URL</strong>';
-      process_info.innerHTML = '';
-      process_info.innerHTML = message;
+    var name = document.getElementById('input_me_edit_name').value;
+    if(url.length > 0) {
+      upload_file();
     }
+    if(name.length > 0) {
+      change_name();
+    }
+    
   });
   
   $('#button_find_friend').bind('click', function() {
@@ -50,7 +38,10 @@ function showContainer(param) {
     $('#profile_friends_container').fadeIn(200);
   }
   if(param === 'me_edit') {
-    $('#profile_me_edit_container').fadeIn(200);    
+    $('#profile_me_edit_container').fadeIn(200);
+  }
+  if(param === 'message_list') {
+    $('#profile_me_messages').fadeIn(200);
   }
 }
 
@@ -77,19 +68,32 @@ function findUser() {
         html += '<div class="tile double bg-color-orange search_result">';
         html += ' <div class="tile-content">';
         html += '   <img class="place-left" src="'+img_url+'" height="64px" id="search_friends_result_photo"></img>';
-        html += '   <h3>Bravin Anton</h3>';
+        html += '   <h3>'+response.name+'</h3>';
         html += '   <h5>Last Achievenment: </h5><p>"'+response.last+'"</p>';
         html += ' </div>';
         html += ' <div class="brand">';
-        html += '   <span class="name"><button class="fg-color-darken">Add</button></span>';
-        //html += '   <span class="name"><i class="icon-plus"></i>Add</span>';
+        html += '   <span class="name"><button class="fg-color-darken add_friend" id="add_friend_'+response.uid+'">Add</button></span>';
         html += '   <span class="badge" id="add_friend_tile_points">'+response.points+'</span>';
         html += ' </div>';
         html += '</div>';
         
         result_field.innerHTML = html;
+        $('.add_friend').bind('click', function() {
+          var uid = this.id.split('add_friend_')[1];
+          sync('webapi', {action: 'send_friendship_request', uid: uid}, function(response) {
+            if(response.error) {
+              document.getElementById('add_friend_'+uid).innerHTML = response.error;
+              document.getElementById('add_friend_'+uid).disabled = true;
+            } 
+          });
+        });
       });
     }
+  });
+  
+  $('#button_clear_find_friend').bind('click', function() {
+    error_result_field.innerHTML = '';
+    result_field.innerHTML = '';
   });
 }
 function change_img(uid) {
@@ -103,8 +107,32 @@ function change_img(uid) {
     if(flag === true) {
       var img = document.getElementById('user_photo');
       img.src = '/images/users_photo/'+uid+'.jpg';
+      $('#profile_me_photo').fadeIn(100);
     }
   });
+}
+
+function upload_file() {
+  var url = document.getElementById('input_me_edit_image_url').value;
+  var me_edit_info = document.getElementById('me_edit_info');
+  if(/^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url)) {
+    console.log(url);
+    sync('upload', {action: 'upload_profile_photo_from_url', url: url}, function(data) {
+      if(data.error) {
+        var message = '<strong class="fg-color-red"><i class="icon-warning"></i>'+data.error+'</strong>';
+        document.getElementById('me_edit_title_photo').setAttribute("class", "fg-color-red");
+        me_edit_info.innerHTML = '';
+        me_edit_info.innerHTML = message;
+      } else {
+        location.reload();
+      }
+    });
+  } else {
+    var message = '<strong class="fg-color-red"><i class="icon-warning"></i>Invalid image URL</strong>';
+    document.getElementById('me_edit_title_photo').setAttribute("class", "fg-color-red");
+    me_edit_info.innerHTML = '';
+    me_edit_info.innerHTML = message;
+  }
 }
 
 function testImage(uid, cb) {
@@ -120,4 +148,20 @@ function testImage(uid, cb) {
   };
   
   http.send();
+}
+
+function change_name() {
+  var me_edit_info = document.getElementById('me_edit_info');
+  var name = document.getElementById('input_me_edit_name').value;
+  if(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/i.test(name)) {
+    sync('webapi', {action: 'edit_profile_name', name: name}, function(data) {
+      //return;
+    });
+  } else {
+    var message = '<strong class="fg-color-red"><i class="icon-warning"></i>Invalid Name(only letters and numbers)</strong>';
+    document.getElementById('me_edit_title_name').setAttribute("class", "fg-color-red");
+    me_edit_info.innerHTML = '';
+    me_edit_info.innerHTML = message;
+    return;
+  }
 }

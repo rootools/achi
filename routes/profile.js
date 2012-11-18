@@ -59,10 +59,43 @@ function pointsSum(uid, cb) {
   });
 }
 
+function get_messages(uid, limit, cb) {
+  var messages = [];
+  db.collection('messages', function(err, collection) {
+    collection.find({target_uid: uid}).toArray(function(err, doc) {
+      
+    var handler = doc.length;
+    if(handler === 0) {
+      cb([]);
+    }
+    
+    function callback(message) {
+      db.collection('users_profile', function(err, collection) {
+        collection.findOne({uid: message.owner_uid},{name: 1, _id: 0}, function(err, doc) {
+          message.owner_name = doc.name;
+          message.time = moment(message.time).format('DD.MM.YYYY hh:mm');
+          messages.push(message);
+          handler--;
+          if(handler === 0) {
+            console.log(messages);
+            cb(messages);
+          }
+        });
+      });
+    }    
+    
+    async.forEach(doc, callback, function(err) {});
+    });
+  });
+}
+
 exports.main = function(req, res) {
   pointsSum(req.session.uid, function(points) {
     getServiceList(req.session.uid, function(service_list) {
-      res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, uid: req.session.uid} );
+      get_messages(req.session.uid, 10, function(messages) {
+        console.log(messages);
+        res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, uid: req.session.uid, messages: messages} );
+      });
     });
   });
 };

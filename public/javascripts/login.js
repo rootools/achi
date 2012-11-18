@@ -1,9 +1,3 @@
-function sync(data, cb) {
-  $.post('login', data, function(data, status, jqXHR) {
-    cb(JSON.parse(jqXHR.responseText));
-  });
-}
-
 $(function() {
   var login_zone = document.getElementById('login_zone');
   $('.login_or_register').click(function() {
@@ -89,7 +83,7 @@ function submitAction() {
   }
   
   if(flag === true) {
-    sync({action: action, email: email, pass: pass}, function(response){
+    sync('login', {action: action, email: email, pass: pass}, function(response){
       if(response.error) {
         $('#error_show').fadeOut(200);
         setTimeout(function() {

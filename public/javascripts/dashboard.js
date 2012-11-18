@@ -1,12 +1,6 @@
-function sync(param, cb) {
-  $.post('/webapi', param, function(data) {
-    cb(data);
-  }, 'json');
-}
-
 function getAchievementsList(service) {
-  sync({action:"getAchievementsList", service:service}, function(fullAchievementsList) {
-    sync({action:"userAchievementsList", service:service}, function(userAchievementsList) {
+  sync('webapi', {action:"getAchievementsList", service:service}, function(fullAchievementsList) {
+    sync('webapi', {action:"userAchievementsList", service:service}, function(userAchievementsList) {
       if(userAchievementsList.achievements == undefined) {userAchievementsList.achievements = [];}
       if(userAchievementsList == null) { userAchievementsList = {}; userAchievementsList.achievements = []; }
       renderAchievementsList(fullAchievementsList, userAchievementsList.achievements);
