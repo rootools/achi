@@ -95,7 +95,7 @@ function find_by_email(req, res) {
         res.end(JSON.stringify({error: 'Did not match'}));
       } else {
         db.collection('users_profile', function(err,profile) {
-          profile.findOne({uid: doc.uid},{_id: 0, name: 1}, function(err, name) {
+          profile.findOne({uid: doc.uid},{_id: 0, name: 1, photo: 1}, function(err, profile) {
             dashboard.getUserAchievements(doc.uid, function(smth, last, data) {
               var sum = 0;
               for(var i in data) {
@@ -103,7 +103,8 @@ function find_by_email(req, res) {
               }
               doc.points = sum;
               doc.last = last[0].name;
-              doc.name = name.name;
+              doc.name = profile.name;
+              doc.photo = profile.photo;
               res.end(JSON.stringify(doc));
             });
       

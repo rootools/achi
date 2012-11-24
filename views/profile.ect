@@ -4,8 +4,8 @@
   <div class="row" id="profile_zone">
     <div id="profile_zone">
       <div id="profile_left">
-        <div id="profile_me_photo" style="width: 194px; display:none;">
-          <img src="" width="194px" id="user_photo"></img>
+        <div id="profile_me_photo" style="width: 194px;">
+          <img src="<%- @profile.photo %>" width="194px" id="user_photo"></img>
         </div>
       </div>
       <div id="profile_right">
@@ -94,7 +94,7 @@
       <div class="row">
         <table class="bordered striped">
           <% for message in @messages : %>
-            <tr><td><img src="/" id="message_photo" height="64px"></img></td><td><%- message.owner_name %></td><td><%- message.data %></td><td><%- message.time %></td>
+            <tr><td><img src="<%- message.photo %>" id="message_photo" height="32px"></img></td><td><%- message.owner_name %></td><td><%- message.data %></td><td><%- message.time %></td>
           <% end %>
         </table>
       </div>
@@ -105,6 +105,3 @@
 
 <link href="/stylesheets/profile.css" rel="stylesheet" />
 <script src="/javascripts/profile.js"></script>
-<script>
-  change_img('<%- @uid %>');
-</script>

@@ -71,13 +71,13 @@ function get_messages(uid, limit, cb) {
     
     function callback(message) {
       db.collection('users_profile', function(err, collection) {
-        collection.findOne({uid: message.owner_uid},{name: 1, _id: 0}, function(err, doc) {
+        collection.findOne({uid: message.owner_uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
           message.owner_name = doc.name;
           message.time = moment(message.time).format('DD.MM.YYYY hh:mm');
+          message.photo = doc.photo;
           messages.push(message);
           handler--;
           if(handler === 0) {
-            console.log(messages);
             cb(messages);
           }
         });
@@ -89,12 +89,21 @@ function get_messages(uid, limit, cb) {
   });
 }
 
+function get_user_profile(uid, cb) {
+  db.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
+      cb(doc);
+    });
+  });
+}
+
 exports.main = function(req, res) {
   pointsSum(req.session.uid, function(points) {
     getServiceList(req.session.uid, function(service_list) {
       get_messages(req.session.uid, 10, function(messages) {
-        console.log(messages);
-        res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, uid: req.session.uid, messages: messages} );
+        get_user_profile(req.session.uid, function(profile) {
+          res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, profile: profile, messages: messages} );
+        });
       });
     });
   });
