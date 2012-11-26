@@ -33,6 +33,7 @@ $(function() {
       $('#login_zone').fadeIn(200);
       setSubmitButton();
       setCloseButton();
+      setEnterPush();
     }, 200);
     
   });
@@ -50,12 +51,44 @@ function setSubmitButton() {
   $('#loginFormSubmitButton').click(function() {
     submitAction();
   });
-  
-  //$('.loginForm').keypress(function(e) {
-  //  if(e.charCode) {
-  //    submitAction();
-  //  }
-  //});
+}
+
+function setEnterPush() {
+  $('.loginForm').keyup(function(e) {
+    if(testInputContents()) {
+      if(e.charCode === 13) {
+        submitAction();
+      }
+      if(e.keyCode === 13) {
+        submitAction();
+      }
+    }
+  });
+}
+
+// Test all Login/Registration Field to not null content.
+// Return True only if all 2 or 3 input is not null
+function testInputContents() {
+  var loginEmail = document.getElementById('loginEmail');
+  var loginPass = document.getElementById('loginPass');
+  var regEmail = document.getElementById('regEmail');
+  var regPass = document.getElementById('regPass');
+  var regPassVerify = document.getElementById('regPassVerify');
+  if(loginEmail !== null && loginPass !== null) {
+    if(loginEmail.value.length !== 0 && loginPass.value.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  if(regEmail !== null && regPass !== null && regPassVerify !== null) {
+    if(regEmail.value.length !== 0 && regPass.value.length !== 0 && regPassVerify.value.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
 }
 
 function submitAction() {
