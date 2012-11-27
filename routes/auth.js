@@ -1,4 +1,3 @@
-var passwordHash = require('password-hash');
 var randomstring = require('randomstring');
 var db;
 
@@ -22,8 +21,7 @@ exports.login = function(req, res) {
 
     if(req.body.action === 'login') {
       collection.findOne({email: req.body.email}, function(err, doc) {
-        var checkPassword = passwordHash.verify(req.body.pass, doc.password);
-        if(checkPassword === true) {
+        if(req.body.pass === doc.password) {
           req.session.auth = true;
           req.session.uid = doc.uid;
           req.session.email = doc.email;
@@ -61,10 +59,7 @@ function testUser(email, cb) {
 
 function registerUser(email, pass) {
   db.collection('users', function(err,collection) {
-    collection.insert({email: email, password: passwordHash.generate(pass), uid: randomstring.generate(20)}, function(err, doc) {
-      if(err) {
-        cb('DB error');
-      }
+    collection.insert({email: email, password: pass, uid: randomstring.generate(20)}, function(err, doc) {
     });
   });
 }

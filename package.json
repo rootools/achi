@@ -13,8 +13,8 @@
     "moment": "*",
     "mongodb": "*",
     "oauth": "*",
-    "password-hash": "*",
     "redis": "*",
-    "vkontakte": "*"
+    "vkontakte": "*",
+    "easyimage": "*"
   }
 }

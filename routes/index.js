@@ -1,4 +1,3 @@
-var passwordHash = require('password-hash');
 var db;
 
 function mongoConnect() {

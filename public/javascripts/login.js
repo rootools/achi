@@ -1,4 +1,5 @@
 $(function() {
+  
   var login_zone = document.getElementById('login_zone');
   $('.login_or_register').click(function() {
     $('#login_zone').fadeOut(200);
@@ -102,6 +103,7 @@ function submitAction() {
     var email = document.getElementById('loginEmail').value;
     var pass = document.getElementById('loginPass').value;
     flag = true;
+    pass = CryptoJS.MD5(pass).toString();
   }
   
   if(action === 'reg') {
@@ -110,6 +112,7 @@ function submitAction() {
     var passVerify = document.getElementById('regPassVerify').value;
     if(pass === passVerify) {
       flag = true;
+      pass = CryptoJS.MD5(pass).toString();
     } else {
       error = 'Passwords didn`t match';
     }
