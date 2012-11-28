@@ -70,7 +70,7 @@ function findUser() {
       html += '   <h5>Last Achievenment: </h5><p>"'+response.last+'"</p>';
       html += ' </div>';
       html += ' <div class="brand">';
-      html += '   <span class="name"><button class="fg-color-darken add_friend" id="add_friend_'+response.uid+'">Add</button></span>';
+      html += '   <span class="name" id="edit_me_add_friend_search_button"><button class="fg-color-darken add_friend" id="add_friend_'+response.uid+'">Add</button></span>';
       html += '   <span class="badge" id="add_friend_tile_points">'+response.points+'</span>';
       html += ' </div>';
       html += '</div>';
@@ -82,7 +82,12 @@ function findUser() {
           if(response.error) {
             document.getElementById('add_friend_'+uid).innerHTML = response.error;
             document.getElementById('add_friend_'+uid).disabled = true;
-          } 
+          } else {
+            var message = document.getElementById('edit_me_add_friend_search_button');
+            $('#edit_me_add_friend_search_button').css('margin-bottom', '14px');
+            message.innerHTML = '';
+            message.innerHTML = '<h4>'+response.message+'</h4>';
+          }
         });
       });
     }
