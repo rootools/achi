@@ -51,6 +51,26 @@
       </div>
       
       <div class="row">
+        <h3 id="me_edit_change_password">Change Password</h3>
+        <div class="span4">
+          <div class="input-control text">
+            <input type="password" id="input_me_edit_oldPass" placeholder="Old Password"/>
+          </div>
+        </div>
+        <div class="span4">
+          <div class="input-control text">
+            <input type="password" id="input_me_edit_newPass" placeholder="New Password"/>
+          </div>
+        </div>
+        <div class="span4">
+          <div class="input-control text">
+            <input type="password" id="input_me_edit_newPassVerify" placeholder="Verify New Password"/>
+          </div>
+        </div>
+        
+      </div>
+      
+      <div class="row">
         <div id="me_edit_info"></div>
         <button id="me_edit_submit">Submit</button>
       </div>
@@ -106,3 +126,4 @@
 
 <link href="/stylesheets/profile.css" rel="stylesheet" />
 <script src="/javascripts/profile.js"></script>
+<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/md5.js"></script>

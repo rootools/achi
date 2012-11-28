@@ -16,13 +16,18 @@ $(function() {
   $('#me_edit_submit').bind('click', function() {
     var url = document.getElementById('input_me_edit_image_url').value;
     var name = document.getElementById('input_me_edit_name').value;
+    var oldPass = document.getElementById('input_me_edit_oldPass').value;
+    var newPass = document.getElementById('input_me_edit_newPass').value;
+    var newPassVerify = document.getElementById('input_me_edit_newPassVerify').value;
     if(url.length > 0) {
-      upload_file();
+      upload_file(url);
     }
     if(name.length > 0) {
-      change_name();
+      change_name(name);
     }
-    
+    if(oldPass.length > 0 && newPass.length > 0 && newPassVerify.length > 0) {
+      change_pass(oldPass, newPass, newPassVerify);
+    }
   });
   
   $('#button_find_friend').bind('click', function() {
@@ -89,37 +94,47 @@ function findUser() {
   });
 }
 
-function upload_file() {
-  var url = document.getElementById('input_me_edit_image_url').value;
-  var me_edit_info = document.getElementById('me_edit_info');
+function upload_file(url) {
   if(/^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url)) {
     sync('upload', {action: 'upload_profile_photo_from_url', url: url}, function(data) {
       if(data.error) {
-        var message = '<strong class="fg-color-red"><i class="icon-warning"></i>'+data.error+'</strong>';
+        me_edit_error_message(data.error);
         document.getElementById('me_edit_title_photo').setAttribute("class", "fg-color-red");
-        me_edit_info.innerHTML = '';
-        me_edit_info.innerHTML = message;
       } else {
         location.reload();
       }
     });
   } else {
-    var message = '<strong class="fg-color-red"><i class="icon-warning"></i>Invalid image URL</strong>';
-    document.getElementById('me_edit_title_photo').setAttribute("class", "fg-color-red");
-    me_edit_info.innerHTML = '';
-    me_edit_info.innerHTML = message;
+    me_edit_error_message('Invalid image URL', 'me_edit_title_photo');
   }
 }
 
-function change_name() {
-  var me_edit_info = document.getElementById('me_edit_info');
-  var name = document.getElementById('input_me_edit_name').value;
+function change_name(name) {
   if(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/i.test(name)) {
     sync('webapi', {action: 'edit_profile_name', name: name}, function(data) {});
   } else {
-    var message = '<strong class="fg-color-red"><i class="icon-warning"></i>Invalid Name(only letters and numbers)</strong>';
-    document.getElementById('me_edit_title_name').setAttribute("class", "fg-color-red");
-    me_edit_info.innerHTML = '';
-    me_edit_info.innerHTML = message;
+    me_edit_error_message('Name(only letters and numbers)', 'me_edit_title_name');
   }
+}
+
+function change_pass(oldPass, newPass, newPassVerify) {
+  if(newPass === newPassVerify) {
+    sync('webapi',{action: 'edit_profile_change_password', oldPass: CryptoJS.MD5(oldPass).toString(), newPass: CryptoJS.MD5(newPass).toString()}, function(response) {
+      if(response.error) {
+        me_edit_error_message(response.error, 'me_edit_change_password');
+      } else {
+        me_edit_error_message('Pass updated', 'me_edit_change_password');
+      }
+    });
+  } else {
+    me_edit_error_message('Passwords didn`t match', 'me_edit_title_photo');
+  }
+}
+
+function me_edit_error_message(message, head) {
+  var me_edit_info = document.getElementById('me_edit_info');
+  var html = '<strong class="fg-color-red"><i class="icon-warning"></i>'+message+'</strong>';
+  me_edit_info.innerHTML = '';
+  me_edit_info.innerHTML = html;
+  document.getElementById(head).setAttribute("class", "fg-color-red");
 }
