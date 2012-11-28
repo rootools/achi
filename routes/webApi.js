@@ -7,8 +7,8 @@ var redis = require("redis"),
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
-    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true, safe: false, strict: false}),
-    db_connector = new mongodb.Db('achi', mongoserver, '');
+    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true}),
+    db_connector = new mongodb.Db('achi', mongoserver, {safe: true});
 
   db_connector.open(function(err, dbs) {
     db = dbs;
