@@ -60,6 +60,10 @@ function testUser(email, cb) {
 function registerUser(email, pass) {
   db.collection('users', function(err,collection) {
     collection.insert({email: email, password: pass, uid: randomstring.generate(20)}, function(err, doc) {
+      db.collection('users_profile', function(err,profiles) {
+        profiles.insert({uid: doc[0].uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
+        });
+      });
     });
   });
 }

@@ -101,12 +101,12 @@ function get_friends_list(uid, cb) {
   var friends_list = [];
   db.collection('users_profile', function(err, collection) {
     collection.findOne({uid: uid},{friends: 1, _id: 0}, function(err, doc) {
+      
       var friends_uid_list = doc.friends;
       var handler = friends_uid_list.length;
-      
       if(handler === 0) {
         cb([]);
-      }
+      }      
       
       function callback(uid) {
         collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {

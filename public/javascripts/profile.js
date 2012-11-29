@@ -154,7 +154,8 @@ function me_edit_error_message(message, head) {
 
 function message_list_row_click(elem) {
   var flag = $(elem).next().attr('class');
-  if(flag === undefined) {
+  console.log(flag);
+  if(flag === undefined || flag !== 'centered') {
     var html = '';
     var type = $(elem).attr('class').split(' ')[1].split('me_messages_')[1];
     if(type === 'friendship_request') {
