@@ -8,6 +8,10 @@ div.page {
   width: 984px;
 }
 
+.centered {
+  text-align: center;
+}
+
 /*
 Menu bar block
 */

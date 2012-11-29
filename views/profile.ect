@@ -115,7 +115,7 @@
       <div class="row">
         <table class="bordered striped">
           <% for message in @messages : %>
-            <tr><td><img src="<%- message.photo %>" id="message_photo" height="32px"></img></td><td><%- message.owner_name %></td><td><%- message.data %></td><td><%- message.time %></td>
+            <tr class="me_messages_row me_messages_<%- message.type %>" id="<%- message.owner_uid %>_<%- message.target_uid %>"><td class="centered" width="1px"><img src="<%- message.photo %>" id="message_photo" height="32px"></img></td><td class="centered"><%- message.owner_name %></td><td><%- message.data %></td><td class="centered"><%- message.time %></td>
           <% end %>
         </table>
       </div>

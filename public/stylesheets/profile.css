@@ -45,3 +45,11 @@
 #me_edit_info {
   margin-bottom: 10px;
 }
+
+.me_messages_row {
+  cursor: pointer;
+}
+
+.me_messages_action_button {
+  margin-top: 10px;
+}

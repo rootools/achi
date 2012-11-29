@@ -1,7 +1,6 @@
 var http = require('http');
 var querystring = require('querystring');
 var async = require('async');
-var hd = require('hero-data');
 
 var cTwitter = require('./qS_twitter.js');
 var cVkontakte = require('./qS_vkontakte');

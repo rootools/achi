@@ -95,7 +95,12 @@ function find_by_email(req, res) {
         res.end(JSON.stringify({error: 'Did not match'}));
       } else {
         db.collection('users_profile', function(err,profile) {
-          profile.findOne({uid: doc.uid},{_id: 0, name: 1, photo: 1}, function(err, profile) {
+          profile.findOne({uid: doc.uid},{_id: 0, name: 1, photo: 1, friends: 1}, function(err, profile) {
+            for(var r in profile.friends) {
+              if(profile.friends[r] === req.session.uid) {
+                res.end(JSON.stringify({error: 'Allready your friend'}));
+              }
+            }
             dashboard.getUserAchievements(doc.uid, function(smth, last, data) {
               var sum = 0;
               for(var i in data) {
@@ -175,6 +180,25 @@ function edit_profile_change_password(req, res) {
       }
     });
   });
+}
+
+function friendship_accept_or_reject(req, res) {
+  var command = req.body.command;
+  var owner_uid = req.body.owner_uid;
+  var target_uid = req.body.target_uid;
+  db.collection('messages', function(err,collection) {
+    if(command === 'reject') {
+        
+    }
+    if(command === 'accept') {
+      db.collection('users_profile', function(err, profile) {
+        profile.update({uid: owner_uid},{$push: {friends: target_uid}}, function(err, doc) {});
+        profile.update({uid: target_uid},{$push: {friends: owner_uid}}, function(err, doc) {});
+      });
+    }
+    collection.remove({owner_uid: owner_uid, target_uid: target_uid}, function(err, doc){});
+  });
+  res.end(JSON.stringify({}));
 }
 
 exports.routing = routing;

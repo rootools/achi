@@ -33,6 +33,10 @@ $(function() {
   $('#button_find_friend').bind('click', function() {
     findUser();  
   });
+  
+  $('.me_messages_row').bind('click', function() {
+    message_list_row_click(this);
+  });
 });
 
 function showContainer(param) {
@@ -142,4 +146,33 @@ function me_edit_error_message(message, head) {
   me_edit_info.innerHTML = '';
   me_edit_info.innerHTML = html;
   document.getElementById(head).setAttribute("class", "fg-color-red");
+}
+
+function message_list_row_click(elem) {
+  var flag = $(elem).next().attr('class');
+  if(flag === undefined) {
+    var html = '';
+    var type = $(elem).attr('class').split(' ')[1].split('me_messages_')[1];
+    if(type === 'friendship_request') {
+      html = '<tr class="centered"><td colspan="4"><button class="me_messages_action_button" value="accept">Accept</button><button class="me_messages_action_button" value="reject">Reject</button></td>';
+    }
+    $(elem).after(html);
+    set_message_list_action();
+  } else {
+    $(elem).next().remove();
+  }
+}
+
+function set_message_list_action() {
+  $('.me_messages_action_button').bind('click', function() {
+    var message_id = $(this).parent().parent().prev();
+    message_id = $(message_id).attr('id');
+    var owner_uid = message_id.split('_');
+    var target_uid = owner_uid[1];
+    owner_uid = owner_uid[0];
+    var button_action = this.value;
+    sync('webapi', {action: 'friendship_accept_or_reject', command: button_action, owner_uid: owner_uid, target_uid: target_uid}, function(response) {
+      
+    });
+  });
 }
