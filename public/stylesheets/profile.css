@@ -78,3 +78,11 @@
 .friends_list_row {
   cursor: pointer;
 }
+
+.friends_list_row_action {
+  padding-top: 14px;
+}
+
+.friends_list_row_action_button {
+  margin-right: 14px;
+}

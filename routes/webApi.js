@@ -200,4 +200,26 @@ function friendship_accept_or_reject(req, res) {
   res.end(JSON.stringify({}));
 }
 
+function remove_friendship(req, res) {
+  var uid = req.session.uid;
+  var friends_uid = req.body.friends_uid;
+  remove_friend_by_uid(uid, friends_uid);
+  remove_friend_by_uid(friends_uid, uid);
+}
+
+function remove_friend_by_uid(uid, friends_uid) {
+  db.collection('users_profile', function(err,collection) {
+    collection.findOne({uid: uid},{friends: 1, _id:0}, function(err, doc) {
+      var friends_list = doc.friends;
+      var new_friends_list = [];
+      for(var i in friends_list) {
+        if(friends_list[i] !== friends_uid) {
+          new_friends_list.push(friends_list[i]);
+        }
+      }
+      collection.update({uid: uid},{$set: {friends: new_friends_list}}, function(err, doc){});
+    });
+  });
+}
+
 exports.routing = routing;

@@ -154,7 +154,6 @@ function me_edit_error_message(message, head) {
 
 function message_list_row_click(elem) {
   var flag = $(elem).next().attr('class');
-  console.log(flag);
   if(flag === undefined || flag !== 'centered') {
     var html = '';
     var type = $(elem).attr('class').split(' ')[1].split('me_messages_')[1];
@@ -183,5 +182,26 @@ function set_message_list_action() {
 }
 
 function friends_list_row_click(elem) {
-  
+  var flag = $(elem).next().attr('class');
+  var friends_uid = elem.id;
+  console.log(friends_uid);
+  if(flag === undefined || flag.split(' ')[1] !== 'friends_list_row_action') {
+    var html = '<div class="row friends_list_row_action"><button class="friends_list_row_action_button" value="profile" disabled>Profile</button><button class="friends_list_row_action_button" value="remove">Remove</button></div>';
+    $(elem).after(html);
+    set_friends_list_action(friends_uid);
+  } else {
+    $(elem).next().remove();
+  }
+}
+
+function set_friends_list_action(friends_uid) {
+  $('.friends_list_row_action_button').bind('click', function() {
+    var value = this.value;
+    if(value === 'remove') {
+      //TO DO: Сделать восстановление дружбы
+      sync('webapi', {action: 'remove_friendship', friends_uid: friends_uid}, function(response) {
+        
+      });
+    }
+  });
 }
