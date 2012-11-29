@@ -53,3 +53,28 @@
 .me_messages_action_button {
   margin-top: 10px;
 }
+
+.friends_list_photo {
+  width: 90px;
+  border: 1px solid;
+}
+
+.friends_list_name, .friends_list_photo {
+  position: relative;
+  float: left;
+}
+
+.friends_list_name {
+  margin-left: 12px;
+  margin-top: -10px;
+}  
+
+.friends_list_points {
+  margin-top: -10px;
+  position: relative;
+  float: right;
+}
+
+.friends_list_row {
+  cursor: pointer;
+}

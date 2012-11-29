@@ -123,7 +123,6 @@ function find_by_email(req, res) {
 function edit_profile_name(req, res) {
   var name = req.body.name;
   var uid = req.session.uid;
-  console.log(name, uid);
   db.collection('users_profile', function(err,collection) {
     collection.findOne({uid:uid}, function(err, doc) {
       if(doc === null) {

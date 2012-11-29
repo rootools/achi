@@ -98,17 +98,32 @@
       <div class="row">
         <h3>Search</h3>
       </div>
+    
       <div class="row">
         <button class="find_bar" id="button_find_friend">Find</button>
         <button class="find_bar" id="button_clear_find_friend">Clear</button>
         <div class="input-control text find_bar">
-          <input type="email" id="input_find_friend" placeholder="Friend E-mail"/>
+          <input type="email" id="input_find_friend" placeholder="Friend E-mail"></input>
         </div>
         <div id="error_search_friends_result"></div>
       </div>
+      
       <div class="row">
-        <dib id="search_friends_result"></div>
+        <div id="search_friends_result"></div>
       </div>
+      
+      <div class="row">
+        <h3>Friends List</h3>
+      </div>
+      
+      <div class="row">
+        <% for friend in @friends : %>
+          <div class="row friends_list" id="<%- friend.uid %>">
+            <img src="<%- friend.photo %>" class="friends_list_photo"><div class="friends_list_name"><h3><%- friend.name %></h3></div><div class="friends_list_points"><h3><%- friend.points %> pts</h3></div>
+          </div>
+        <% end %>
+      </div>
+
     </div>
     
     <div id="profile_me_messages" class="service_container" style="display:none">

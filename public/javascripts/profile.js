@@ -37,6 +37,10 @@ $(function() {
   $('.me_messages_row').bind('click', function() {
     message_list_row_click(this);
   });
+  
+  $('.friends_list_row').bind('click', function() {
+    friends_list_row_click(this);
+  });
 });
 
 function showContainer(param) {
@@ -175,4 +179,8 @@ function set_message_list_action() {
       
     });
   });
+}
+
+function friends_list_row_click(elem) {
+  
 }

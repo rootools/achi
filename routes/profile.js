@@ -97,12 +97,43 @@ function get_user_profile(uid, cb) {
   });
 }
 
+function get_friends_list(uid, cb) {
+  var friends_list = [];
+  db.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid},{friends: 1, _id: 0}, function(err, doc) {
+      var friends_uid_list = doc.friends;
+      var handler = friends_uid_list.length;
+      
+      if(handler === 0) {
+        cb([]);
+      }
+      
+      function callback(uid) {
+        collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {
+          pointsSum(uid, function(points) {
+            profile.points = points;
+            friends_list.push(profile);
+            handler--;
+            if(handler === 0) {
+              cb(friends_list);
+            }
+          });
+        });
+      }
+      
+      async.forEach(friends_uid_list, callback, function(err) {});
+    });
+  });
+}
+
 exports.main = function(req, res) {
   pointsSum(req.session.uid, function(points) {
     getServiceList(req.session.uid, function(service_list) {
       get_messages(req.session.uid, 10, function(messages) {
         get_user_profile(req.session.uid, function(profile) {
-          res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, profile: profile, messages: messages} );
+          get_friends_list(req.session.uid, function(friends) {
+            res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, profile: profile, messages: messages, friends: friends} );
+          });
         });
       });
     });
