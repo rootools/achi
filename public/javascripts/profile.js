@@ -184,7 +184,6 @@ function set_message_list_action() {
 function friends_list_row_click(elem) {
   var flag = $(elem).next().attr('class');
   var friends_uid = elem.id;
-  console.log(friends_uid);
   if(flag === undefined || flag.split(' ')[1] !== 'friends_list_row_action') {
     var html = '<div class="row friends_list_row_action"><button class="friends_list_row_action_button" value="profile" disabled>Profile</button><button class="friends_list_row_action_button" value="remove">Remove</button></div>';
     $(elem).after(html);
@@ -196,12 +195,27 @@ function friends_list_row_click(elem) {
 
 function set_friends_list_action(friends_uid) {
   $('.friends_list_row_action_button').bind('click', function() {
+    var action_panel = this;
     var value = this.value;
     if(value === 'remove') {
-      //TO DO: Сделать восстановление дружбы
       sync('webapi', {action: 'remove_friendship', friends_uid: friends_uid}, function(response) {
-        
+        var name = $('#'+friends_uid).children('.friends_list_name').text();
+        $('#'+friends_uid).css('display','none');
+        var html = '<button class="friends_list_row_action_button friends_list_row_action_restore_button" value="restore">Restore</button> Restore friendship with '+name;
+        $(action_panel).parent().html(html);
+        restore_friend_set_event();
       });
     }
+  });
+}
+
+function restore_friend_set_event() {
+  $('.friends_list_row_action_restore_button').bind('click', function(){
+    var friend_elem = $(this).parent().prev();
+    var friends_uid = $(friend_elem).attr('id');
+    sync('webapi',{action: 'restore_friendship', friends_uid: friends_uid}, function(response) {
+      $(friend_elem).css('display','block');
+      $(friend_elem).next().remove();  
+    });
   });
 }

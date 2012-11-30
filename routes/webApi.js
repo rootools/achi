@@ -102,14 +102,19 @@ function find_by_email(req, res) {
               }
             }
             dashboard.getUserAchievements(doc.uid, function(smth, last, data) {
+              if(last.length === 0) {
+                doc.last = '';
+              } else {
+                doc.last = last[0].name;  
+              }
               var sum = 0;
               for(var i in data) {
                 sum += data[i];
               }
               doc.points = sum;
-              doc.last = last[0].name;
               doc.name = profile.name;
               doc.photo = profile.photo;
+              
               res.end(JSON.stringify(doc));
             });
       
@@ -205,6 +210,7 @@ function remove_friendship(req, res) {
   var friends_uid = req.body.friends_uid;
   remove_friend_by_uid(uid, friends_uid);
   remove_friend_by_uid(friends_uid, uid);
+  res.end(JSON.stringify({}));
 }
 
 function remove_friend_by_uid(uid, friends_uid) {
@@ -219,6 +225,16 @@ function remove_friend_by_uid(uid, friends_uid) {
       }
       collection.update({uid: uid},{$set: {friends: new_friends_list}}, function(err, doc){});
     });
+  });
+}
+
+function restore_friendship(req, res) {
+  var uid = req.session.uid;
+  var friends_uid = req.body.friends_uid;
+  db.collection('users_profile', function(err,collection) {
+    collection.update({uid: uid},{$push: {friends: friends_uid}}, function(err, doc){});
+    collection.update({uid: friends_uid},{$push: {friends: uid}}, function(err, doc){});
+    res.end(JSON.stringify({}));
   });
 }
 
