@@ -23,7 +23,7 @@ mongoConnect();
 function updateQuery(uid, service) {
   var now = new Date().getTime();
   db.collection('services_connections', function(err, collection) {
-    collection.update({uid: uid, service:service},{$set: {lastupdate:now}});
+    collection.update({uid: uid, service:service},{$set: {lastupdate:now}}, function(err, doc) {});
   });
 }
 
