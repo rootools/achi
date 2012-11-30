@@ -36,10 +36,10 @@ function createQuery() {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
           if(task.service == 'twitter') {
-              cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
-                updateQuery(task.uid, task.service);
-                callback();
-              });
+            cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
+              updateQuery(task.uid, task.service);
+              callback();
+            });
           }
           if(task.service == 'vkontakte') {
             cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
@@ -67,8 +67,8 @@ function createQuery() {
 function getData(service, auth, cb) {
   if(service == 'twitter') {
     var options = {
-        host: '127.0.0.1',
-        port: 1337,
+        host: 'twitter1-achi.eu01.aws.af.cm',
+        port: 80,
         path: '/?oauth_token='+auth.oauth_token+'&oauth_token_secret='+auth.oauth_token_secret};
   }
   
