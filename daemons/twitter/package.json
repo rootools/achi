@@ -1,0 +1,10 @@
+{
+  "name": "twitter-bot",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node twitter.js"
+  },
+  "dependencies":{
+    "oauth":"*"
+  }
+}
