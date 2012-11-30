@@ -5,6 +5,7 @@
     "start": "node app.js"
   },
   "dependencies":{
-    "async":"*"
+    "async":"*",
+    "vkontakte":"*"
   }
 }
