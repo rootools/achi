@@ -1,5 +1,4 @@
 var http = require('http');
-var querystring = require('querystring');
 var async = require('async');
 
 var cTwitter = require('./qS_twitter.js');
@@ -12,7 +11,7 @@ var db;
 function mongoConnect() {
   var mongodb = require("mongodb"),
     mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true}),
-    db_connector = new mongodb.Db('achi', mongoserver, '');
+    db_connector = new mongodb.Db('achi', mongoserver, {safe: true});
 
   db_connector.open(function(err, dbs) {
     db = dbs;
@@ -105,4 +104,4 @@ setInterval(function() {
     console.log('Run createQuery');
     createQuery();
   }
-}, 5000);
+}, 300000);
