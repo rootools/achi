@@ -74,15 +74,15 @@ function getData(service, auth, cb) {
   
   if(service == 'vkontakte') {
     var options = {
-        host: '127.0.0.1',
-        port: 1347,
+        host: 'vk1-achi.eu01.aws.af.cm',
+        port: 80,
         path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
   }
 
   if(service == 'facebook') {
     var options = {
-        host: '127.0.0.1',
-        port: 1357,
+        host: 'facebook1-achi.eu01.aws.af.cm',
+        port: 80,
         path: '/?access_token='+auth};
   }
 
@@ -105,4 +105,4 @@ setInterval(function() {
     console.log('Run createQuery');
     createQuery();
   }
-}, 300000);
+}, 5000);

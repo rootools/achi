@@ -29,5 +29,5 @@ http.createServer(function (req, res) {
     res.end(JSON.stringify(profile));
   });
 
-}).listen(1337, '127.0.0.1');
+}).listen(process.env.VCAP_APP_PORT || 3000);
 

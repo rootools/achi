@@ -26,7 +26,7 @@ http.createServer(function (req, res) {
     res.end(JSON.stringify(response));
   });
 
-}).listen(1357, '127.0.0.1');
+}).listen(process.env.VCAP_APP_PORT || 3000);
 
 function getData(query, access_token, cb) {
   var options = {

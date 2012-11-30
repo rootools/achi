@@ -1,0 +1,14 @@
+--- 
+applications: 
+  .: 
+    mem: 64M
+    name: twitter1-achi
+    instances: 1
+    url: ${name}.${target-base}
+    infra: eu-aws
+    framework: 
+      name: node
+      info: 
+        mem: 64M
+        description: Node.js Application
+        exec: 

@@ -1,0 +1,14 @@
+--- 
+applications: 
+  .: 
+    framework: 
+      info: 
+        exec: 
+        description: Node.js Application
+        mem: 64M
+      name: node
+    instances: 1
+    infra: eu-aws
+    mem: 64M
+    name: facebook1-achi
+    url: ${name}.${target-base}

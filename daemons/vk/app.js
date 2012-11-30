@@ -9,7 +9,7 @@ http.createServer(function (req, res) {
   getData(query.access_token, query.uid, function(data) {
     res.end(JSON.stringify(data));
   });
-}).listen(1347, '127.0.0.1');
+}).listen(process.env.VCAP_APP_PORT || 3000);
 
 
 function getData(access_token, uid, cb) {
