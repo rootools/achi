@@ -1,3 +1,4 @@
+var config = require('../configs/config.js');
 var dashboard = require('./dashboard.js');
 var db;
 
@@ -7,8 +8,8 @@ var redis = require("redis"),
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
-    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true}),
-    db_connector = new mongodb.Db('achi', mongoserver, {safe: true});
+    mongoserver = new mongodb.Server(config.mongo.host, config.mongo.port, config.mongo.server_config),
+    db_connector = new mongodb.Db(config.mongo.db, mongoserver, config.mongo.connector_config);
 
   db_connector.open(function(err, dbs) {
     db = dbs;
