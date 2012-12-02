@@ -1,6 +1,7 @@
 var config = require('../configs/config.js');
 var locale = require('../configs/locale/main.js');
 
+var geoip = require('geoip-lite');
 var randomstring = require('randomstring');
 var db;
 
@@ -17,6 +18,7 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
+  var region = geoip.lookup(req.connection.remoteAddress).country;
   db.collection('users', function(err,collection) {
     if(req.session.auth && req.session.auth === true) {
       res.redirect('http://rootools.ru/');
@@ -28,6 +30,7 @@ exports.login = function(req, res) {
           req.session.auth = true;
           req.session.uid = doc.uid;
           req.session.email = doc.email;
+          req.session.lang = region;
           res.end(JSON.stringify({}));
         } else {
           res.end(JSON.stringify({error: locale.errors.err1.eng}));
@@ -39,7 +42,7 @@ exports.login = function(req, res) {
           registerUser(req.body.email, req.body.pass);
           res.end(JSON.stringify({}));
         } else {
-          res.end(JSON.stringify({error: 'This E-mail allready register' }));
+          res.end(JSON.stringify({error: locale.errors.err2.eng}));
         } 
       });
     } else {
@@ -73,5 +76,5 @@ function registerUser(email, pass) {
 
 exports.logout = function(req, res) {
   req.session.auth = false;
-  res.redirect('http://rootools.ru/');
+  res.redirect(config.site.url);
 };

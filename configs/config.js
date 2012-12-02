@@ -1,3 +1,7 @@
+exports.site = {
+  url: 'http://rootools.ru/'
+};
+
 exports.mongo = {
   db: 'achi',
   port: 27017,

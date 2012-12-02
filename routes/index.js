@@ -1,4 +1,5 @@
 var config = require('../configs/config.js');
+
 var db;
 
 function mongoConnect() {
