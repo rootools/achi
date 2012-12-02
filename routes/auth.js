@@ -1,4 +1,6 @@
 var config = require('../configs/config.js');
+var locale = require('../configs/locale/main.js');
+
 var randomstring = require('randomstring');
 var db;
 
@@ -28,7 +30,7 @@ exports.login = function(req, res) {
           req.session.email = doc.email;
           res.end(JSON.stringify({}));
         } else {
-          res.end(JSON.stringify({error: 'Error in E-mail or password'}));
+          res.end(JSON.stringify({error: locale.errors.err1.eng}));
         }
       });
     } else if(req.body.action === 'reg') {
