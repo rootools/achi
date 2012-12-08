@@ -185,7 +185,7 @@ function friends_list_row_click(elem) {
   var flag = $(elem).next().attr('class');
   var friends_uid = elem.id;
   if(flag === undefined || flag.split(' ')[1] !== 'friends_list_row_action') {
-    var html = '<div class="row friends_list_row_action"><button class="friends_list_row_action_button" value="profile" disabled>Profile</button><button class="friends_list_row_action_button" value="remove">Remove</button></div>';
+    var html = '<div class="row friends_list_row_action"><button class="friends_list_row_action_button" value="profile">Profile</button><button class="friends_list_row_action_button" value="remove">Remove</button></div>';
     $(elem).after(html);
     set_friends_list_action(friends_uid);
   } else {
@@ -205,6 +205,9 @@ function set_friends_list_action(friends_uid) {
         $(action_panel).parent().html(html);
         restore_friend_set_event();
       });
+    }
+    if(value === 'profile') {
+      document.location.href = 'http://rootools.ru/dashboard/user/'+friends_uid;
     }
   });
 }

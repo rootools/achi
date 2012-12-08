@@ -128,15 +128,19 @@ function get_friends_list(uid, cb) {
 }
 
 exports.main = function(req, res) {
-  pointsSum(req.session.uid, function(points) {
-    getServiceList(req.session.uid, function(service_list) {
-      get_messages(req.session.uid, 10, function(messages) {
-        get_user_profile(req.session.uid, function(profile) {
-          get_friends_list(req.session.uid, function(friends) {
-            res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, profile: profile, messages: messages, friends: friends} );
+  if(req.session === undefined) {
+    res.redirect(config.site.url);
+  } else {
+    pointsSum(req.session.uid, function(points) {
+      getServiceList(req.session.uid, function(service_list) {
+        get_messages(req.session.uid, 10, function(messages) {
+          get_user_profile(req.session.uid, function(profile) {
+            get_friends_list(req.session.uid, function(friends) {
+              res.render('profile.ect', { title: 'Profile', service_list:service_list, session:req.session, points: points, profile: profile, messages: messages, friends: friends} );
+            });
           });
         });
       });
     });
-  });
+  }
 };

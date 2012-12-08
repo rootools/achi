@@ -44,6 +44,8 @@ app.all('/logout', authRoutes.logout);
 app.all('/webapi', webApi.routing);
 app.all('/dashboard', dashboard.main);
 app.all('/dashboard/:service', dashboard.service);
+app.all('/dashboard/:service/user/:id', dashboard.service_user);
+app.all('/dashboard/user/:id', dashboard.user);
 app.all('/profile', profile.main);
 app.all('/upload', upload.main);
 
