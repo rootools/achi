@@ -86,9 +86,9 @@
             <td><%= row.lastupdate %></td>
             <td><%= row.addtime %></td>
             <% if row.addtime : %>
-              <td><button disabled class="bg-color-blue">Add</button></td>
+              <td><button disabled class="me_service_list_add_button bg-color-blue">Add</button></td>
             <% else : %>
-              <td><a href="/add_service/<%= row.service %>"><button class="bg-color-blueDark">Add</button></a></td>
+              <td><a href="/add_service/<%= row.service %>"><button class="me_service_list_add_button bg-color-blueDark">Add</button></a></td>
             <% end %>
         <% end %>
       </table>
