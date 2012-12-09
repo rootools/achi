@@ -239,4 +239,12 @@ function restore_friendship(req, res) {
   });
 }
 
+function get_new_notifications(req, res) {
+  db.collection('messages', function(err,collection) {
+    collection.find({target_uid: req.session.uid}).toArray(function(err, data){
+      res.end(data.length+'');
+    });
+  });
+}
+
 exports.routing = routing;

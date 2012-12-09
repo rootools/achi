@@ -5,17 +5,18 @@ function sync(path, data, cb) {
 }
 
 $(function() {
-    sync('webapi', {action: 'get_new_notifications'}, function(response) {
-      var notifications = document.getElementById('notifications');
-      notifications.innerHTML = '';
-      if(response.notice > 0) {
-        var html = '';
-        
-        html += '<a href="/profile#messages" class="fg-color-red" id="profile_messages"><i class="icon-mail"></i>'+response.notice+'</a>';
-        notifications.innerHTML = html;
-        $('#profile_messages').bind('click', function() {
-          location.reload();
-        });
-      }
-    });
+  sync('webapi', {action: 'get_new_notifications'}, function(response) {
+    console.log(response);
+    var notifications = document.getElementById('notifications');
+    notifications.innerHTML = '';
+    if(response > 0) {
+      var html = '';
+      
+      html += '<a href="/profile#messages" id="profile_messages"><span class="fg-color-red"><i class="icon-mail"></i>'+response+'</span></a>';
+      notifications.innerHTML = html;
+      $('#profile_messages').bind('click', function() {
+        location.reload();
+      });
+    }
+  });
 });
