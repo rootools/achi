@@ -13,12 +13,11 @@ function mongoConnect() {
 mongoConnect();
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+  res.render('index.ect', { title: 'Express' });
 };
 
 exports.editor_api = function(req, res) {
-  console.log(req.body);
-
+  
   if(req.body.command == 'get_service_list') {
     db.collection('achievements', function(err, collection) {
       collection.distinct('service', function(err, doc) {
@@ -57,6 +56,16 @@ exports.editor_api = function(req, res) {
     db.collection('achievements', function(err, collection) {
       collection.update({aid:req.body.aid},{$set:{name:req.body.name, description:req.body.description, position:parseInt(req.body.position), points:parseInt(req.body.points), icon:req.body.icon}}, function(err, doc) {});
       res.redirect('http://rootools.ru:3000/');
+    });
+  }
+  
+  if(req.body.command === 'get_users_list') {
+    db.collection('users', function(err, collection) {
+      collection.find({}).toArray(function(err, doc) {
+        var data = JSON.stringify({data: doc});
+        res.contentType('json');
+        res.end(data);
+      });
     });
   }
 };

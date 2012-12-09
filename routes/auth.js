@@ -1,5 +1,6 @@
 var config = require('../configs/config.js');
 var locale = require('../configs/locale/main.js');
+var ext_achivster = require('../external/achivster.js');
 
 var geoip = require('geoip-lite');
 var randomstring = require('randomstring');
@@ -64,10 +65,19 @@ function testUser(email, cb) {
 }
 
 function registerUser(email, pass) {
+  var uid = randomstring.generate(20);
   db.collection('users', function(err,collection) {
-    collection.insert({email: email, password: pass, uid: randomstring.generate(20)}, function(err, doc) {
+    collection.insert({email: email, password: pass, uid: uid}, function(err, doc) {
       db.collection('users_profile', function(err,profiles) {
-        profiles.insert({uid: doc[0].uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
+        profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
+          db.collection('services_connections', function(err, services_connections) {
+            services_connections.insert({uid: uid, service: 'achivster', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+              db.collection('users_achievements', function(err, users_achievements) {  
+                users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {});
+                ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
+              });
+            });
+          });
         });
       });
     });

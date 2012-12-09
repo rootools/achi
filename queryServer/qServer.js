@@ -31,7 +31,7 @@ function createQuery() {
   var now = new Date().getTime();
 
   db.collection('services_connections', function(err, collection) {
-    collection.find({valid: true, lastupdate: {$lt:now - 1800000}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+    collection.find({valid: true, lastupdate: {$lt:now - 1800000}, service:{$ne: 'achivster'}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
           if(task.service == 'twitter') {
@@ -85,7 +85,7 @@ function getData(service, auth, cb) {
         path: '/?access_token='+auth};
   }
 
-  callback = function(res) {
+  var callback = function(res) {
     var str = '';
     res.on('data', function(chunk) {
       str += chunk;
@@ -94,13 +94,13 @@ function getData(service, auth, cb) {
     res.on('end', function() {
       cb(JSON.parse(str));
     });
-  }
+  };
 
   http.request(options, callback).end();
 }
 
 setInterval(function() {
-  if(q == undefined || q.length() == 0) {
+  if(q === undefined || q.length() === 0) {
     console.log('Run createQuery');
     createQuery();
   }

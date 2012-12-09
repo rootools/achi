@@ -31,7 +31,7 @@ function getAchivList(service) {
 
 function getService() {
   var body = document.getElementById('menu');
-  var html = '';
+  var html = '<button class="bg-color-blue" id="users_list">Users</button>';
 
   getData({command:'get_service_list'}, function(data) {
     for(var i=0;i<data.length;i++) {
@@ -48,6 +48,10 @@ function getService() {
 
     $('#add_achiev').bind('click', function() {
       addNewAchiv(data);
+    });
+    
+    $('#users_list').bind('click', function() {
+      get_users_list();
     });
   });
 
@@ -125,6 +129,19 @@ function showEditWindow(achiv) {
     $('#table_achiv').css({'width':'100%', 'position':'', 'float':''});
   });
 
+}
+
+function get_users_list() {
+  var content = document.getElementById('content');
+  content.innerHTML = '';
+  
+  var html = '<table>';
+  getData({command: 'get_users_list'}, function(data) {
+    for(var i in data) {
+      html += '<tr><td>'+data[i].uid+'</td><td>'+data[i].email+'</td><td><button>Remove</button></td>';
+    }
+    content.innerHTML = html;
+  });
 }
 
 $(function() {
