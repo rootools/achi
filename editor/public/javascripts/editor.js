@@ -138,9 +138,18 @@ function get_users_list() {
   var html = '<table>';
   getData({command: 'get_users_list'}, function(data) {
     for(var i in data) {
-      html += '<tr><td>'+data[i].uid+'</td><td>'+data[i].email+'</td><td><button>Remove</button></td>';
+      html += '<tr><td>'+data[i].uid+'</td><td>'+data[i].email+'</td><td><button class="remove_user" id="'+data[i].uid+'">Remove</button></td>';
     }
     content.innerHTML = html;
+    $('.remove_user').bind('click', function(){
+      remove_user(this.id);
+    });
+  });
+}
+
+function remove_user(uid) {
+  getData({command: 'remove_user', uid: uid}, function(data){
+    
   });
 }
 

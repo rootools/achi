@@ -68,4 +68,26 @@ exports.editor_api = function(req, res) {
       });
     });
   }
+  
+  if(req.body.command === 'remove_user') {
+    var uid = req.body.uid;
+    db.collection('users', function(err,collection) {
+    collection.remove({uid: uid}, function(err, doc) {
+      db.collection('users_profile', function(err,profiles) {
+        profiles.remove({uid: uid}, function(err, doc) {
+          db.collection('services_connections', function(err, services_connections) {
+            services_connections.insert({uid: uid}, function(err, doc) {
+              db.collection('users_achievements', function(err, users_achievements) {  
+                users_achievements.insert({uid: uid}, function(err, doc) {});
+                var data = JSON.stringify({});
+                res.contentType('json');
+                res.end(data);
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+  }
 };

@@ -104,6 +104,7 @@ function get_friends_list(uid, cb) {
     collection.findOne({uid: uid},{friends: 1, _id: 0}, function(err, doc) {
       
       var friends_uid_list = doc.friends;
+      
       var handler = friends_uid_list.length;
       if(handler === 0) {
         cb([]);
@@ -128,7 +129,8 @@ function get_friends_list(uid, cb) {
 }
 
 exports.main = function(req, res) {
-  if(req.session === undefined) {
+  console.log(req.session.uid);
+  if(req.session.auth === false) {
     res.redirect(config.site.url);
   } else {
     pointsSum(req.session.uid, function(points) {

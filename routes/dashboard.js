@@ -150,7 +150,7 @@ function get_achievment_stat(achivList, allAchievements, points) {
 }
 
 exports.main = function(req, res) {
-  if(req.session === undefined) {
+  if(req.session.auth === false) {
     res.redirect(config.site.url);
   } else {
     getUserAchievements(req.session.uid, function(achivList, lastAchivArray, points) {
@@ -164,11 +164,15 @@ exports.main = function(req, res) {
 };
 
 exports.service = function(req, res) {
-  getUserAchievementsByService(req.params.service, req.session.uid, function(data){
-    getServiceInfo(req.params.service, function(serviceInfo) {
-      res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo, session: req.session});
+  if(req.session.auth === false) {
+    res.redirect(config.site.url);
+  } else {
+    getUserAchievementsByService(req.params.service, req.session.uid, function(data){
+      getServiceInfo(req.params.service, function(serviceInfo) {
+        res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo, session: req.session});
+      });
     });
-  });
+  }
 };
 
 // HASH IT!!
