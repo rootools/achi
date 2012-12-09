@@ -1,5 +1,11 @@
 $(function() {
-  
+  get_notifications();
+  setInterval(function() {
+    get_notifications();
+  }, 300000);
+});
+
+function get_notifications() {
   sync('/webapi', {action: 'get_new_notifications'}, function(response) {
     var notifications = document.getElementById('notifications');
     notifications.innerHTML = '';
@@ -18,4 +24,4 @@ $(function() {
       });
     }
   });
-});
+}

@@ -5,6 +5,10 @@ $(function() {
     showContainer('message_list');
   }
   
+  if(document.URL.split('#')[1] === 'friends') {
+    showContainer('friends_list');
+  }
+  
   $('.profile_menu_button').bind('click', function() {
     var elem = this.id;
     $('.service_container').fadeOut(200);
@@ -62,8 +66,7 @@ function findUser() {
   var find_email = document.getElementById('input_find_friend').value;
   var error_result_field = document.getElementById('error_search_friends_result');
   var result_field = document.getElementById('search_friends_result');
-  sync('webapi', {action: 'find_by_email', email: find_email}, function(response) {
-    console.log(response);
+  sync('/webapi', {action: 'find_by_email', email: find_email}, function(response) {
     if(response.error) {
       error_result_field.innerHTML = '';
       error_result_field.innerHTML = '<strong><i class="icon-warning"></i>'+response.error+'</strong>';
@@ -86,7 +89,7 @@ function findUser() {
       result_field.innerHTML = html;
       $('.add_friend').bind('click', function() {
         var uid = this.id.split('add_friend_')[1];
-        sync('webapi', {action: 'send_friendship_request', uid: uid}, function(response) {
+        sync('/webapi', {action: 'send_friendship_request', uid: uid}, function(response) {
           if(response.error) {
             document.getElementById('add_friend_'+uid).innerHTML = response.error;
             document.getElementById('add_friend_'+uid).disabled = true;
@@ -109,7 +112,7 @@ function findUser() {
 
 function upload_file(url) {
   if(/^([a-z]([a-z]|\d|\+|-|\.)*):(\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?((\[(|(v[\da-f]{1,}\.(([a-z]|\d|-|\.|_|~)|[!\$&'\(\)\*\+,;=]|:)+))\])|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=])*)(:\d*)?)(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*|(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)|((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)){0})(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url)) {
-    sync('upload', {action: 'upload_profile_photo_from_url', url: url}, function(data) {
+    sync('/upload', {action: 'upload_profile_photo_from_url', url: url}, function(data) {
       if(data.error) {
         me_edit_error_message(data.error);
         document.getElementById('me_edit_title_photo').setAttribute("class", "fg-color-red");
@@ -124,7 +127,7 @@ function upload_file(url) {
 
 function change_name(name) {
   if(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/i.test(name)) {
-    sync('webapi', {action: 'edit_profile_name', name: name}, function(data) {});
+    sync('/webapi', {action: 'edit_profile_name', name: name}, function(data) {});
   } else {
     me_edit_error_message('Name(only letters and numbers)', 'me_edit_title_name');
   }
@@ -132,7 +135,7 @@ function change_name(name) {
 
 function change_pass(oldPass, newPass, newPassVerify) {
   if(newPass === newPassVerify) {
-    sync('webapi',{action: 'edit_profile_change_password', oldPass: CryptoJS.MD5(oldPass).toString(), newPass: CryptoJS.MD5(newPass).toString()}, function(response) {
+    sync('/webapi',{action: 'edit_profile_change_password', oldPass: CryptoJS.MD5(oldPass).toString(), newPass: CryptoJS.MD5(newPass).toString()}, function(response) {
       if(response.error) {
         me_edit_error_message(response.error, 'me_edit_change_password');
       } else {
@@ -176,7 +179,13 @@ function set_message_list_action() {
     owner_uid = owner_uid[0];
     var button_action = this.value;
     sync('webapi', {action: 'friendship_accept_or_reject', command: button_action, owner_uid: owner_uid, target_uid: target_uid}, function(response) {
-      
+      var message_row = $('#'+message_id);
+      $(message_row).next().remove();
+      $(message_row).remove();
+      $('#friends_list').bind('click', function() {
+        location = '/profile#friends';
+        location.reload();
+      });
     });
   });
 }
