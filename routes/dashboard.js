@@ -164,6 +164,22 @@ function get_service_icon(cb) {
   });
 }
 
+function countAchivmentsFromService(data) {
+  var result = {};
+  result.all = data.length;
+  result.earned = 0;
+  result.pointsAll = 0;
+  result.points = 0;
+  for(var i in data) {
+    if(data[i].earned === true) {
+      result.earned += 1;
+      result.points += data[i].points;
+    }
+    result.pointsAll += data[i].points;
+  }
+  return result;
+}
+
 exports.main = function(req, res) {
   if(req.session.auth === false) {
     res.redirect(config.site.url);
@@ -183,8 +199,9 @@ exports.service = function(req, res) {
     res.redirect(config.site.url);
   } else {
     getUserAchievementsByService(req.params.service, req.session.uid, function(data){
+      var service_info_count = countAchivmentsFromService(data);
       getServiceInfo(req.params.service, function(serviceInfo) {
-        res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo, session: req.session});
+        res.render('dashboard_service.ect', { title: 'Dashboard', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
       });
     });
   }
@@ -249,7 +266,8 @@ exports.user = function(req, res) {
 exports.service_user = function(req, res) {
   getUserAchievementsByService(req.params.service, req.params.id, function(data){
     getServiceInfo(req.params.service, function(serviceInfo) {
-      res.render('dashboard_service.ect', { title: req.params.service, list:data, service_info:serviceInfo, session: req.session});
+      var service_info_count = countAchivmentsFromService(data);
+      res.render('dashboard_service.ect', { title: 'Dashboard', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
     });
   });
 };

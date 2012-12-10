@@ -5,9 +5,12 @@
 <div class="grid">
 
   <div class="row">
-    <h3>Service Info</h3>
+    <img src="<%= @service_info.icon %>" width="194px" height="194px">
+    <h2><%= @service_info.service %></h2>
+    <h4><i class="icon-trophy"></i><%= @service_info_count.earned %>/<%= @service_info_count.all %></h4>
+    <h4><i class="icon-star-4"></i><%= @service_info_count.points %>/<%= @service_info_count.pointsAll %></h4>
   </div>
-
+    
   <div class="row">
     <table>
       <% for item in @list : %>
