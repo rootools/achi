@@ -83,4 +83,9 @@ $(function() {
     getAchievementsList(this.firstChild.textContent);
   });
 
+  $('.dashboard_back').click(function(){
+    var a = location.pathname.split('/');
+    console.log(a.length);
+  });
+
 });

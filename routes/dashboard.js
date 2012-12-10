@@ -254,8 +254,9 @@ exports.user = function(req, res) {
       } else {
         getUserAchievements(uid, function(achivList, lastAchivArray, points) {
           getAllAchievementsCount(function(allAchievements) {
-            var achivStat = get_achievment_stat(achivList, allAchievements, points);
-            res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session, target_uid: uid });
+            get_achievment_stat(achivList, allAchievements, points, function(achivStat) {
+              res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session, target_uid: uid });
+            });
           });
         });
       }

@@ -2,3 +2,12 @@
   font-size: 38px;
   margin-right: 28px;
 }
+
+#service_left, #service_right {
+  position: relative;
+  float: left;
+}
+
+#service_right {
+  margin-top: -10px;
+}

@@ -12,6 +12,10 @@ div.page {
   text-align: center;
 }
 
+.uppercase_first:first-letter {
+  text-transform: uppercase;
+}
+
 /*
 Menu bar block
 */
