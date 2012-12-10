@@ -29,10 +29,7 @@ exports.login = function(req, res) {
       collection.findOne({email: req.body.email}, function(err, doc) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
-            req.session.auth = true;
-            req.session.uid = doc.uid;
-            req.session.email = doc.email;
-            req.session.lang = region;
+            add_session(req, doc.uid, doc.email, region);
             res.end(JSON.stringify({}));
           } else {
             res.end(JSON.stringify({error: locale.errors.err1.eng}));
@@ -44,8 +41,9 @@ exports.login = function(req, res) {
     } else if(req.body.action === 'reg') {
       testUser(req.body.email, function(flag) {
         if(flag === true) {
-          registerUser(req.body.email, req.body.pass);
-          res.end(JSON.stringify({}));
+          registerUser(req.body.email, req.body.pass, region, req, function(){
+            res.end(JSON.stringify({}));
+          });
         } else {
           res.end(JSON.stringify({error: locale.errors.err2.eng}));
         } 
@@ -68,7 +66,7 @@ function testUser(email, cb) {
   });  
 }
 
-function registerUser(email, pass) {
+function registerUser(email, pass, region, req, cb) {
   var uid = randomstring.generate(20);
   db.collection('users', function(err,collection) {
     collection.insert({email: email, password: pass, uid: uid}, function(err, doc) {
@@ -78,7 +76,9 @@ function registerUser(email, pass) {
             services_connections.insert({uid: uid, service: 'achivster', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
               db.collection('users_achievements', function(err, users_achievements) {  
                 users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {});
+                add_session(req, uid, email, region);
                 ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
+                cb();
               });
             });
           });
@@ -86,6 +86,13 @@ function registerUser(email, pass) {
       });
     });
   });
+}
+
+function add_session(req, uid, email, lang) {
+  req.session.auth = true;
+  req.session.uid = uid;
+  req.session.email = email;
+  req.session.lang = lang;
 }
 
 exports.logout = function(req, res) {
