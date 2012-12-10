@@ -27,12 +27,16 @@ exports.login = function(req, res) {
 
     if(req.body.action === 'login') {
       collection.findOne({email: req.body.email}, function(err, doc) {
-        if(req.body.pass === doc.password) {
-          req.session.auth = true;
-          req.session.uid = doc.uid;
-          req.session.email = doc.email;
-          req.session.lang = region;
-          res.end(JSON.stringify({}));
+        if(doc !== null) {
+          if(req.body.pass === doc.password) {
+            req.session.auth = true;
+            req.session.uid = doc.uid;
+            req.session.email = doc.email;
+            req.session.lang = region;
+            res.end(JSON.stringify({}));
+          } else {
+            res.end(JSON.stringify({error: locale.errors.err1.eng}));
+          }
         } else {
           res.end(JSON.stringify({error: locale.errors.err1.eng}));
         }

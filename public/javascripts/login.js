@@ -50,7 +50,9 @@ function setCloseButton() {
 
 function setSubmitButton() {
   $('#loginFormSubmitButton').click(function() {
-    submitAction();
+    if(testInputContents()) {
+      submitAction();
+    }
   });
 }
 
