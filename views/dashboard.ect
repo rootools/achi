@@ -8,7 +8,7 @@
   <div class="row">
     <% for achiv in @lastAchivArray : %>
       <div class="span2">
-        <div class="tile bg-color-blue" title="<%= achiv.name %>(<%= achiv.service %>)">
+        <div class="tile bg-color-blueDark" title="<%= achiv.name %>(<%= achiv.service %>)">
           <div class="tile-content icon">
             <img src="<%= achiv.icon %>" width="128px" height="128px">
           </div>
@@ -41,7 +41,7 @@
         <% end %>
           <div class="tile double bg-color-green">
             <div class="tile-content">
-              <img class="place-right" src="/images/label.png">
+              <img class="place-right" src="<%= item.icon %>" width="128px" height="128px">
               <h2><%= item.service %></h2>
               <h4><%= item.earnedPoints %>/<%= item.fullPoints %></h4>
             </div>

@@ -129,7 +129,6 @@ function get_friends_list(uid, cb) {
 }
 
 exports.main = function(req, res) {
-  console.log(req.session.uid);
   if(req.session.auth === false) {
     res.redirect(config.site.url);
   } else {

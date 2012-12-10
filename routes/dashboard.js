@@ -77,15 +77,15 @@ function getAllAchievementsCount(cb) {
 	db.collection('achievements', function(err, collection) {
 		collection.find({},{service: 1, points:1}).toArray(function(err, doc) {
 			for(var i=0;i<doc.length;i++){
-				if(result[doc[i].service+'_count'] !== undefined) {
+        if(result[doc[i].service+'_count'] !== undefined) {
 					result[doc[i].service+'_count'] += 1;
 					result[doc[i].service+'_points'] += doc[i].points;
 				} else {
 					result[doc[i].service+'_count'] = 1;
 					result[doc[i].service+'_points'] = doc[i].points;
 				}
-			}
-			cb(result);
+      }
+      cb(result);
 		});
 	});
 }
@@ -134,19 +134,34 @@ function getLatestAchievements(data, cb) {
 	});
 }
 
-function get_achievment_stat(achivList, allAchievements, points) {
-  var achivStat = [];
-  for(var i=0;i<achivList.length;i++){
-    var tmpObj = {};
-    tmpObj.service = achivList[i].service;
-    tmpObj.earned = achivList[i].achievements.length;
-    tmpObj.full = allAchievements[achivList[i].service+'_count'];
-    tmpObj.earnedPoints = points[achivList[i].service];
-    if(tmpObj.earnedPoints === undefined) {tmpObj.earnedPoints = 0;}
-    tmpObj.fullPoints = allAchievements[achivList[i].service+'_points'];
-    achivStat.push(tmpObj);
-  }
-  return achivStat;
+function get_achievment_stat(achivList, allAchievements, points, cb) {
+  get_service_icon(function(service_icon){
+    var achivStat = [];
+    for(var i=0;i<achivList.length;i++){
+      var tmpObj = {};
+      tmpObj.service = achivList[i].service;
+      tmpObj.earned = achivList[i].achievements.length;
+      tmpObj.full = allAchievements[achivList[i].service+'_count'];
+      tmpObj.earnedPoints = points[achivList[i].service];
+      if(tmpObj.earnedPoints === undefined) {tmpObj.earnedPoints = 0;}
+      tmpObj.fullPoints = allAchievements[achivList[i].service+'_points'];
+      for(var r in service_icon) {
+        if(service_icon[r].service === tmpObj.service) {
+          tmpObj.icon = service_icon[r].icon;
+        }
+      }
+      achivStat.push(tmpObj);
+    }
+    cb(achivStat);
+  });
+}
+
+function get_service_icon(cb) {
+  db.collection('services_info', function(err, collection){
+    collection.find({},{service:1, icon:1, _id: 0}).toArray(function(err, doc){
+      cb(doc);
+    });
+  });
 }
 
 exports.main = function(req, res) {
@@ -155,9 +170,9 @@ exports.main = function(req, res) {
   } else {
     getUserAchievements(req.session.uid, function(achivList, lastAchivArray, points) {
       getAllAchievementsCount(function(allAchievements) {
-			var achivStat = get_achievment_stat(achivList, allAchievements, points);
-      //achivStat.push({service:'main', earned: 12, full: 24});
-      res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session });
+        get_achievment_stat(achivList, allAchievements, points, function(achivStat) {
+          res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session });
+        });
       });
     });
   }
