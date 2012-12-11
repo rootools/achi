@@ -17,6 +17,10 @@
   border: 1px solid;
 }
 
+.profile_menu_button {
+  background-color: #C7FCEC !important;
+}
+
 .find_bar {
   position: relative;
   float: left;
