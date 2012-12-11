@@ -84,8 +84,7 @@ $(function() {
   });
 
   $('.dashboard_back').click(function(){
-    var a = location.pathname.split('/');
-    console.log(a.length);
+    history.go(-1);
   });
 
 });
