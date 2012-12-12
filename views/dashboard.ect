@@ -8,9 +8,9 @@
   <div class="row">
     <% for achiv in @lastAchivArray : %>
       <div class="span2">
-        <div class="tile bg-color-blueDark" title="<%= achiv.name %>(<%= achiv.service %>)">
-          <div class="tile-content icon">
-            <img src="<%= achiv.icon %>" width="128px" height="128px">
+        <div class="tile bg-color-blueDark last_achiv_tile" title="<%= achiv.name %>">
+          <div class="tile-content">
+            <img src="<%= achiv.icon %>" width="100px" height="100px" class="place-left">
           </div>
           <div class="brand">
             <div class="name"><%= achiv.time %></div>

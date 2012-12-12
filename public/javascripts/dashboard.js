@@ -1,8 +1,8 @@
 function getAchievementsList(service) {
   sync('webapi', {action:"getAchievementsList", service:service}, function(fullAchievementsList) {
     sync('webapi', {action:"userAchievementsList", service:service}, function(userAchievementsList) {
-      if(userAchievementsList.achievements == undefined) {userAchievementsList.achievements = [];}
-      if(userAchievementsList == null) { userAchievementsList = {}; userAchievementsList.achievements = []; }
+      if(userAchievementsList.achievements === undefined) {userAchievementsList.achievements = [];}
+      if(userAchievementsList === null) { userAchievementsList = {}; userAchievementsList.achievements = []; }
       renderAchievementsList(fullAchievementsList, userAchievementsList.achievements);
     });
   });
@@ -77,14 +77,37 @@ function setAchievementBadgListenters(achivList) {
   });
 }
 
+function last_achiv_event(elem) {
+  var flag = $(elem).attr('class').split('double').length;
+    if(flag === 1 ) {
+      $('.last_achiv_tile').removeClass('double');
+      $('.last_achiv_tile').css('z-index', '');
+      $('.last_achiv_tile').children('.tile-content').children('.last_achiv_tile_name').remove();
+      
+      var achiv_name = $(elem).attr('title');
+      $(elem).children('.tile-content').append('<h3 class="last_achiv_tile_name">'+achiv_name)+'</h3>';
+      $(elem).addClass('double');
+      $(elem).css('z-index', '999');
+      
+    } else {
+      $(elem).children('.tile-content').children('.last_achiv_tile_name').remove();
+      $(elem).removeClass('double');
+      $(elem).css('z-index', '');
+    }
+}
+
 $(function() {
 
   $('.dashboard_menu_button').click(function() {
     getAchievementsList(this.firstChild.textContent);
   });
 
-  $('.dashboard_back').click(function(){
+  $('.dashboard_back').click(function() {
     history.go(-1);
+  });
+  
+  $('.last_achiv_tile').click(function() {
+    last_achiv_event(this);
   });
 
 });
