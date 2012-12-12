@@ -1,8 +1,9 @@
 <% extend 'layout.ect' %>
 
-<script src="javascripts/dashboard.js"></script>
+<script type="text/javascript" src="http://vkontakte.ru/js/api/share.js?9" charset="windows-1251"></script>
+<script src="/javascripts/dashboard.js"></script>
 
-<div class="grid">
+<div class="grid" id="<%= @session.uid %>">
 
 <!-- Generate last 6 achiv area-->
   <div class="row">
@@ -10,10 +11,11 @@
       <div class="span2">
         <div class="tile bg-color-blueDark last_achiv_tile" title="<%= achiv.name %>">
           <div class="tile-content">
-            <img src="<%= achiv.icon %>" width="100px" height="100px" class="place-left">
+            <img src="<%= achiv.icon %>" width="100px" height="100px" class="place-left achiv_icon">
           </div>
           <div class="brand">
             <div class="name"><%= achiv.time %></div>
+            <div class="social_sharing"></div>
             <div class="badge"><%= achiv.points %></div>
           </div>
         </div>

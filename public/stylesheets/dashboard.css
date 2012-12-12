@@ -11,3 +11,10 @@
 #service_right {
   margin-top: -10px;
 }
+
+.social_sharing {
+  position: relative;
+  float: right;
+  margin-top: 3px;
+  margin-right: 40px;
+}
