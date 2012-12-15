@@ -91,7 +91,13 @@ function last_achiv_event(elem) {
       $(elem).children('.brand').children('.social_sharing').html(social_sharing);
       $(elem).addClass('double');
       $(elem).css('z-index', '888');
+      if($($('.last_achiv_tile')[5]).attr('title') === $(elem).attr('title')) {
+        $(elem).css('right', '160px');
+      }
     } else {
+      if($($('.last_achiv_tile')[5]).attr('title') === $(elem).attr('title')) {
+        $(elem).css('right', '');
+      }
       $(elem).children('.tile-content').children('.last_achiv_tile_name').remove();
       $(elem).children('.brand').children('.social_sharing').html('');
       $(elem).removeClass('double');
@@ -102,7 +108,7 @@ function last_achiv_event(elem) {
 function create_social_sharing_pannerl(elem, name) {
   var icon = location.origin + $(elem).children('.tile-content').children('.achiv_icon').attr('src');
   var points = $(elem).children('.brand').children('.badge').text();
-  var url = location.origin+'/dashboard/user/' + $('.grid').attr('id');
+  var url = 'http://'+location.host+'/dashboard/user/' + $('.grid').attr('id');
   var title = 'Я заработал достижение!';
   var text = '"'+name + '" за '+points+' очков! #ачивстер #achivster';
   var html = '';
