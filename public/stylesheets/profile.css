@@ -11,6 +11,7 @@
   position: relative;
   float: left;
   margin-left: 12px;
+  margin-top: -14px;
 }
 
 #user_photo {
@@ -18,7 +19,7 @@
 }
 
 .profile_menu_button {
-  background-color: #C7FCEC !important;
+  background-color: #99CCFF !important;
 }
 
 .find_bar {
