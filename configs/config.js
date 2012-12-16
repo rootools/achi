@@ -1,5 +1,5 @@
 exports.site = {
-  url: 'http://rootools.ru/'
+  url: 'http://achivster.com/'
 };
 
 exports.mongo = {
