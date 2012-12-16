@@ -39,6 +39,12 @@ function getServiceList(uid, cb) {
 
       for(var i in data.all) {
         for(var r in data.added) {
+          // HACK!!
+          if(data.all[i].service === 'vkontakte') { response[i].button_icon = 'v'}
+          if(data.all[i].service === 'facebook') { response[i].button_icon = 'f'}
+          if(data.all[i].service === 'twitter') { response[i].button_icon = 't'}
+          if(data.all[i].service === 'achivster') { response[i].button_icon = '¹'}
+          //
           if(data.added[r].service === data.all[i].service) {
             response[i].valid = data.added[r].valid;
             response[i].addtime = moment(data.added[r].addtime).format('DD.MM.YYYY hh:mm');
@@ -46,6 +52,7 @@ function getServiceList(uid, cb) {
           }
         }
       }
+      console.log(response);
       cb(response);
     });
 }
