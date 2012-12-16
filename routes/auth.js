@@ -19,7 +19,8 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
-  var region = geoip.lookup(req.connection.remoteAddress).country;
+  var region = '';
+  //var region = geoip.lookup(req.connection.remoteAddress).country;
   db.collection('users', function(err,collection) {
     if(req.session.auth && req.session.auth === true) {
       res.redirect(config.site.url);
