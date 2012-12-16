@@ -19,6 +19,7 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
+  console.log(req.session);
   var region = '';
   //var region = geoip.lookup(req.connection.remoteAddress).country;
   db.collection('users', function(err,collection) {
@@ -30,8 +31,9 @@ exports.login = function(req, res) {
       collection.findOne({email: req.body.email}, function(err, doc) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
-            add_session(req, doc.uid, doc.email, region);
-            res.end(JSON.stringify({}));
+            add_session(req, doc.uid, doc.email, region, function() {
+              res.end(JSON.stringify({}));
+            });
           } else {
             res.end(JSON.stringify({error: locale.errors.err1.eng}));
           }
@@ -77,9 +79,10 @@ function registerUser(email, pass, region, req, cb) {
             services_connections.insert({uid: uid, service: 'achivster', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
               db.collection('users_achievements', function(err, users_achievements) {  
                 users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {});
-                add_session(req, uid, email, region);
                 ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
-                cb();
+                add_session(req, uid, email, region, function() {
+                  cb();
+                });
               });
             });
           });
@@ -89,11 +92,12 @@ function registerUser(email, pass, region, req, cb) {
   });
 }
 
-function add_session(req, uid, email, lang) {
+function add_session(req, uid, email, lang, cb) {
   req.session.auth = true;
   req.session.uid = uid;
   req.session.email = email;
   req.session.lang = lang;
+  cb();
 }
 
 exports.logout = function(req, res) {

@@ -9,7 +9,7 @@ var twitterOA = new oauth(
   'CXWNIxTwg8vyTmtETDbPMA',
   'd4rgsi9dvbMhUgYVT3kbQD0L9lZ8I8NO8dG2oqOHY',
   '1.0',
-  'http://rootools.ru/add_service/twitter',
+  'http://achivster.com/add_service/twitter',
   'HMAC-SHA1'
 );
 
