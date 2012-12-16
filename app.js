@@ -21,7 +21,7 @@ var ectRenderer = ECT({ cache: false, watch: false, root: __dirname + '/views' }
 app.engine('.ect', ectRenderer.render);
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 80);
+  app.set('port', process.env.PORT || 8001);
   app.set('views', __dirname + '/views');
 //  app.set('view engine', 'ect');
   app.use(express.favicon());
