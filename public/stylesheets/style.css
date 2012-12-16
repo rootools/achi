@@ -129,3 +129,7 @@ td.td_achiv_table {
 div#error_show {
   text-align: center;
 }
+
+.social_button_group {
+  margin-right: 10px;
+}
