@@ -16,6 +16,7 @@
     "redis": "*",
     "vkontakte": "*",
     "easyimage": "*",
-    "randomstring": "*"
+    "randomstring": "*",
+    "geoip-lite": "*"
   }
 }
