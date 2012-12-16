@@ -10,7 +10,7 @@ var twitterOA = new oauth(
   'CXWNIxTwg8vyTmtETDbPMA',
   'd4rgsi9dvbMhUgYVT3kbQD0L9lZ8I8NO8dG2oqOHY',
   '1.0',
-  'http://rootools.ru/add_service/twitter',
+  config.site.url+'add_service/twitter',
   'HMAC-SHA1'
 );
 
@@ -30,13 +30,13 @@ mongoConnect();
 
 exports.vk = function(req, res) {
   if(!req.query.code) {
-    res.redirect('http://oauth.vk.com/authorize?client_id=3126840&scope=notify,friends,photos,audio,video,status,wall,groups,notifications,offline&display=popup&response_type=code&tt=12&redirect_uri=http://rootools.ru/add_service/vkontakte');
+    res.redirect('http://oauth.vk.com/authorize?client_id=3126840&scope=notify,friends,photos,audio,video,status,wall,groups,notifications,offline&display=popup&response_type=code&tt=12&redirect_uri='+config.site.url+'add_service/vkontakte');
   } 
   if(req.query.code) {
     var options = {
       host: 'oauth.vk.com',
       method: 'GET',
-      path: '/access_token?client_id=3126840&client_secret=nlKuMIbXcEV6HqLn1W1n&code='+req.query.code+'&redirect_uri=http://rootools.ru/add_service/vkontakte&'
+      path: '/access_token?client_id=3126840&client_secret=nlKuMIbXcEV6HqLn1W1n&code='+req.query.code+'&redirect_uri='+config.site.url+'add_service/vkontakte&'
     };
 
     var callback = function(response) {
@@ -54,7 +54,7 @@ exports.vk = function(req, res) {
     };
 
     https.request(options, callback).end();
-    res.redirect('http://rootools.ru/profile');
+    res.redirect(config.site.url+'profile');
   }
 };
 
@@ -64,7 +64,7 @@ exports.twitter = function(req, res) {
       var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };
       add_service(req.session, data, 'twitter');
       delete req.session.twitter_request_oauth_token_secret;
-      res.redirect('http://rootools.ru/profile');
+      res.redirect(config.site.url+'profile');
     });
   } else {
 
@@ -77,7 +77,7 @@ exports.twitter = function(req, res) {
 
 exports.facebook = function(req, res) {
   if(!req.query.code) {  
-    res.redirect('https://www.facebook.com/dialog/oauth?client_id=258024554279925&redirect_uri=http://rootools.ru/add_service/facebook&state=123&scope=publish_actions,user_photos');
+    res.redirect('https://www.facebook.com/dialog/oauth?client_id=258024554279925&redirect_uri='+config.site.url+'add_service/facebook&state=123&scope=publish_actions,user_photos');
   } 
   if(req.query.code) {
     var code = req.query.code;
@@ -85,7 +85,7 @@ exports.facebook = function(req, res) {
     var options = {
       host: 'graph.facebook.com',
       method: 'GET',
-      path: '/oauth/access_token?client_id=258024554279925&redirect_uri=http://rootools.ru/add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+req.query.code
+      path: '/oauth/access_token?client_id=258024554279925&redirect_uri='+config.site.url+'add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+req.query.code
     }
 
     var callback = function(response) {
@@ -102,7 +102,7 @@ exports.facebook = function(req, res) {
     }
 
     https.request(options, callback).end();
-    res.redirect('http://rootools.ru/profile');
+    res.redirect(config.site.url+'profile');
   }
 }
 
@@ -136,4 +136,3 @@ function testService(uid, service, cb) {
   });
   });
 }
-

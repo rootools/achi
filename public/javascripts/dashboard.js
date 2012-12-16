@@ -119,7 +119,7 @@ function create_social_sharing_pannerl(elem, name) {
   html += VK.Share.button(vk_sharing_object_1, vk_sharing_object_2);
   // Facebook
   // http://developers.facebook.com/docs/reference/dialogs/feed/
-  html += '<a href="https://www.facebook.com/dialog/feed?app_id=258024554279925&link=https://developers.facebook.com/docs/reference/dialogs/&picture='+icon+'&name='+title+'&caption=http://achivster.com/&description='+encodeURIComponent(text)+'&redirect_uri=http://rootools.ru/dashboard&link='+url+'">';
+  html += '<a href="https://www.facebook.com/dialog/feed?app_id=258024554279925&link=https://developers.facebook.com/docs/reference/dialogs/&picture='+icon+'&name='+title+'&caption=http://achivster.com/&description='+encodeURIComponent(text)+'&redirect_uri=http://'+location.host+'/dashboard&link='+url+'">';
   html += '<i class="websymbols social_sharing_button" id="facebook_sharing">f</i></a>';
   // Twitter
   // https://dev.twitter.com/docs/tweet-button

@@ -216,7 +216,7 @@ function set_friends_list_action(friends_uid) {
       });
     }
     if(value === 'profile') {
-      document.location.href = 'http://rootools.ru/dashboard/user/'+friends_uid;
+      document.location.href = 'http://'+location.host+'/dashboard/user/'+friends_uid;
     }
   });
 }

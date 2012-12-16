@@ -22,7 +22,7 @@ exports.login = function(req, res) {
   var region = geoip.lookup(req.connection.remoteAddress).country;
   db.collection('users', function(err,collection) {
     if(req.session.auth && req.session.auth === true) {
-      res.redirect('http://rootools.ru/');
+      res.redirect(config.site.url);
     }
 
     if(req.body.action === 'login') {
