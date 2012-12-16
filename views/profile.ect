@@ -90,20 +90,29 @@
     </div>
     
     <div id="profile_service_container" class="service_container" style="display:none">
-      <table>
-        <th>Service</th><th>Updated</th><th>Added time</th><th>Action</th>
         <% for row in @service_list : %>
-          <tr>
-            <td><h3><%= row.service %></h3></td>
-            <td><%= row.lastupdate %></td>
-            <td><%= row.addtime %></td>
-            <% if row.addtime : %>
-              <td><button disabled class="me_service_list_add_button bg-color-blue">Add</button></td>
-            <% else : %>
-              <td><a href="/add_service/<%= row.service %>"><button class="me_service_list_add_button bg-color-blueDark">Add</button></a></td>
-            <% end %>
+          <% if row.addtime : %>
+            <button disabled class="me_service_list_add_button shortcut">
+              <span class="icon">
+                <i class="websymbols"><%= row.button_icon %></i>
+              </span>
+              <span class="label">
+                <%= row.service %>
+              </span>
+            </button>
+          <% else : %>  
+            <a href="/add_service/<%= row.service %>">
+              <button class="me_service_list_add_button shortcut bg-color-blueDark">
+              <span class="icon fg-color-blueLight">
+                <i class="websymbols"><%= row.button_icon %></i>
+              </span>
+              <span class="label fg-color-blueLight">
+                <%= row.service %>
+              </span>
+            </button>
+            </a>
+          <% end %>
         <% end %>
-      </table>
     </div>
     
     <div id="profile_friends_container" class="service_container" style="display:none">
