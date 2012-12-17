@@ -92,6 +92,7 @@ function getData(service, auth, cb) {
     });
 
     res.on('end', function() {
+      console.log(str);
       cb(JSON.parse(str));
     });
   };

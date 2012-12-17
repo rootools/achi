@@ -77,7 +77,7 @@ exports.twitter = function(req, res) {
 
 exports.facebook = function(req, res) {
   if(!req.query.code) {  
-    res.redirect('https://www.facebook.com/dialog/oauth?client_id=258024554279925&redirect_uri='+config.site.url+'add_service/facebook&state=123&scope=publish_actions,user_photos');
+    res.redirect('https://www.facebook.com/dialog/oauth?client_id=258024554279925&redirect_uri='+config.site.url+'add_service/facebook&state=123&scope=publish_actions,user_photos,user_likes,read_stream');
   } 
   if(req.query.code) {
     var code = req.query.code;

@@ -11,8 +11,8 @@ http.createServer(function (req, res) {
   var response = {};
   var fql = {};
   fql.friends_count = 'SELECT+friend_count+FROM+user+WHERE+uid=me()';
-  fql.wall_count = 'SELECT+wall_count+FROM+user+WHERE+uid=me()';
-  fql.photo_count = 'SELECT+photo_count+FROM+album+WHERE+uid=me()';
+  fql.photo_count = 'SELECT+photo_count+FROM+album+WHERE+owner=me()';
+  fql.likes_count = 'SELECT+likes_count+FROM+user+WHERE+uid=me()';
   fql = JSON.stringify(fql);
 
   getData(fql, query.access_token, function(data) {
