@@ -67,9 +67,149 @@ function vk_xbELzMG28H5oUA7zvocKcxasDrmvIh(uid, data, aid, db) {
   }
 }
 
-// Add 1000 friends
-function vk_0bgDLLMfiBCRDihXblZthw8YEyJ7qs(uid, data, aid, db) {
-  if(data.friendsCount >= 1000) {
+// Add Post
+function vk_sVb9UmoqbV1iQJzrtgN419bsFOCEhx(uid, data, aid, db) {
+  if(data.wallCount >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 100 Post
+function vk_Qqv6WCsPco3uQXBuB37ZDm6MvXN6J9(uid, data, aid, db) {
+  if(data.wallCount >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 500 Post
+function vk_pDOZyeGIEY6xs8LPZoWeqAM4geKv8i(uid, data, aid, db) {
+  if(data.wallCount >= 500) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 1000 Post
+function vk_cXIk4iwKdkvFNu4WpAch9m84RAjbzK(uid, data, aid, db) {
+  if(data.wallCount >= 1000) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add Audio
+function vk_wZLlqdxSd4FE7S6JXQsAGenVcIq8zC(uid, data, aid, db) {
+  if(data.audioCount >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 100 Audio
+function vk_yiaTkZ8PrzWNGGIgOE1kksWSG1ZJve(uid, data, aid, db) {
+  if(data.audioCount >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 500 Audio
+function vk_OrRp5s2IAevQsh3vNGBfvyYJKDknR1(uid, data, aid, db) {
+  if(data.audioCount >= 500) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 1000 Audio
+function vk_bpizS4iRgv2FQijSM3lwxhHNJBuGZH(uid, data, aid, db) {
+  if(data.audioCount >= 1000) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add Photo
+function vk_kdJHH5dLZ57i0qfH3gsniLSSTEBxQ9(uid, data, aid, db) {
+  if(data.photosCount >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 100 Photo
+function vk_NDFIaAgpKrGIqwO5PXdAAcntqTz8kF(uid, data, aid, db) {
+  if(data.photosCount >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 300 Photo
+function vk_FUZLmAHTPXeCx956ELb6W5FJflotId(uid, data, aid, db) {
+  if(data.photosCount >= 300) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 300 Photo
+function vk_FUZLmAHTPXeCx956ELb6W5FJflotId(uid, data, aid, db) {
+  if(data.photosCount >= 300) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add Video
+function vk_MGTNzcrH5Ufnz1PyEujwQILeY4TgUt(uid, data, aid, db) {
+  if(data.videoCount >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 50 Video
+function vk_ed8EXsl4gtD0rTThhI898ffTrFBL0Z(uid, data, aid, db) {
+  if(data.videoCount >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 100 Video
+function vk_h2gOKmohUKR1LgoXOodZSQ6cQmlMec(uid, data, aid, db) {
+  if(data.videoCount >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earned Post Like
+function vk_Ut3pRL5dgWGx5FX0ukhQeEdgUMil6e(uid, data, aid, db) {
+  if(data.maxPostLike >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earned 50 Post Like
+function vk_pSeJ999JzZ2SkyD8iWffE34Vv874zu(uid, data, aid, db) {
+  if(data.maxPostLike >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earned 100 Post Like
+function vk_IrYhDD22CneQbsvcgclRqlWmTQCLuf(uid, data, aid, db) {
+  if(data.maxPostLike >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earned Photo Like
+function vk_NNJ20S3CqA9vIWiJ64fx1FzLp8WmES(uid, data, aid, db) {
+  if(data.maxPhotoLike >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earned 50 Photo Like
+function vk_r2F2FQ7OcX8U5ElQMskZwRAwZO8rnV(uid, data, aid, db) {
+  if(data.maxPhotoLike >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earned 100 Photo Like
+function vk_ie7bdaVQw0MhHTY008mcVS8EJgYDem(uid, data, aid, db) {
+  if(data.maxPhotoLike >= 100) {
     writeToDB(uid, aid, db);
   }
 }
