@@ -41,7 +41,7 @@ exports.editor_api = function(req, res) {
   if(req.body.command == 'add_new_achiv') {
     db.collection('achievements', function(err, collection) {
       collection.insert({aid:req.body.aid, name:req.body.name, description:req.body.description, position: parseInt(req.body.position), service:req.body.service, points:parseInt(req.body.service.points), icon:req.body.icon},function(err, doc) {});
-      res.redirect('http://rootools.ru:3000/');
+      res.redirect('http://achivster.com:3000/');
     });
   }
 
@@ -55,7 +55,7 @@ exports.editor_api = function(req, res) {
   if(req.body.command == 'edit_achiv') {
     db.collection('achievements', function(err, collection) {
       collection.update({aid:req.body.aid},{$set:{name:req.body.name, description:req.body.description, position:parseInt(req.body.position), points:parseInt(req.body.points), icon:req.body.icon}}, function(err, doc) {});
-      res.redirect('http://rootools.ru:3000/');
+      res.redirect('http://achivster.com:3000/');
     });
   }
   
