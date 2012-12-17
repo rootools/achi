@@ -52,7 +52,6 @@ function getServiceList(uid, cb) {
           }
         }
       }
-      console.log(response);
       cb(response);
     });
 }
@@ -136,7 +135,7 @@ function get_friends_list(uid, cb) {
 }
 
 exports.main = function(req, res) {
-  if(req.session.auth === false) {
+  if(!req.session.auth || req.session.auth === false) {
     res.redirect(config.site.url);
   } else {
     pointsSum(req.session.uid, function(points) {
