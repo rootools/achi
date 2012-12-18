@@ -73,6 +73,48 @@ function twit_9uNB3eic259fYtH1fW9UjN4hZA7vRE(uid, data, aid, db) {
   }
 }
 
+// Earn 5 Followers
+function twit_IAT0dpCbKoHDSMIL1w1I36WZDijqCT(uid, data, aid, db) {
+  if(data.followers_count >= 5) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earn 50 Followers
+function twit_Y1Ra9C8EzDuOmg0YcpJNh8Wx5kM4fb(uid, data, aid, db) {
+  if(data.followers_count >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Earn 100 Followers
+function twit_fefK09G9al1in69GhGVqqeXmY19tCx(uid, data, aid, db) {
+  if(data.followers_count >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 10 Friends
+function twit_uXi2CRNFJzxZShZOnveug3B9WCVeed(uid, data, aid, db) {
+  if(data.friends_count >= 10) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 50 Friends
+function twit_pySzJCgThCYghDuqPJrpT9CaNFxZng(uid, data, aid, db) {
+  if(data.friends_count >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Add 100 Friends
+function twit_DOWVEg0x4koMUZGkFDt2StIKUvkdTZ(uid, data, aid, db) {
+  if(data.friends_count >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'twitter'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
