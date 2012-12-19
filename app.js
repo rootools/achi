@@ -11,6 +11,7 @@ var dashboard = require('./routes/dashboard');
 var profile = require('./routes/profile');
 var add_service = require('./routes/add_service');
 var upload = require('./routes/upload');
+var offer = require('./routes/offer');
 
 var sessionsStorage = require('connect-redis')(express);
 
@@ -48,6 +49,7 @@ app.all('/dashboard/:service/user/:id', dashboard.service_user);
 app.all('/dashboard/user/:id', dashboard.user);
 app.all('/profile', profile.main);
 app.all('/upload', upload.main);
+app.all('/offer', offer.main);
 
 app.all('/add_service/vkontakte', add_service.vk);
 app.all('/add_service/twitter', add_service.twitter);

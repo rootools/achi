@@ -32,6 +32,7 @@ $(function() {
     setTimeout(function() {
       login_zone.innerHTML = html;
       $('#login_zone').fadeIn(200);
+      $('.page-region').css('opacity', 0.2);
       setSubmitButton();
       setCloseButton();
       setEnterPush();
@@ -45,6 +46,7 @@ function setCloseButton() {
   $('#closeFormButton').click(function() {
     login_zone.innerHTML = '';
     $('#login_zone').fadeOut(1);
+    $('.page-region').css('opacity', 1);
   });
 }
 

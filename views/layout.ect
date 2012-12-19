@@ -9,6 +9,10 @@
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.1.min.js"></script>
   </head>
   <body class="modern-ui">
+    <% if @session.auth : %>
+    <% else : %>
+      <div id="login_zone"></div>
+    <% end %>
     <div class="page">
       <div class="page-header">
         <div class="page-header-content">
@@ -19,6 +23,9 @@
           <% end %>
           <div class="nav-bar bg-color-white">
             <div class="nav-bar-inner">
+              <ul class="menu place-left">
+                <li><a href="/offer"><i class="websymbols fg-color-red">W</i><span class="fg-color-red">Акция!</span></a></li>
+              </ul>
               <% if @session.auth : %>
               <ul class="menu place-right">
                 <li id="notifications"></li>
@@ -36,10 +43,7 @@
               <% end %>
             </div>
           </div>
-          <% if @session.auth : %>
-          <% else : %>
-            <div id="login_zone"></div>
-          <% end %>
+          
         </div>
       </div>
       <div class="page-region">

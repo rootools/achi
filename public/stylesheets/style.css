@@ -25,6 +25,7 @@ i {
 }
 
 
+/*
 div#login_zone {
   z-index: 999;
   position: relative;
@@ -33,7 +34,18 @@ div#login_zone {
   padding: 10px;
   display: none;
 }
+*/
 
+#login_zone {
+  position: absolute;
+  z-index: 999;
+  margin-top: 35px;
+  margin-left: 50%;
+  width: 40%;
+  padding: 10px;
+  display: none;
+  float: right;
+}
 
 div#error_show {
   margin-bottom: 10px;
