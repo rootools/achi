@@ -30,7 +30,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
-  app.use(express.session({ store: new sessionsStorage({db: 7}), secret: 'lolcat' }));
+  app.use(express.session({ store: new sessionsStorage({db: 7}), secret: 'lolcat', cookie:{maxAge: 1209600000} }));
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 });
