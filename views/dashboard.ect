@@ -15,7 +15,9 @@
           </div>
           <div class="brand">
             <div class="name"><%= achiv.time %></div>
-            <div class="social_sharing"></div>
+            <% if @session.auth : %>
+              <div class="social_sharing"></div>
+            <% end %>
             <div class="badge"><%= achiv.points %></div>
           </div>
         </div>
