@@ -2,6 +2,8 @@ var config = require('../configs/config.js');
 var https = require('https');
 var querystring = require('querystring');
 
+var ext_achivster = require('../external/achivster.js');
+
 var oauth = require('oauth').OAuth;
 
 var twitterOA = new oauth(
@@ -124,9 +126,19 @@ function add_service(session, account, service) {
 function testService(uid, service, cb) {
   db.collection('services_connections', function(sc_err,sc_collection) {
   db.collection('users_achievements', function(ua_err, ua_collection) {
-    sc_collection.findOne({uid: uid, service:service}, function(sc_err, sc_doc) {
+    sc_collection.find({uid: uid}).toArray(function(sc_err, sc_doc) {
+    for(var i in sc_doc) {
+      if(sc_doc[i].service === service) {
+        cb(false);
+      }
+    }
+    // Earned achiv for first service
+    if(sc_doc.length === 1) {
+      ext_achivster.main(uid, 'eSkuacz7tW1yUayFp1Xes710UNc8u1');
+    }
+    
     ua_collection.findOne({uid: uid, service:service}, function(ua_err, ua_doc) {
-      if(sc_err === null && sc_doc === null && ua_err === null && ua_doc === null) {
+      if(sc_err === null && ua_err === null && ua_doc === null) {
         cb(true);
       } else {
         cb(false);

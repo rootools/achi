@@ -76,9 +76,9 @@ exports.editor_api = function(req, res) {
       db.collection('users_profile', function(err,profiles) {
         profiles.remove({uid: uid}, function(err, doc) {
           db.collection('services_connections', function(err, services_connections) {
-            services_connections.insert({uid: uid}, function(err, doc) {
+            services_connections.remove({uid: uid}, function(err, doc) {
               db.collection('users_achievements', function(err, users_achievements) {  
-                users_achievements.insert({uid: uid}, function(err, doc) {});
+                users_achievements.remove({uid: uid}, function(err, doc) {});
                 var data = JSON.stringify({});
                 res.contentType('json');
                 res.end(data);

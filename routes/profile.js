@@ -120,6 +120,7 @@ function get_friends_list(uid, cb) {
         collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {
           pointsSum(uid, function(points) {
             profile.points = points;
+            if(profile.name === '') { profile.name = 'anonymous'};
             friends_list.push(profile);
             handler--;
             if(handler === 0) {
