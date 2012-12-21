@@ -1,5 +1,6 @@
 var config = require('../configs/config.js');
 var dashboard = require('./dashboard.js');
+var ext_achivster = require('../external/achivster.js');
 var db;
 
 var redis = require("redis"),
@@ -193,13 +194,14 @@ function friendship_accept_or_reject(req, res) {
   var target_uid = req.body.target_uid;
   db.collection('messages', function(err,collection) {
     if(command === 'reject') {
-        
+      
     }
     if(command === 'accept') {
       db.collection('users_profile', function(err, profile) {
         profile.update({uid: owner_uid},{$push: {friends: target_uid}}, function(err, doc) {});
         profile.update({uid: target_uid},{$push: {friends: owner_uid}}, function(err, doc) {});
       });
+      ext_achivster.check_first_friend(req.session.uid);
     }
     collection.remove({owner_uid: owner_uid, target_uid: target_uid}, function(err, doc){});
   });
