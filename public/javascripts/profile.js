@@ -8,6 +8,9 @@ $(function() {
   if(document.URL.split('#')[1] === 'friends') {
     showContainer('friends_list');
   }
+  if(document.URL.split('#')[1] === 'service') {
+    showContainer('services_list');
+  }
   
   $('.profile_menu_button').bind('click', function() {
     var elem = this.id;
