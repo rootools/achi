@@ -22,3 +22,15 @@
 .service_tile .brand > .badge {
   margin-right: 10px;
 }
+
+.user_info_left {
+  position: relative;
+  float: left;
+}
+
+.user_info_right {
+  margin-left: 12px;
+  margin-top: -14px;
+  position: relative;
+  float: left;
+}

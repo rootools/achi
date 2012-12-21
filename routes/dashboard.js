@@ -180,6 +180,19 @@ function countAchivmentsFromService(data) {
   return result;
 }
 
+function get_user_stat(uid, points, cb) {
+  var sum_points = 0;
+  for(var i in points) {
+    sum_points += points[i];
+  }
+  db.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
+      doc.points = sum_points;
+      cb(doc);
+    });
+  });
+}
+
 exports.main = function(req, res) {
   if(req.session.auth === false) {
     res.redirect(config.site.url);
@@ -187,7 +200,9 @@ exports.main = function(req, res) {
     getUserAchievements(req.session.uid, function(achivList, lastAchivArray, points) {
       getAllAchievementsCount(function(allAchievements) {
         get_achievment_stat(achivList, allAchievements, points, function(achivStat) {
-          res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session });
+          get_user_stat(req.session.uid, points, function(user_stat) {
+            res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session, user_stat: user_stat });
+          });
         });
       });
     });
@@ -255,7 +270,9 @@ exports.user = function(req, res) {
         getUserAchievements(uid, function(achivList, lastAchivArray, points) {
           getAllAchievementsCount(function(allAchievements) {
             get_achievment_stat(achivList, allAchievements, points, function(achivStat) {
-              res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session, target_uid: uid });
+              get_user_stat(uid, points, function(user_stat) {
+                res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session, target_uid: uid, user_stat: user_stat });
+              });
             });
           });
         });

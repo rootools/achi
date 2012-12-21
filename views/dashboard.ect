@@ -5,6 +5,16 @@
 
 <div class="grid" id="<%= @session.uid %>">
 
+  <div class="row" style="margin-bottom: 6px">
+    <div class="user_info_left">
+      <img src="<%= @user_stat.photo %>" width="150px" heigt="150px">
+    </div>
+    <div class="user_info_right">
+      <h3><%= @user_stat.name %></h3>
+      <h4><i class="icon-star-4 fg-color-orange"></i><%= @user_stat.points %></h4>
+    </div>
+  </div>
+
 <!-- Generate last 6 achiv area-->
   <div class="row">
     <% for achiv in @lastAchivArray : %>
