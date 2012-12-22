@@ -91,27 +91,32 @@
     
     <div id="profile_service_container" class="service_container" style="display:none">
         <% for row in @service_list : %>
-          <% if row.addtime : %>
-            <button disabled class="me_service_list_add_button shortcut">
-              <span class="icon">
-                <i class="websymbols"><%= row.button_icon %></i>
-              </span>
-              <span class="label">
-                <%= row.service %>
-              </span>
-            </button>
-          <% else : %>  
-            <a href="/add_service/<%= row.service %>">
-              <button class="me_service_list_add_button shortcut bg-color-blueDark">
-              <span class="icon fg-color-blueLight">
-                <i class="websymbols"><%= row.button_icon %></i>
-              </span>
-              <span class="label fg-color-blueLight">
-                <%= row.service %>
-              </span>
-            </button>
-            </a>
+          
+          <% switch row.service : %>
+            <% when 'achivster' : %>
+              <a>
+            <% end %>
+            <% else : %>
+              <a href="/add_service/<%= row.service %>">
+            <% end %>
           <% end %>
+          
+            <% if row.addtime : %>
+              <button class="me_service_list_add_button shortcut">
+            <% else : %>
+              <button class="me_service_list_add_button shortcut bg-color-blueDark">
+            <% end %>
+            <span class="icon">
+              <i class="websymbols"><%= row.button_icon %></i>
+            </span>
+            <span class="label">
+              <%= row.service %>
+            </span>
+            <span class="badge bg-color-blueDark">
+              <i class="websymbols" style="margin-right: 0px;">V</i>
+            </span>
+            </button>
+          </a>
         <% end %>
     </div>
     
