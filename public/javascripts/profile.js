@@ -130,7 +130,9 @@ function upload_file(url) {
 
 function change_name(name) {
   if(/^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/i.test(name)) {
-    sync('/webapi', {action: 'edit_profile_name', name: name}, function(data) {});
+    sync('/webapi', {action: 'edit_profile_name', name: name}, function(data) {
+      location.reload();
+    });
   } else {
     me_edit_error_message('Name(only letters and numbers)', 'me_edit_title_name');
   }
