@@ -201,7 +201,7 @@ function friendship_accept_or_reject(req, res) {
         profile.update({uid: owner_uid},{$push: {friends: target_uid}}, function(err, doc) {});
         profile.update({uid: target_uid},{$push: {friends: owner_uid}}, function(err, doc) {});
       });
-      ext_achivster.check_first_friend(req.session.uid);
+      ext_achivster.check_first_friend(owner_uid);
     }
     collection.remove({owner_uid: owner_uid, target_uid: target_uid}, function(err, doc){});
   });
