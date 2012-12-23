@@ -1,3 +1,26 @@
 <% extend 'layout.ect' %>
 
-<h3>В данный момент акции не проводятся</h3>
+<% if @message : %>
+  <h3><%- @message%></h3>
+<% else : %>
+  <p>Ачивстер проводит акцию. Необходимо придумать название для следующих достижений:</p>
+  <form method="post" action="/offer">
+  
+    <div class="input-control select">
+      <select name="aid">
+        <% for achiv in @achiv_list : %>
+          <option value="<%- achiv.aid %>"><%- achiv.name %>(<%- achiv.service %>)</option>
+        <% end %>
+      </select>
+    </div>
+
+    <p>Количество вариантов неограниченно! Будьте креативны!</p>
+    <div class="input-control text">
+      <input type="text" / name="name">
+    </div>
+  
+    <p>Те, кто придумает лучший вариант - получит Великое Достижение!</p>
+    <input type="submit">
+  
+  </form>
+<% end %>
