@@ -4,6 +4,8 @@ var ext_achivster = require('../external/achivster.js');
 
 var geoip = require('geoip-lite');
 var randomstring = require('randomstring');
+var nodemailer = require("nodemailer");
+
 var db;
 
 function mongoConnect() {
@@ -19,7 +21,6 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
-  console.log(req.session);
   var region = '';
   //var region = geoip.lookup(req.connection.remoteAddress).country;
   db.collection('users', function(err,collection) {
@@ -69,10 +70,38 @@ function testUser(email, cb) {
   });  
 }
 
+function send_mail_confirmation(uid, email, access_key) {
+  var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Yandex",
+    auth: {
+        user: "support@achivster.com",
+        pass: "AO4dtGvORf"
+    }
+  });
+
+  var mailOptions = {
+    from: "Achivster Support <support@achivster.com>",
+    to: email,
+    subject: "Hello", 
+    html: '<a href="http://'+config.site.url+'/login/access_key?key='+access_key+'">Подтвердить</a>'
+  };
+
+  smtpTransport.sendMail(mailOptions, function(error, response){
+    if(error){
+        console.log(error);
+    }else{
+        console.log("Message sent: " + response.message);
+    }
+
+    smtpTransport.close();
+  });
+}
+
 function registerUser(email, pass, region, req, cb) {
   var uid = randomstring.generate(20);
+  var access_key = randomstring.generate(40);
   db.collection('users', function(err,collection) {
-    collection.insert({email: email, password: pass, uid: uid}, function(err, doc) {
+    collection.insert({email: email, password: pass, uid: uid, access_key: access_key}, function(err, doc) {
       db.collection('users_profile', function(err,profiles) {
         profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
           db.collection('services_connections', function(err, services_connections) {
@@ -80,6 +109,7 @@ function registerUser(email, pass, region, req, cb) {
               db.collection('users_achievements', function(err, users_achievements) {  
                 users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {});
                 ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
+                send_mail_confirmation(uid, email, access_key);
                 add_session(req, uid, email, region, function() {
                   cb();
                 });
@@ -99,6 +129,15 @@ function add_session(req, uid, email, lang, cb) {
   req.session.lang = lang;
   cb();
 }
+
+exports.access_key = function(req, res) {
+  var key = req.query.key;
+  db.collection('users', function(err,collection) {
+    collection.update({access_key: key}, {$unset: {access_key: 1}}, function(err, doc) {
+      res.redirect(config.site.url);
+    });
+  });
+};
 
 exports.logout = function(req, res) {
   req.session.auth = false;

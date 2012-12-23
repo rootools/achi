@@ -1,5 +1,6 @@
 exports.site = {
-  url: 'http://achivster.com/'
+  url: 'http://t.achivster.com/',
+  port: 9001
 };
 
 exports.mongo = {

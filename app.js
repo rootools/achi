@@ -5,6 +5,9 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 
+var config = require('./configs/config.js');
+
+
 var authRoutes = require('./routes/auth');
 var webApi = require('./routes/webApi');
 var dashboard = require('./routes/dashboard');
@@ -22,7 +25,7 @@ var ectRenderer = ECT({ cache: false, watch: false, root: __dirname + '/views' }
 app.engine('.ect', ectRenderer.render);
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 8001);
+  app.set('port', process.env.PORT || config.site.port);
   app.set('views', __dirname + '/views');
 //  app.set('view engine', 'ect');
   app.use(express.favicon());
@@ -41,6 +44,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.all('/login', authRoutes.login);
+app.all('/login/access_key', authRoutes.access_key);
 app.all('/logout', authRoutes.logout);
 app.all('/webapi', webApi.routing);
 app.all('/dashboard', dashboard.main);
