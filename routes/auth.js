@@ -83,7 +83,7 @@ function send_mail_confirmation(uid, email, access_key) {
     from: "Achivster Support <support@achivster.com>",
     to: email,
     subject: "Hello", 
-    html: '<a href="http://'+config.site.url+'/login/access_key?key='+access_key+'">Подтвердить</a>'
+    html: '<a href="'+config.site.url+'login/access_key?key='+access_key+'">Подтвердить</a>'
   };
 
   smtpTransport.sendMail(mailOptions, function(error, response){
