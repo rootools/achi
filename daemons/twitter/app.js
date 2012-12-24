@@ -16,6 +16,7 @@ var twitterOA = new oauth(
 http.createServer(function (req, res) {
   var query = url.parse(req.url, true).query;
 
+
   twitterOA.get('https://api.twitter.com/1.1/account/verify_credentials.json', query.oauth_token, query.oauth_token_secret, function(err, data) {
     data = JSON.parse(data);
 
@@ -26,7 +27,17 @@ http.createServer(function (req, res) {
     profile.created_at = data.created_at;
     profile.url = data.url;
     profile.favourites_count = data.favourites_count;
-    res.end(JSON.stringify(profile));
+    twitterOA.get('https://api.twitter.com/1.1/friendships/lookup.json?screen_name=achivster_ru,achivster', query.oauth_token, query.oauth_token_secret, function(err, is_achivster) {
+      is_achivster = JSON.parse(is_achivster);
+      profile.is_achivster = false;
+      for(var i in is_achivster) {
+        if(is_achivster[i].connections[0] === 'following') {
+          profile.is_achivster = true;
+        }
+      }
+      res.end(JSON.stringify(profile));
+    });
+  
   });
 
 }).listen(process.env.VCAP_APP_PORT || 3000);

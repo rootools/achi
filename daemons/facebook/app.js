@@ -13,14 +13,26 @@ http.createServer(function (req, res) {
   fql.friends_count = 'SELECT+friend_count+FROM+user+WHERE+uid=me()';
   fql.photo_count = 'SELECT+photo_count+FROM+album+WHERE+owner=me()';
   fql.likes_count = 'SELECT+likes_count+FROM+user+WHERE+uid=me()';
+  fql.is_achivster = 'SELECT+page_id+FROM+page_fan+WHERE+uid=me()';
   fql = JSON.stringify(fql);
 
   getData(fql, query.access_token, function(data) {
     data = data.data;
+    response.is_achivster = false;
     for(var i=0;i<data.length;i++) {
-      var tempObject = data[i].fql_result_set[0];
-      for(var key in tempObject) {
-        response[key] = tempObject[key];
+
+      if(data[i].name === 'is_achivster') {
+        for(var n in data[i].fql_result_set) {
+          if(data[i].fql_result_set[n].page_id === 483770871661354) {
+            response.is_achivster = true;
+          }
+        }
+      } else {
+
+        var tempObject = data[i].fql_result_set[0];
+        for(var key in tempObject) {
+          response[key] = tempObject[key];
+        }
       }
     }
     res.end(JSON.stringify(response));
