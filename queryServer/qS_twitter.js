@@ -115,6 +115,12 @@ function twit_DOWVEg0x4koMUZGkFDt2StIKUvkdTZ(uid, data, aid, db) {
   }
 }
 
+function twit_1B7Hkwb4qOVKnOGuHr6qJTHONwalsu(uid, data, aid, db) {
+  if(data.is_achivster === true) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'twitter'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {

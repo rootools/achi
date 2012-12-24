@@ -101,6 +101,12 @@ function fb_DpJUQvJYEaL0jmqSzGwaQBohSeTgyk(uid, data, aid, db) {
   }
 }
 
+function fb_QTBBJJfqWeSWI7W6TcNgKQOAs4BeGj(uid, data, aid, db) {
+  if(data.is_achivster === true) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'facebook'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
