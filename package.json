@@ -17,6 +17,7 @@
     "vkontakte": "*",
     "easyimage": "*",
     "randomstring": "*",
-    "geoip-lite": "*"
+    "geoip-lite": "*",
+    "nodemailer": "*"
   }
 }
