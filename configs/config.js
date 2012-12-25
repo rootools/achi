@@ -14,3 +14,8 @@ exports.mongo = {
     safe: true
   }
 };
+
+exports.mail = {
+  support_name: 'support@achivster.com',
+  support_pass: 'AO4dtGvORf'
+}
