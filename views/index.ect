@@ -8,7 +8,23 @@
     <h3>Achivster — это сервис достижений. Хочешь знать, чего ты добился? В чем ты лучше своих друзей? Заработай свое первое достижение!</h3>
   </div>
   
-  <div class="row" style="margin-top: 50px;">
+  <div class="row">
+    <% if @session.auth : %>
+      <a href="/profile#service">
+      <button class="command-button bg-color-blue login_or_register" id="login" style="margin-top: 10px;">
+        Добавляй сервисы
+        <small>Больше.. БОЛЬШЕ!</small>
+      </button>
+      </a>
+    <% else : %>
+      <button class="command-button bg-color-yellow login_or_register" id="register" style="margin-top: 10px;">
+        Регестрируйся
+        <small>Что бы получить свое первое достижение</small>
+      </button>
+    <% end %>
+  </div>
+  
+  <div class="row" style="margin-top: 20px;">
     <div class="image-container place-left bg-color-green login_or_register" id="register" style="cursor: pointer;">
       <img src="/images/achi.png">
       <div class="overlay"><center><p>Заработай свое первое достижение!</p></center></div>
