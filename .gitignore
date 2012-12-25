@@ -2,3 +2,4 @@ dump.rdb
 node_modules/
 public/images/users_photo/
 .c9revisions
+.settings

@@ -1,0 +1,20 @@
+<% extend 'layout.ect' %>
+
+<div class="grid">
+  <% for friend in @friends_list : %>
+    <% switch friend.uid : %>
+    <% when @session.uid : %>
+      <div class="row friends_list_row bg-color-blueLight" id="<%- friend.uid %>">
+    <% end %>
+    <% else : %>
+      <div class="row friends_list_row" id="<%- friend.uid %>">
+    <% end %>
+    <% end %>
+      <img src="<%- friend.photo %>" class="friends_list_photo">
+      <div class="friends_list_name"><h3><%- friend.name %></h3></div>
+      <div class="friends_list_points"><h3><%- friend.points %> pts</h3></div>
+    </div>
+  <% end %>
+</div>
+
+<link href="/stylesheets/top.css" rel="stylesheet" />
