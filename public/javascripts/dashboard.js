@@ -106,7 +106,7 @@ function last_achiv_event(elem) {
 }
 
 function create_social_sharing_pannerl(elem, name) {
-  var icon = location.origin + $(elem).children('.tile-content').children('.achiv_icon').attr('src');
+  var icon = 'http://'+location.host+'/' + $(elem).children('.tile-content').children('.achiv_icon').attr('src');
   var points = $(elem).children('.brand').children('.badge').text();
   var url = 'http://'+location.host+'/dashboard/user/' + $('.grid').attr('id');
   var title = 'Я заработал достижение!';

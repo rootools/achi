@@ -101,7 +101,7 @@ function registerUser(email, pass, region, req, cb) {
   var uid = randomstring.generate(20);
   var access_key = randomstring.generate(40);
   db.collection('users', function(err,collection) {
-    collection.insert({email: email, password: pass, uid: uid, access_key: access_key}, function(err, doc) {
+    collection.insert({email: email, password: pass, uid: uid/*, access_key: access_key*/}, function(err, doc) {
       db.collection('users_profile', function(err,profiles) {
         profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
           db.collection('services_connections', function(err, services_connections) {
@@ -109,7 +109,7 @@ function registerUser(email, pass, region, req, cb) {
               db.collection('users_achievements', function(err, users_achievements) {  
                 users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {});
                 ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
-                send_mail_confirmation(uid, email, access_key);
+                //send_mail_confirmation(uid, email, access_key);
                 add_session(req, uid, email, region, function() {
                   cb();
                 });
