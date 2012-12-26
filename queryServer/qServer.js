@@ -34,6 +34,9 @@ function createQuery() {
     collection.find({valid: true, lastupdate: {$lt:now - 1800000}, service:{$ne: 'achivster'}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
+        if(data.error) {
+          console.log(data);
+        }
           if(task.service == 'twitter') {
             cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
@@ -73,8 +76,9 @@ function getData(service, auth, cb) {
   
   if(service == 'vkontakte') {
     var options = {
-        host: 'vk1-achi.eu01.aws.af.cm',
-        port: 80,
+//        host: 'vk1-achi.eu01.aws.af.cm',
+        host: 'localhost',
+        port: 8085,
         path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
   }
 
@@ -92,7 +96,6 @@ function getData(service, auth, cb) {
     });
 
     res.on('end', function() {
-      console.log(str);
       cb(JSON.parse(str));
     });
   };

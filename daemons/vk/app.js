@@ -9,7 +9,7 @@ http.createServer(function (req, res) {
   getData(query.access_token, query.uid, function(data) {
     res.end(JSON.stringify(data));
   });
-}).listen(process.env.VCAP_APP_PORT || 3000);
+}).listen(process.env.VCAP_APP_PORT || 8085);
 
 
 function getData(access_token, uid, cb) {
@@ -20,9 +20,13 @@ function getData(access_token, uid, cb) {
 
   async.series([
     function(callback) {
-      getSingleStat(vk, uid, function(data) {
-        data.audioCount = parseFloat(data.audioCount);
-        callback(null, data);
+      getSingleStat(vk, uid, function(err, data) {
+        if(err) {
+          callback(err, null);
+        } else {
+          data.audioCount = parseFloat(data.audioCount);
+          callback(null, data);
+        }
       });
     },
     function(callback) {
@@ -35,12 +39,16 @@ function getData(access_token, uid, cb) {
         callback(null, data);
       });
     }], function(err, data) {
-      for(var i=0;i<data.length;i++) {
-        for(var key in data[i]) {
-          response[key] = data[i][key];
+      if(err) {
+        cb({error: 1});
+      } else {
+        for(var i=0;i<data.length;i++) {
+          for(var key in data[i]) {
+            response[key] = data[i][key];
+          }
         }
+        cb(response);
       }
-      cb(response);
     });
 }
 
@@ -55,7 +63,7 @@ function getSingleStat(vk, uid, cb) {
   code += 'return response;';
 
   vk('execute', {code:code}, function(err, data) {
-    cb(data);
+    cb(err, data);
   });
 }
 
