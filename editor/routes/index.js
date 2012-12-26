@@ -69,6 +69,16 @@ exports.editor_api = function(req, res) {
     });
   }
   
+  if(req.body.command === 'get_offer_list') {
+    db.collection('offers', function(err, collection) {
+      collection.find({}).toArray(function(err, doc) {
+        var data = JSON.stringify({data: doc});
+        res.contentType('json');
+        res.end(data);
+      });
+    });
+  }
+
   if(req.body.command === 'remove_user') {
     var uid = req.body.uid;
     db.collection('users', function(err,collection) {

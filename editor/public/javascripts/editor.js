@@ -1,5 +1,5 @@
 function getData(query, cb) {
-  $.post('editor_api', query, function(data, status, jqXHR) {
+  $.post('/editor_api', query, function(data, status, jqXHR) {
     cb(data.data);
   });
 }
@@ -31,7 +31,7 @@ function getAchivList(service) {
 
 function getService() {
   var body = document.getElementById('menu');
-  var html = '<button class="bg-color-blue" id="users_list">Users</button>';
+  var html = '<button class="bg-color-blue" id="users_list">Users</button><button class="bg-color-blueDark" id="offer_list">Offers</button>';
 
   getData({command:'get_service_list'}, function(data) {
     for(var i=0;i<data.length;i++) {
@@ -52,6 +52,10 @@ function getService() {
     
     $('#users_list').bind('click', function() {
       get_users_list();
+    });
+
+    $('#offer_list').bind('click', function() {
+      get_offers_list();
     });
   });
 
@@ -145,6 +149,21 @@ function get_users_list() {
       remove_user(this.id);
     });
   });
+}
+
+function get_offers_list() {
+  var content = document.getElementById('content');
+  content.innerHTML = '';
+
+  var html = '<table>';
+  html += '<tr><th>aid</th><th>uid</th><th>name</th></tr>';
+  getData({command: 'get_offer_list'}, function(data) {
+    for(var i in data) {
+      html += '<tr><td>'+data[i].aid+'</td><td>'+data[i].uid+'</td><td>'+data[i].name+'</td></tr>';
+    }
+    content.innerHTML = html;
+  });
+
 }
 
 function remove_user(uid) {
