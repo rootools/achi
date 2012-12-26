@@ -24,7 +24,7 @@ function achivname(cb) {
 
 exports.main = function(req, res) {
   if(!req.session.auth || req.session.auth === false) {
-    res.render('offer.ect', { title: 'Акция', session:req.session, message: 'Простите, но принимать участие в акциях могут только зарегестрированные пользователи.'} );
+    res.render('offer.ect', { title: 'Акция', session:req.session, message: 'Простите, но принимать участие в акциях могут только зарегистрированные пользователи.'} );
   } else {
     if(req.body.aid && req.body.name) {
       db.collection('offers', function(err, collection) {
