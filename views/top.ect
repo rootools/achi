@@ -1,20 +1,51 @@
 <% extend 'layout.ect' %>
 
 <div class="grid">
-  <% for friend in @friends_list : %>
-    <% switch friend.uid : %>
-    <% when @session.uid : %>
-      <div class="row friends_list_row bg-color-blueLight" id="<%- friend.uid %>">
-    <% end %>
-    <% else : %>
-      <div class="row friends_list_row" id="<%- friend.uid %>">
-    <% end %>
-    <% end %>
-      <img src="<%- friend.photo %>" class="friends_list_photo">
-      <div class="friends_list_name"><h3><%- friend.name %></h3></div>
-      <div class="friends_list_points"><h3><%- friend.points %> pts</h3></div>
+
+  <div class="row">
+    <button class="big" id="friends_top_button"><i class="icon-big icon-address-book"></i>Друзья</button>
+    <button class="big" id="world_top_button"><i class="icon-big icon-earth"></i>Мир</button>
+  </div>
+
+  <div class="top_content">
+    
+    <div class="row" id="top_world_list" style="display:none">
+      <% for user in @world_list : %>
+      <% switch user.uid : %>
+      <% when @session.uid : %>
+        <div class="row friends_list_row bg-color-blueLight" id="<%- user.uid %>">
+      <% end %>
+      <% else : %>
+          <div class="row friends_list_row" id="<%- user.uid %>">
+      <% end %>
+      <% end %>
+          <img src="<%- user.photo %>" class="friends_list_photo">
+          <div class="friends_list_name"><h3><%- user.name %></h3></div>
+          <div class="friends_list_points"><h3><%- user.points %> pts</h3></div>
+        </div>
+      <% end %>
     </div>
-  <% end %>
+
+    <div class="row" id="top_friends_list">
+      <% for friend in @friends_list : %>
+      <% switch friend.uid : %>
+      <% when @session.uid : %>
+        <div class="row friends_list_row bg-color-blueLight" id="<%- friend.uid %>">
+      <% end %>
+      <% else : %>
+          <div class="row friends_list_row" id="<%- friend.uid %>">
+      <% end %>
+      <% end %>
+          <img src="<%- friend.photo %>" class="friends_list_photo">
+          <div class="friends_list_name"><h3><%- friend.name %></h3></div>
+          <div class="friends_list_points"><h3><%- friend.points %> pts</h3></div>
+        </div>
+      <% end %>
+    </div>
+  
+  </div>
+
 </div>
 
 <link href="/stylesheets/top.css" rel="stylesheet" />
+<script src="/javascripts/top.js"></script>
