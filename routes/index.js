@@ -25,10 +25,10 @@ function getUserAchievements(uid, cb) {
 exports.index = function(req, res){
   console.log(req.session);
   if(!req.session.auth || req.session.auth === false) {
-    res.render('index.ect', { title: 'Achivster', session: req.session});
+    res.render('index.ect', { title: 'Ачивстер', session: req.session});
   } else {
     getUserAchievements(req.session.uid, function(achivList) {    
-      res.render('index.ect', { title: 'Achivster' , session: req.session, achivList:achivList});
+      res.render('index.ect', { title: 'Ачивстер' , session: req.session, achivList:achivList});
     });
   }
 };
