@@ -108,4 +108,4 @@ setInterval(function() {
     console.log('Run createQuery');
     createQuery();
   }
-}, 300000);
+}, 600000);

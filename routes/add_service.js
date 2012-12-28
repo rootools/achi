@@ -1,6 +1,8 @@
 var config = require('../configs/config.js');
 var https = require('https');
 var querystring = require('querystring');
+var Iconv  = require('iconv').Iconv;
+var sys = require('sys');
 
 var ext_achivster = require('../external/achivster.js');
 
@@ -35,6 +37,7 @@ exports.vk = function(req, res) {
     res.redirect('http://oauth.vk.com/authorize?client_id=3126840&scope=notify,friends,photos,audio,video,status,wall,groups,notifications,offline&display=popup&response_type=code&tt=12&redirect_uri='+config.site.url+'add_service/vkontakte');
   } 
   if(req.query.code) {
+    
     var options = {
       host: 'oauth.vk.com',
       method: 'GET',
@@ -69,13 +72,12 @@ exports.twitter = function(req, res) {
       res.redirect(config.site.url+'profile');
     });
   } else {
-
     twitterOA.getOAuthRequestToken(function(error, request_oauth_token, request_oauth_token_secret, results){
       req.session.twitter_request_oauth_token_secret = request_oauth_token_secret;
       res.redirect('https://api.twitter.com/oauth/authorize?oauth_token='+request_oauth_token);
     });
   }
-}
+};
 
 exports.facebook = function(req, res) {
   if(!req.query.code) {  
@@ -87,8 +89,8 @@ exports.facebook = function(req, res) {
     var options = {
       host: 'graph.facebook.com',
       method: 'GET',
-      path: '/oauth/access_token?client_id=258024554279925&redirect_uri='+config.site.url+'add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+req.query.code
-    }
+      path: '/oauth/access_token?client_id=258024554279925&redirect_uri='+config.site.url+'add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+code
+    };
 
     var callback = function(response) {
       var str = '';
@@ -101,7 +103,7 @@ exports.facebook = function(req, res) {
         var data = querystring.parse(str).access_token;
         add_service(req.session, data, 'facebook');
       });
-    }
+    };
 
     https.request(options, callback).end();
     res.redirect(config.site.url+'profile');
@@ -109,16 +111,19 @@ exports.facebook = function(req, res) {
 }
 
 function add_service(session, account, service) {
-  testService(session.uid, service, function(check) {
+  testService(session.uid, service, function(check, is_first) {
+    if(true) {
+      get_user_name_by_service(session.uid, service, account);
+    }
     db.collection('services_connections', function(err,collection) {
-    db.collection('users_achievements', function(err, ua_collection) {
-      if(check === true) {
-        collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {});
-        ua_collection.insert({uid:session.uid, service:service, achievements: []}, function(err, doc) {});
-      } else {
-        collection.update({uid: session.uid, service:service},{$set: {service_login: account, valid: true}}, function(err,doc) {});
-      }
-    });
+      db.collection('users_achievements', function(err, ua_collection) {
+        if(check === true) {
+          collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {});
+          ua_collection.insert({uid:session.uid, service:service, achievements: []}, function(err, doc) {});
+        } else {
+          collection.update({uid: session.uid, service:service},{$set: {service_login: account, valid: true}}, function(err,doc) {});
+        }
+      });
     });
   });
 }
@@ -127,9 +132,13 @@ function testService(uid, service, cb) {
   db.collection('services_connections', function(sc_err,sc_collection) {
   db.collection('users_achievements', function(ua_err, ua_collection) {
     sc_collection.find({uid: uid}).toArray(function(sc_err, sc_doc) {
+    var is_first = false;
+    if(sc_doc.length === 1) {
+      is_first = true;
+    }
     for(var i in sc_doc) {
       if(sc_doc[i].service === service) {
-        cb(false);
+        cb(false, is_first);
       }
     }
     // Earned achiv for first service
@@ -139,12 +148,70 @@ function testService(uid, service, cb) {
     
     ua_collection.findOne({uid: uid, service:service}, function(ua_err, ua_doc) {
       if(sc_err === null && ua_err === null && ua_doc === null) {
-        cb(true);
+        cb(true, is_first);
       } else {
-        cb(false);
+        cb(false, is_first);
       }
     });
     });
   });
   });
+}
+
+function get_user_name_by_service(uid, service, account) {
+  var name = '';
+  var image = '';
+  
+  if(service === 'twitter') {
+    twitterOA.get('https://api.twitter.com/1.1/account/verify_credentials.json', account.oauth_token, account.oauth_token_secret, function(err, data) {
+      data = JSON.parse(data);
+      image = data.profile_image_url;
+      name = data.name;
+      write_name_and_image_from_service(uid, image, name);
+    });
+  }
+  
+  if(service === 'facebook') {
+    var query = {};
+    query.info = 'SELECT+pic_big,name+FROM+user+WHERE+uid=me()';
+    query = JSON.stringify(query);
+    
+    var options = {
+      host: 'graph.facebook.com',
+      method: 'GET'
+    };
+
+    options.path = '/fql?q='+query+'&access_token='+account;
+  
+    var callback = function(response) {
+      var str = '';
+      response.on('data', function(chunk) {
+        str += chunk;
+      });
+
+      response.on('end', function() {
+        str = JSON.parse(str);
+        str = str.data[0].fql_result_set[0];
+        name = str.name;
+        image = str.pic;
+        write_name_and_image_from_service(uid, image, name);
+      });
+    };
+
+    https.request(options, callback).end();
+  }
+  
+  if(service === 'vkontakte') {
+    var vkontakte = require('vkontakte')(account.access_token);
+    vkontakte('users.get', {uids: account.user_id, fields: 'nickname,photo_medium'}, function(err, data) {
+      data = data[0];
+      name = data.first_name+' '+data.last_name;
+      image = data.photo_medium;
+      write_name_and_image_from_service(uid, image, name);
+    });
+  }
+}
+
+function write_name_and_image_from_service(uid, image, name) {
+  //console.log(uid, image, name);
 }

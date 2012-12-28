@@ -58,7 +58,7 @@ function getSingleStat(vk, uid, cb) {
   code += 'var photosCount = API.photos.getAll({no_service_albums:0})[0];';
   code += 'var wallCount = API.wall.get()[0];';
   code += 'var audioCount = API.audio.getCount({oid:'+uid+'});';
-  code += 'var videoCount = API.video.get()[0];'
+  code += 'var videoCount = API.video.get()[0];';
   code += 'var response = {friendsCount: friendsCount, groupsCount:groupsCount, photosCount:photosCount, wallCount:wallCount, audioCount:audioCount, videoCount:videoCount};';
   code += 'return response;';
 
@@ -88,7 +88,7 @@ function getMaxLike(method, options, vk, uid, cb) {
 
     var q = async.queue(function(task, callback) {
       vk(method, task, function(err, data) {
-        dirtyArray.push(data)
+        dirtyArray.push(data);
         callback(data);
       });
     }, queue);
@@ -96,7 +96,7 @@ function getMaxLike(method, options, vk, uid, cb) {
     q.drain = function(data) {
       cb_obj[name_cb] = calcMaxLike(dirtyArray);
       cb(cb_obj);
-    }
+    };
 
     var handler = 100;
     while(handler < data[0]) {
