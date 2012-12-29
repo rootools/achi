@@ -1,8 +1,8 @@
 var config = require('../configs/config.js');
 var https = require('https');
 var querystring = require('querystring');
-var Iconv  = require('iconv').Iconv;
 var sys = require('sys');
+var uploads = require('./upload.js');
 
 var ext_achivster = require('../external/achivster.js');
 
@@ -54,12 +54,13 @@ exports.vk = function(req, res) {
       response.on('end', function() {
         var data = JSON.parse(str);
         delete data.expires_in;
-        add_service(req.session, data, 'vkontakte');
+        add_service(req.session, data, 'vkontakte', function() {
+          res.redirect(config.site.url+'profile');
+        });
       });
     };
 
     https.request(options, callback).end();
-    res.redirect(config.site.url+'profile');
   }
 };
 
@@ -67,9 +68,10 @@ exports.twitter = function(req, res) {
   if(req.query.oauth_token) {
     twitterOA.getOAuthAccessToken(req.query.oauth_token, req.session.request_twitter_oauth_token_secret, req.query.oauth_verifier, function(err, oauth_token, oauth_token_secret, results) {
       var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };
-      add_service(req.session, data, 'twitter');
-      delete req.session.twitter_request_oauth_token_secret;
-      res.redirect(config.site.url+'profile');
+      add_service(req.session, data, 'twitter', function(){
+        delete req.session.twitter_request_oauth_token_secret;
+        res.redirect(config.site.url+'profile');
+      });
     });
   } else {
     twitterOA.getOAuthRequestToken(function(error, request_oauth_token, request_oauth_token_secret, results){
@@ -101,30 +103,48 @@ exports.facebook = function(req, res) {
 
       response.on('end', function() {
         var data = querystring.parse(str).access_token;
-        add_service(req.session, data, 'facebook');
+        add_service(req.session, data, 'facebook', function(){
+          res.redirect(config.site.url+'profile');
+        });
       });
     };
 
     https.request(options, callback).end();
-    res.redirect(config.site.url+'profile');
   }
-}
+};
 
-function add_service(session, account, service) {
+function add_service(session, account, service, cb) {
   testService(session.uid, service, function(check, is_first) {
     if(true) {
-      get_user_name_by_service(session.uid, service, account);
-    }
-    db.collection('services_connections', function(err,collection) {
-      db.collection('users_achievements', function(err, ua_collection) {
-        if(check === true) {
-          collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {});
-          ua_collection.insert({uid:session.uid, service:service, achievements: []}, function(err, doc) {});
-        } else {
-          collection.update({uid: session.uid, service:service},{$set: {service_login: account, valid: true}}, function(err,doc) {});
-        }
+      get_user_name_by_service(session.uid, service, account, function() {
+        write_newuser_to_db(function(){
+          cb();
+        });
       });
-    });
+    } else {
+      write_newuser_to_db(function(){
+        cb();
+      });
+    }
+    
+    function write_newuser_to_db(cbk) {
+      db.collection('services_connections', function(err,collection) {
+        db.collection('users_achievements', function(err, ua_collection) {
+          if(check === true) {
+            collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+              ua_collection.insert({uid:session.uid, service:service, achievements: []}, function(err, doc) {
+                cbk();
+              });
+            });
+          } else {
+            collection.update({uid: session.uid, service:service},{$set: {service_login: account, valid: true}}, function(err,doc) {
+              cbk();
+            });
+          }
+        });
+      });
+    }
+    
   });
 }
 
@@ -158,7 +178,7 @@ function testService(uid, service, cb) {
   });
 }
 
-function get_user_name_by_service(uid, service, account) {
+function get_user_name_by_service(uid, service, account, cb) {
   var name = '';
   var image = '';
   
@@ -167,7 +187,9 @@ function get_user_name_by_service(uid, service, account) {
       data = JSON.parse(data);
       image = data.profile_image_url;
       name = data.name;
-      write_name_and_image_from_service(uid, image, name);
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
+      });
     });
   }
   
@@ -193,8 +215,10 @@ function get_user_name_by_service(uid, service, account) {
         str = JSON.parse(str);
         str = str.data[0].fql_result_set[0];
         name = str.name;
-        image = str.pic;
-        write_name_and_image_from_service(uid, image, name);
+        image = str.pic_big;
+        write_name_and_image_from_service(uid, image, name, function() {
+          cb();
+        });
       });
     };
 
@@ -207,11 +231,19 @@ function get_user_name_by_service(uid, service, account) {
       data = data[0];
       name = data.first_name+' '+data.last_name;
       image = data.photo_medium;
-      write_name_and_image_from_service(uid, image, name);
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
+      });
     });
   }
 }
 
-function write_name_and_image_from_service(uid, image, name) {
-  //console.log(uid, image, name);
+function write_name_and_image_from_service(uid, image, name, cb) {
+  uploads.upload_profile_photo_from_url(image, uid, function() {
+    db.collection('users_profile', function(ua_err, users_profile) {
+      users_profile.update({uid: uid}, {$set: {name: name}}, function(sc_err, sc_doc) {
+        cb();
+      });
+    });
+  });
 }
