@@ -35,7 +35,9 @@ function createQuery() {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
         if(data.error) {
-          console.log(data);
+          collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
+            console.log('Set valid=false: '+task.uid+' '+task.service);
+          });
         }
           if(task.service == 'twitter') {
             cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
@@ -108,4 +110,4 @@ setInterval(function() {
     console.log('Run createQuery');
     createQuery();
   }
-}, 600000);
+}, 300000);
