@@ -10,9 +10,16 @@
       <img src="<%= @service_info.icon %>" width="194px" height="194px">
     </div>
     <div id="service_right">
-      <h2 class="uppercase_first"><%= @service_info.service %></h2>
-      <h4><i class="icon-star-4 fg-color-orange"></i><%= @service_info_count.points %>/<%= @service_info_count.pointsAll %></h4>
-      <h4><i class="icon-trophy fg-color-orangeDark"></i><%= @service_info_count.earned %>/<%= @service_info_count.all %></h4>
+      <% switch @service_info.service : %>
+      <% when 'rare' : %>
+        <h2 class="uppercase_first">Подвиги</h2>
+        <h4><i class="icon-trophy fg-color-orangeDark"></i><%= @service_info_count.earned %></h4>
+      <% end %><% else : %>
+        <h2 class="uppercase_first"><%= @service_info.service %></h2>
+        <h4><i class="icon-star-4 fg-color-orange"></i><%= @service_info_count.points %>/<%= @service_info_count.pointsAll %></h4>
+        <h4><i class="icon-trophy fg-color-orangeDark"></i><%= @service_info_count.earned %>/<%= @service_info_count.all %></h4>
+      <% end %><% end %>
+      
     </div>
   
   </div>
@@ -30,7 +37,11 @@
           </td>
           <td width="64px">
             <center>
-              <h3><%= item.points %></h3>
+              <% switch @service_info.service : %>
+              <% when 'rare' : %>
+              <% end %><% else : %>
+                <h3><%= item.points %></h3>
+              <% end %><% end %>
               <div class="body-text"><%= item.time %></div>
             </center>
           </td> 

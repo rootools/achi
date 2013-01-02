@@ -152,6 +152,15 @@ function get_achievment_stat(achivList, allAchievements, points, cb) {
       }
       achivStat.push(tmpObj);
     }
+    
+    for(var j in achivStat) {
+      if(achivStat[j].service === 'rare') {
+        var rare = achivStat.splice(j,1);
+        achivStat.push(rare[0]);
+        break;
+      }
+    }
+    
     cb(achivStat);
   });
 }
@@ -193,35 +202,6 @@ function get_user_stat(uid, points, cb) {
   });
 }
 
-exports.main = function(req, res) {
-  if(req.session.auth === false) {
-    res.redirect(config.site.url);
-  } else {
-    getUserAchievements(req.session.uid, function(achivList, lastAchivArray, points) {
-      getAllAchievementsCount(function(allAchievements) {
-        get_achievment_stat(achivList, allAchievements, points, function(achivStat) {
-          get_user_stat(req.session.uid, points, function(user_stat) {
-            res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session, user_stat: user_stat });
-          });
-        });
-      });
-    });
-  }
-};
-
-exports.service = function(req, res) {
-  if(req.session.auth === false) {
-    res.redirect(config.site.url);
-  } else {
-    getUserAchievementsByService(req.params.service, req.session.uid, function(data){
-      var service_info_count = countAchivmentsFromService(data);
-      getServiceInfo(req.params.service, function(serviceInfo) {
-        res.render('dashboard_service.ect', { title: 'Dashboard', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
-      });
-    });
-  }
-};
-
 // HASH IT!!
 function getUserAchievementsByService(service, uid, cb) {
   db.collection('users_achievements', function(err, collection) {
@@ -259,6 +239,35 @@ function getServiceInfo(service, cb) {
     });
   });
 }
+
+exports.main = function(req, res) {
+  if(req.session.auth === false) {
+    res.redirect(config.site.url);
+  } else {
+    getUserAchievements(req.session.uid, function(achivList, lastAchivArray, points) {
+      getAllAchievementsCount(function(allAchievements) {
+        get_achievment_stat(achivList, allAchievements, points, function(achivStat) {
+          get_user_stat(req.session.uid, points, function(user_stat) {
+            res.render('dashboard.ect', { title: 'Dashboard', achievements: achivStat, lastAchivArray:lastAchivArray, session: req.session, user_stat: user_stat });
+          });
+        });
+      });
+    });
+  }
+};
+
+exports.service = function(req, res) {
+  if(req.session.auth === false) {
+    res.redirect(config.site.url);
+  } else {
+    getUserAchievementsByService(req.params.service, req.session.uid, function(data){
+      var service_info_count = countAchivmentsFromService(data);
+      getServiceInfo(req.params.service, function(serviceInfo) {
+        res.render('dashboard_service.ect', { title: 'Dashboard', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
+      });
+    });
+  }
+};
 
 exports.user = function(req, res) {
   var uid = req.params.id;

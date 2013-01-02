@@ -31,7 +31,7 @@ function createQuery() {
   var now = new Date().getTime();
 
   db.collection('services_connections', function(err, collection) {
-    collection.find({valid: true, lastupdate: {$lt:now - 1800000}, service:{$ne: 'achivster'}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+    collection.find({valid: true, lastupdate: {$lt:now - 1800000}, service:{$nin: ['achivster', 'rare']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
         if(data.error) {
