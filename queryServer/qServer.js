@@ -35,10 +35,12 @@ function createQuery() {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
         if(data.error) {
-          collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
-            console.log('Set valid=false: '+task.uid+' '+task.service);
-          });
-        }
+          updateQuery(task.uid, task.service);
+//          collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
+//            console.log('Set valid=false: '+task.uid+' '+task.service);
+//          });
+          callback();
+        } else {
           if(task.service == 'twitter') {
             cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
@@ -57,6 +59,7 @@ function createQuery() {
               callback();
             });
           }
+        }
         });
       }, doc.length);
 

@@ -21,14 +21,14 @@ function checkFacebookAchievements(uid, data, db, cb) {
       res.all = createAIDarray(res.all);
       res.users = createAIDarray(res.users);
       if(res.users === undefined || res.users.length === 0) {res.users = [];}
-      var notRecieved = res.all;
-      for(var i=0;i<notRecieved.length;i++) {
-        for(var r=0;r<res.users.length;r++) {
-          if(res.users[r] == notRecieved[i]) {
-            notRecieved.splice(i,1);
-          }
+
+      var notRecieved = [];
+      for(var i in res.all) {
+        if(res.users.indexOf(res.all[i]) === -1) {
+          notRecieved.push(res.all[i]);
         }
       }
+
       for(var i=0;i<notRecieved.length;i++) {
         var runTest = eval('fb_'+notRecieved[i]);
         runTest(uid, data, notRecieved[i], db);
