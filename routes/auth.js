@@ -97,6 +97,22 @@ function send_mail_confirmation(uid, email, access_key) {
   });
 }
 
+function add_default_services(uid, cb) {
+  db.collection('services_connections', function(err, services_connections) {
+    services_connections.insert({uid: uid, service: 'achivster', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+      services_connections.insert({uid: uid, service: 'rare', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+        db.collection('users_achievements', function(err, users_achievements) {  
+          users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {
+            users_achievements.insert({uid: uid, service: 'rare', achievements: []}, function(err, doc) {
+              cb();
+            });
+          });
+        });
+      });
+    });
+  });
+}
+
 function registerUser(email, pass, region, req, cb) {
   var uid = randomstring.generate(20);
   var access_key = randomstring.generate(40);
@@ -104,16 +120,11 @@ function registerUser(email, pass, region, req, cb) {
     collection.insert({email: email, password: pass, uid: uid/*, access_key: access_key*/}, function(err, doc) {
       db.collection('users_profile', function(err,profiles) {
         profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
-          db.collection('services_connections', function(err, services_connections) {
-            services_connections.insert({uid: uid, service: 'achivster', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
-              db.collection('users_achievements', function(err, users_achievements) {  
-                users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {});
-                ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
+          add_default_services(uid, function() {
+            ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
                 //send_mail_confirmation(uid, email, access_key);
-                add_session(req, uid, email, region, function() {
-                  cb();
-                });
-              });
+            add_session(req, uid, email, region, function() {
+              cb();
             });
           });
         });

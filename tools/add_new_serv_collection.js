@@ -11,34 +11,21 @@ function mongoConnect() {
 }
 
 mongoConnect();
-var day = new Date().getTime() - 86400000;
 
-function remove_doubles() {
-  db.collection('users_achievements', function(err, collection) {
-    collection.find({},{achievements:1 ,uid:1, service:1,_id:0}).toArray(function(err ,doc) {
+function add_new_sc() {
+  db.collection('users', function(err, collection) {
+    collection.find({},{uid:1,_id:0}).toArray(function(err ,doc) {
       for(var i in doc) {
-        rem_achiv(doc[i].uid, doc[i].service, doc[i].achievements);
+        var uid = doc[i].uid;
+        db.collection('services_connections', function(err, collection) {
+          collection.insert({uid: uid, service: 'rare', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+          });
+        });
       }
     });
   });
 }
 
-function rem_achiv(uid, service, achiv_list) {
-  var newArr = [];
-  for(var i in achiv_list) {
-    if(achiv_list[i].time > day) {
-      console.log(achiv_list[i]);
-    } else {
-      newArr.push(achiv_list[i]);
-    }
-  }
-
-  db.collection('users_achievements', function(err, collection) {
-    collection.update({uid: uid, service: service},{$set: {achievements: newArr}}, function(err,doc){
-    });;
-  });
-}
-
 setTimeout(function() {
-  remove_doubles();
+  add_new_sc();
 }, 500);
