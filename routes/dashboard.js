@@ -154,7 +154,9 @@ function get_achievment_stat(achivList, allAchievements, points, cb) {
     }
     
     for(var j in achivStat) {
-      if(achivStat[j].service === 'rare') {
+      if(achivStat[j].service === 'rare' && achivStat[j].earned === 0) {
+        achivStat.splice(j,1);
+      } else if(achivStat[j].service === 'rare') {
         var rare = achivStat.splice(j,1);
         achivStat.push(rare[0]);
         break;
