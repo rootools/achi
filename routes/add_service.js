@@ -115,7 +115,7 @@ exports.facebook = function(req, res) {
 
 function add_service(session, account, service, cb) {
   testService(session.uid, service, function(check, is_first) {
-    if(true) {
+    if(is_first) {
       get_user_name_by_service(session.uid, service, account, function() {
         write_newuser_to_db(function(){
           cb();
