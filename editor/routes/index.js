@@ -71,7 +71,7 @@ exports.editor_api = function(req, res) {
   
   if(req.body.command === 'get_offer_list') {
     db.collection('offers', function(err, collection) {
-      collection.find({}).toArray(function(err, doc) {
+      collection.find({}).sort([['aid',1]]).toArray(function(err, doc) {
         var data = JSON.stringify({data: doc});
         res.contentType('json');
         res.end(data);

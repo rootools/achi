@@ -17,9 +17,14 @@ function add_new_sc() {
     collection.find({},{uid:1,_id:0}).toArray(function(err ,doc) {
       for(var i in doc) {
         var uid = doc[i].uid;
-        db.collection('services_connections', function(err, collection) {
-          collection.insert({uid: uid, service: 'rare', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
-          });
+        db.collection('users_achievements', function(err, users_achievements) {  
+          users_achievements.insert({uid: uid, service: 'rare', achievements: []}, function(err, doc) {
+
+        //db.collection('services_connections', function(err, collection) {
+          //collection.insert({uid: uid, service: 'rare', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+          //});
+        //});
+        });
         });
       }
     });
