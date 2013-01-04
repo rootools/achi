@@ -10,7 +10,15 @@
       <img src="<%= @user_stat.photo %>" width="150px" heigt="150px">
     </div>
     <div class="user_info_right">
-      <h3><%= @user_stat.name %></h3>
+      <h3><%= @user_stat.name %>
+        <% if @target_uid : %>
+          <a href="/dashboard/user/<%- @target_uid %>">
+        <% else : %>
+          <a href="/dashboard/user/<%= @session.uid %>">
+        <% end %>
+          <i class="icon-link" style="font-size: 15px;"></i>
+        </a>
+      </h3>
       <h4><i class="icon-star-4 fg-color-orange"></i><%= @user_stat.points %> pts</h4>
     </div>
   </div>
