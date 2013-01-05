@@ -23,7 +23,6 @@ function getUserAchievements(uid, cb) {
 }
 
 exports.index = function(req, res){
-  console.log(req.session);
   if(!req.session.auth || req.session.auth === false) {
     res.render('index.ect', { title: 'Ачивстер', session: req.session});
   } else {

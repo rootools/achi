@@ -153,7 +153,7 @@ function testService(uid, service, cb) {
   db.collection('users_achievements', function(ua_err, ua_collection) {
     sc_collection.find({uid: uid}).toArray(function(sc_err, sc_doc) {
     var is_first = false;
-    if(sc_doc.length === 1) {
+    if(sc_doc.length === 2) {
       is_first = true;
     }
     for(var i in sc_doc) {

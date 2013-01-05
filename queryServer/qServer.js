@@ -35,10 +35,11 @@ function createQuery() {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
         if(data.error) {
+          console.log(data);
           updateQuery(task.uid, task.service);
-//          collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
-//            console.log('Set valid=false: '+task.uid+' '+task.service);
-//          });
+          collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
+            console.log('Set valid=false: '+task.uid+' '+task.service);
+          });
           callback();
         } else {
           if(task.service == 'twitter') {
@@ -74,14 +75,13 @@ function createQuery() {
 function getData(service, auth, cb) {
   if(service == 'twitter') {
     var options = {
-        host: 'twitter1-achi.eu01.aws.af.cm',
-        port: 80,
+//        host: 'twitter1-achi.eu01.aws.af.cm',
+        port: 8065,
         path: '/?oauth_token='+auth.oauth_token+'&oauth_token_secret='+auth.oauth_token_secret};
   }
   
   if(service == 'vkontakte') {
     var options = {
-//        host: 'vk1-achi.eu01.aws.af.cm',
         host: 'localhost',
         port: 8085,
         path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
@@ -89,8 +89,9 @@ function getData(service, auth, cb) {
 
   if(service == 'facebook') {
     var options = {
-        host: 'facebook1-achi.eu01.aws.af.cm',
-        port: 80,
+//        host: 'facebook1-achi.eu01.aws.af.cm',
+        host: 'localhost',
+        port: 8075,
         path: '/?access_token='+auth};
   }
 

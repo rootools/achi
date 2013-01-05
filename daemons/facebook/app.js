@@ -17,6 +17,10 @@ http.createServer(function (req, res) {
   fql = JSON.stringify(fql);
 
   getData(fql, query.access_token, function(data) {
+    if(data.error) {
+      res.end(JSON.stringify(data));
+    } else {
+    
     data = data.data;
     response.is_achivster = false;
     for(var i=0;i<data.length;i++) {
@@ -36,9 +40,10 @@ http.createServer(function (req, res) {
       }
     }
     res.end(JSON.stringify(response));
+  }
   });
 
-}).listen(process.env.VCAP_APP_PORT || 3000);
+}).listen(process.env.VCAP_APP_PORT || 8075);
 
 function getData(query, access_token, cb) {
   var options = {
