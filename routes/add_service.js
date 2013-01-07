@@ -24,7 +24,7 @@ var bitbucketOA = new oauth(
   'ENSfZreEzhHYjtWLmG',
   'kbgFjZNAcMADEmpF44c2wrARTrY3NKEY',
   '1.0',
-  'http://localhost:8001/add_service/bitbucket',
+  config.site.url+'add_service/bitbucket',
   'HMAC-SHA1'
 );
 
