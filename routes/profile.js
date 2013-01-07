@@ -43,6 +43,7 @@ function getServiceList(uid, cb) {
           if(data.all[i].service === 'vkontakte') { response[i].button_icon = 'v'}
           if(data.all[i].service === 'facebook') { response[i].button_icon = 'f'}
           if(data.all[i].service === 'twitter') { response[i].button_icon = 't'}
+          if(data.all[i].service === 'bitbucket') { response[i].button_icon = 'C'}
           //
           if(data.added[r].service === data.all[i].service) {
             response[i].valid = data.added[r].valid;
@@ -62,12 +63,6 @@ function getServiceList(uid, cb) {
       for(var j in response) {
         if(response[j].service === 'achivster') {
           response.splice(j,1);
-        }
-      }
-
-      for(var g in response) {
-        if(response[g].service === 'bitbucket') {
-          response.splice(g,1);
         }
       }
 

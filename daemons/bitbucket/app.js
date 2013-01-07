@@ -19,11 +19,39 @@ http.createServer(function (req, res) {
   bitbucketOA.get('https://api.bitbucket.org/1.0/user', query.token, query.secret, function(err, data) {
     data = JSON.parse(data);
 
-    var profile = data;
-      console.log(profile);
-      res.end(JSON.stringify(profile));
-    });
+    var profile = {};
+    profile.repo_count = data.repositories.length;
+    profile.lang_list = get_lang_list(data.repositories);
+    profile.have_wiki = have_wiki(data.repositories);
+    profile.have_issues = have_issues(data.repositories);
+    res.end(JSON.stringify(profile));
   
   });
 
-}).listen(process.env.VCAP_APP_PORT || 8055);
+}).listen(8055, 'localhost');
+
+function get_lang_list(data) {
+  var lang_ls = [];
+  for(var i in data) {
+    if(lang_ls.indexOf(data[i].language) === -1) {
+      lang_ls.push(data[i].language);
+    }
+  }
+  return lang_ls;
+}
+
+function have_wiki(data) {
+  for(var i in data) {
+    if(data[i].has_wiki) {
+      return true;
+    }
+  }
+}
+
+function have_issues(data) {
+  for(var i in data) {
+    if(data[i].has_issues) {
+      return true;
+    }
+  }  
+}

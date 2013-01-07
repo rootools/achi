@@ -103,18 +103,24 @@
           
             <% if row.addtime : %>
               <button class="me_service_list_add_button shortcut">
+              <span class="icon">
+                <i class="websymbols"><%= row.button_icon %></i>
+              </span>
+              <span class="label">
+                <%= row.service %>
+              </span>
+              <span class="badge bg-color-blue">
+                <i class="websymbols" style="margin-right: 0px;">V</i>
+              </span>
             <% else : %>
               <button class="me_service_list_add_button shortcut bg-color-blueDark">
+              <span class="icon fg-color-blueLight">
+                <i class="websymbols"><%= row.button_icon %></i>
+              </span>
+              <span class="label fg-color-blueLight">
+                <%= row.service %>
+              </span>
             <% end %>
-            <span class="icon">
-              <i class="websymbols"><%= row.button_icon %></i>
-            </span>
-            <span class="label">
-              <%= row.service %>
-            </span>
-            <span class="badge bg-color-blueDark">
-              <i class="websymbols" style="margin-right: 0px;">V</i>
-            </span>
             </button>
           </a>
         <% end %>
