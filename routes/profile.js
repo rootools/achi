@@ -65,6 +65,12 @@ function getServiceList(uid, cb) {
         }
       }
 
+      for(var g in response) {
+        if(response[g].service === 'bitbucket') {
+          response.splice(g,1);
+        }
+      }
+
       cb(response);
     });
 }
