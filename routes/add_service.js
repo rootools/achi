@@ -18,6 +18,16 @@ var twitterOA = new oauth(
   'HMAC-SHA1'
 );
 
+var bitbucketOA = new oauth(
+  'https://bitbucket.org/!api/1.0/oauth/request_token',
+  'https://bitbucket.org/!api/1.0/oauth/access_token',
+  'ENSfZreEzhHYjtWLmG',
+  'kbgFjZNAcMADEmpF44c2wrARTrY3NKEY',
+  '1.0',
+  'http://localhost:8001/add_service/bitbucket',
+  'HMAC-SHA1'
+);
+
 var db;
 
 function mongoConnect() {
@@ -110,6 +120,25 @@ exports.facebook = function(req, res) {
     };
 
     https.request(options, callback).end();
+  }
+};
+
+exports.bitbucket = function(req, res) {
+  if(req.query.oauth_token) {
+    bitbucketOA.getOAuthAccessToken(req.session.request_oauth_token, req.session.request_oauth_token_secret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results){
+      var data = {token: oauthAccessToken, secret: oauthAccessTokenSecret};
+      add_service(req.session, data, 'bitbucket', function(){
+        delete req.session.request_oauth_token;
+        delete req.session.request_oauth_token_secret;
+        res.redirect(config.site.url+'profile');
+      });
+    });
+  } else {
+    bitbucketOA.getOAuthRequestToken(function(error, request_oauth_token, request_oauth_token_secret, results){
+      req.session.request_oauth_token = request_oauth_token;
+      req.session.request_oauth_token_secret = request_oauth_token_secret;
+      res.redirect('https://bitbucket.org/!api/1.0/oauth/authenticate?oauth_token='+request_oauth_token);
+    });
   }
 };
 
@@ -231,6 +260,17 @@ function get_user_name_by_service(uid, service, account, cb) {
       data = data[0];
       name = data.first_name+' '+data.last_name;
       image = data.photo_medium;
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
+      });
+    });
+  }
+
+  if(service === 'bitbucket') {
+    bitbucketOA.get('https://api.bitbucket.org/1.0/user', account.token, account.secret, function(err, data){
+      data = JSON.parse(data).user;
+      image = data.avatar;
+      name = data.display_name;
       write_name_and_image_from_service(uid, image, name, function() {
         cb();
       });

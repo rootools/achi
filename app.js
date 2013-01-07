@@ -60,6 +60,8 @@ app.all('/offer', offer.main);
 app.all('/add_service/vkontakte', add_service.vk);
 app.all('/add_service/twitter', add_service.twitter);
 app.all('/add_service/facebook', add_service.facebook);
+app.all('/add_service/bitbucket', add_service.bitbucket);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
