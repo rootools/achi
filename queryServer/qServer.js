@@ -1,9 +1,10 @@
 var http = require('http');
 var async = require('async');
 
-var cTwitter = require('./qS_twitter.js');
+var cTwitter = require('./qS_twitter');
 var cVkontakte = require('./qS_vkontakte');
 var cFacebook = require('./qS_facebook');
+var cBitbucket = require('./qS_bitbucket');
 
 var q;
 var db;
@@ -60,6 +61,12 @@ function createQuery() {
               callback();
             });
           }
+          if(task.service == 'bitbucket') {
+            cFacebook.checkBitbucketAchievements(task.uid, data, db, function(res) {
+              //updateQuery(task.uid, task.service);
+              callback();
+            });
+          }
         }
         });
       }, doc.length);
@@ -75,7 +82,7 @@ function createQuery() {
 function getData(service, auth, cb) {
   if(service == 'twitter') {
     var options = {
-//        host: 'twitter1-achi.eu01.aws.af.cm',
+        host: 'localhost',
         port: 8065,
         path: '/?oauth_token='+auth.oauth_token+'&oauth_token_secret='+auth.oauth_token_secret};
   }
@@ -89,10 +96,16 @@ function getData(service, auth, cb) {
 
   if(service == 'facebook') {
     var options = {
-//        host: 'facebook1-achi.eu01.aws.af.cm',
         host: 'localhost',
         port: 8075,
         path: '/?access_token='+auth};
+  }
+
+  if(service == 'bitbucket') {
+    var options = {
+        host: 'localhost',
+        port: 8055,
+        path: '/?token='+auth.token+'&secret='+auth.secret};
   }
 
   var callback = function(res) {
