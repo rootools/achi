@@ -101,6 +101,10 @@ function getData(service, auth, cb) {
       str += chunk;
     });
 
+    res.on('error', function(err) {
+      console.log(err);
+    });
+
     res.on('end', function() {
       cb(JSON.parse(str));
     });

@@ -162,7 +162,7 @@ function testService(uid, service, cb) {
       }
     }
     // Earned achiv for first service
-    if(sc_doc.length === 1) {
+    if(sc_doc.length === 2) {
       ext_achivster.main(uid, 'eSkuacz7tW1yUayFp1Xes710UNc8u1');
     }
     
