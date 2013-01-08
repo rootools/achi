@@ -43,29 +43,33 @@ function createQuery() {
           });
           callback();
         } else {
-          if(task.service == 'twitter') {
+          if(task.service === 'twitter') {
             cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
               callback();
             });
           }
-          if(task.service == 'vkontakte') {
+          if(task.service === 'vkontakte') {
             cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
               callback();
             });
           }
-          if(task.service == 'facebook') {
+          if(task.service === 'facebook') {
             cFacebook.checkFacebookAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
               callback();
             });
           }
-          if(task.service == 'bitbucket') {
+          if(task.service === 'bitbucket') {
             cBitbucket.checkBitbucketAchievements(task.uid, data, db, function(res) {
               //updateQuery(task.uid, task.service);
               callback();
             });
+          }
+          if(task.service === 'github') {
+            console.log(data);
+            callback();
           }
         }
         });
@@ -106,6 +110,13 @@ function getData(service, auth, cb) {
         host: 'localhost',
         port: 8055,
         path: '/?token='+auth.token+'&secret='+auth.secret};
+  }
+
+  if(service == 'github') {
+    var options = {
+        host: 'localhost',
+        port: 8045,
+        path: '/?token='+auth.access_token};
   }
 
   var callback = function(res) {
