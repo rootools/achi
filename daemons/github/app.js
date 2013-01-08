@@ -10,6 +10,7 @@ http.createServer(function (req, res) {
   getData('/user', query.token, function(data) {
     response.followers = data.followers;
     response.following = data.following;
+    response.repo_count = data.public_repos + data.total_private_repos;
     response.public_repos = data.public_repos;
     response.total_private_repos = data.total_private_repos;
     response.gists = data.public_gists + data.private_gists;

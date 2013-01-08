@@ -5,6 +5,7 @@ var cTwitter = require('./qS_twitter');
 var cVkontakte = require('./qS_vkontakte');
 var cFacebook = require('./qS_facebook');
 var cBitbucket = require('./qS_bitbucket');
+var cGithub = require('./qS_github');
 
 var q;
 var db;
@@ -63,12 +64,15 @@ function createQuery() {
           }
           if(task.service === 'bitbucket') {
             cBitbucket.checkBitbucketAchievements(task.uid, data, db, function(res) {
-              //updateQuery(task.uid, task.service);
+              updateQuery(task.uid, task.service);
               callback();
             });
           }
           if(task.service === 'github') {
-            callback();
+            cGithub.checkGithubAchievements(task.uid, data, db, function(res) {
+              //updateQuery(task.uid, task.service);
+              callback();
+            });
           }
         }
         });
