@@ -46,6 +46,7 @@ function have_wiki(data) {
       return true;
     }
   }
+  return false;
 }
 
 function have_issues(data) {
@@ -53,5 +54,6 @@ function have_issues(data) {
     if(data[i].has_issues) {
       return true;
     }
-  }  
+  }
+  return false;
 }
