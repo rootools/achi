@@ -321,7 +321,7 @@ function get_user_name_by_service(uid, service, account, cb) {
       });
 
       response.on('end', function() {
-        var data = querystring.parse(str);
+        var data = JSON.parse(str);
         image = data.avatar_url;
         name = data.name;
         write_name_and_image_from_service(uid, image, name, function() {
