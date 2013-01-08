@@ -142,6 +142,35 @@ exports.bitbucket = function(req, res) {
   }
 };
 
+exports.github = function(req, res) {
+  if(!req.query.code) {
+    res.redirect('https://github.com/login/oauth/authorize?client_id=1167c7508199dd90ba7c&scope=user,repo:status,gist');
+  } else {
+    var options = {
+      host: 'github.com',
+      method: 'POST',
+      path: '/login/oauth/access_token?client_id=1167c7508199dd90ba7c&client_secret=4521cb71a4dd118099810a98028c302b66ad3fa8&code='+req.query.code
+    };
+
+    var callback = function(response) {
+      var str = '';
+
+      response.on('data', function(chunk) {
+        str += chunk;
+      });
+
+      response.on('end', function() {
+        var data = querystring.parse(str);
+        add_service(req.session, data, 'github', function(){
+          res.redirect(config.site.url+'profile');
+        });
+      });
+    };
+
+    https.request(options, callback).end();
+  }
+}
+
 function add_service(session, account, service, cb) {
   testService(session.uid, service, function(check, is_first) {
     if(is_first) {
@@ -275,6 +304,33 @@ function get_user_name_by_service(uid, service, account, cb) {
         cb();
       });
     });
+  }
+
+  if(service === 'github') {
+    var options = {
+      host: 'api.github.com',
+      method: 'GET',
+      path: '/user?access_token='+account.access_token
+    };
+
+    var callback = function(response) {
+      var str = '';
+
+      response.on('data', function(chunk) {
+        str += chunk;
+      });
+
+      response.on('end', function() {
+        var data = querystring.parse(str);
+        image = data.avatar_url;
+        name = data.name;
+        write_name_and_image_from_service(uid, image, name, function() {
+          cb();
+        });
+      });
+    };
+
+    https.request(options, callback).end();
   }
 }
 
