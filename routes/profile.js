@@ -40,10 +40,12 @@ function getServiceList(uid, cb) {
       for(var i in data.all) {
         for(var r in data.added) {
           // HACK!!
-          if(data.all[i].service === 'vkontakte') { response[i].button_icon = 'v'}
-          if(data.all[i].service === 'facebook') { response[i].button_icon = 'f'}
-          if(data.all[i].service === 'twitter') { response[i].button_icon = 't'}
-          if(data.all[i].service === 'bitbucket') { response[i].button_icon = 'C'}
+          if(data.all[i].service === 'vkontakte') { response[i].button_icon = '<i class="websymbols">v</i>'}
+          if(data.all[i].service === 'facebook') { response[i].button_icon = '<i class="websymbols">f</i>'}
+          if(data.all[i].service === 'twitter') { response[i].button_icon = '<i class="websymbols">t</i>'}
+          //if(data.all[i].service === 'bitbucket') { response[i].button_icon = '<i class="websymbols">C</i>'}
+          if(data.all[i].service === 'bitbucket') { response[i].button_icon = '<i class="icon-filter"></i>'}
+          if(data.all[i].service === 'github') { response[i].button_icon = '<i class="icon-github"></i>'}
           //
           if(data.added[r].service === data.all[i].service) {
             response[i].valid = data.added[r].valid;

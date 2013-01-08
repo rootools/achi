@@ -104,7 +104,7 @@
             <% if row.addtime : %>
               <button class="me_service_list_add_button shortcut">
               <span class="icon">
-                <i class="websymbols"><%= row.button_icon %></i>
+                <%- row.button_icon %>
               </span>
               <span class="label">
                 <%= row.service %>
@@ -115,7 +115,7 @@
             <% else : %>
               <button class="me_service_list_add_button shortcut bg-color-blueDark">
               <span class="icon fg-color-blueLight">
-                <i class="websymbols"><%= row.button_icon %></i>
+                <%- row.button_icon %>
               </span>
               <span class="label fg-color-blueLight">
                 <%= row.service %>

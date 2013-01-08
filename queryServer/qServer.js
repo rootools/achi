@@ -70,7 +70,7 @@ function createQuery() {
           }
           if(task.service === 'github') {
             cGithub.checkGithubAchievements(task.uid, data, db, function(res) {
-              //updateQuery(task.uid, task.service);
+              updateQuery(task.uid, task.service);
               callback();
             });
           }
