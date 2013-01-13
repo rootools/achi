@@ -49,17 +49,37 @@
       <div class="span4">
         <a href="<%= item.url %>">
           <% if item.valid : %>
-              <div class="tile double bg-color-green service_tile">
-            <% else : %>
-              <div class="tile double service_tile service_tile_disable">
-            <% end %>
+            <% switch item.service : %>
+              <% when 'rare' : %> 
+                <div class="tile double bg-color-red service_tile rare_tile">
+              <% end %><% else : %>
+                <div class="tile double bg-color-green service_tile">
+              <% end %><% end %>
+          <% else : %>
+                <div class="tile double service_tile service_tile_disable">
+          <% end %>
               <div class="tile-content">
                 <img class="place-right" src="<%= item.icon %>" width="110px" height="110px">
+              
+                    <% switch item.service : %>
+                    <% when 'rare' : %>
+                      <h2 class="uppercase_first">Подвиги</h2>
+                      <p style="margin-top: 5px;">Достижения, которые сложно заработать</p>
+                    <% end %><% else : %>
                 <h2 class="uppercase_first"><%= item.service %></h2>
                 <h4><%= item.earnedPoints %>/<%= item.fullPoints %></h4>
+                    <% end %><% end %>
+              
               </div>
               <div class="brand">
+                    
+                    <% switch item.service : %>
+                    <% when 'rare' : %>
+                        <div class="badge"><%= item.earned %></div>
+                    <% end %><% else : %>
                 <div class="badge"><%= item.earned %>/<%= item.full %></div>
+                    <% end %><% end %>
+
               </div>
             </div>
         </a>

@@ -411,6 +411,10 @@ function GetServiceList(uid, cb) {
     for(var i in data) {
       if(data[i].service === 'rare' && data[i].earned === 0) {
         data.splice(i, 1);
+      } else if(data[i].service === 'rare') {
+        var rare = data.splice(j,1);
+        data.push(rare[0]);
+        break;
       }
     }
     cb(data);
