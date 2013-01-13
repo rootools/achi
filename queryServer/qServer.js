@@ -78,7 +78,7 @@ function createQuery() {
         });
       }, doc.length);
 
-      for(var i=0;i<doc.length;i++) {
+      for(var i in doc) {
         q.push(doc[i], function(err){});
       }
 

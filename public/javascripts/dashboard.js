@@ -143,4 +143,8 @@ $(function() {
     last_achiv_event(this);
   });
 
+  if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {} else {
+    grayscale($('.service_tile_disable'));
+  }
+
 });
