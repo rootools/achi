@@ -14,20 +14,10 @@ function mongoConnect() {
 
 mongoConnect();
 
-function getUserAchievements(uid, cb) {
-  db.collection('users_achievements', function(err, collection) {
-    collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
-      cb(doc);
-    });
-  });
-}
-
 exports.index = function(req, res){
   if(!req.session.auth || req.session.auth === false) {
     res.render('index.ect', { title: 'Ачивстер', session: req.session});
   } else {
-    getUserAchievements(req.session.uid, function(achivList) {    
-      res.render('index.ect', { title: 'Ачивстер' , session: req.session, achivList:achivList});
-    });
+    res.redirect(config.site.url+'dashboard');
   }
 };

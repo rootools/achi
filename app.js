@@ -43,9 +43,8 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
+app.all('/', routes.index);
 app.all('/login', authRoutes.login);
-app.all('/login/access_key', authRoutes.access_key);
 app.all('/logout', authRoutes.logout);
 app.all('/webapi', webApi.routing);
 app.all('/dashboard', dashboard.main);

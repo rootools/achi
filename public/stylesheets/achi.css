@@ -1,4 +1,4 @@
-body {
+/*body {
   font-family: "DejaVu Sans Mono", monospace;
 }
 
@@ -14,4 +14,15 @@ input#loginFormSubmitButton {
   margin-top: 10px;
   width: 150px;
   height: 40px;
+}
+*/
+
+.div_index_left, .div_index_right {
+	position: relative;
+	float: left;
+}
+
+.login_form, .register_form {
+	margin-left: 5px;
+	width: 330px;
 }

@@ -24,50 +24,6 @@ i {
   margin-right: 5px;
 }
 
-
-/*
-div#login_zone {
-  z-index: 999;
-  position: relative;
-  float: right;
-  width: 50%;
-  padding: 10px;
-  display: none;
-}
-*/
-
-#login_zone {
-  position: absolute;
-  z-index: 999;
-  margin-top: 35px;
-  margin-left: 50%;
-  width: 40%;
-  padding: 10px;
-  display: none;
-  float: right;
-}
-
-div#error_show {
-  margin-bottom: 10px;
-}
-
-div#loginForm {
-  width: 300px;
-}
-
-input.loginForm {
-  width: 100%;
-}
-
-input#loginFormSubmitButton {
-  margin-top: 10px;
-  width: 150px;
-  height: 40px;
-}
-
-/*
-*/
-
 div#dashboard {
   width: 800px;
 }

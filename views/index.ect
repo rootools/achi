@@ -9,43 +9,49 @@
   </div>
   
   <div class="row">
-    <% if @session.auth : %>
-      <a href="/profile#service">
-      <button class="command-button bg-color-blue login_or_register" id="login" style="margin-top: 10px;">
-        Добавляй сервисы
-        <small>Больше.. БОЛЬШЕ!</small>
-      </button>
-      </a>
-    <% else : %>
-      <button class="command-button bg-color-yellow login_or_register" id="register" style="margin-top: 10px;">
-        Регистрируйся
+    <div class="div_index_left">
+      <button class="command-button bg-color-green form_menu_buttons border-color-darken" id="form_menu_buttons_login">Войти
+        <small>aa</small>
+      </button><br>
+      <button class="command-button bg-color-blue form_menu_buttons" id="form_menu_buttons_register">Зарегистрироваться
         <small>Что бы получить свое первое достижение</small>
       </button>
-    <% end %>
+    </div>
+    <div class="div_index_right">
+
+      <div class="login_form">
+        <form action="/login" method="POST">
+          <div class="input-control text">
+            <input type="email" name="email" class="loginForm" id="loginEmail" placeholder="Электронный адрес">
+          </div>
+          <div class="input-control password">
+            <input type="password" name="pass" class="loginForm" id="loginPass" placeholder="Пароль">
+          </div>
+          <input type="hidden" name="action" value="login">
+          <input type="hidden" name="nosecurity" value="true">
+          <input type="submit" id="loginFormSubmitButton" class="bg-color-blueDark fg-color-blueLight" value="Вход">
+        </form>
+      </div>
+      
+      <div class="register_form" style="display: none;">
+        <form action="/login" method="POST">
+          <div class="input-control text">
+            <input type="email" name="email" class="loginForm" id="regEmail" placeholder="Электронный адрес">
+          </div>
+          <div class="input-control password">
+            <input type="password" name="pass" class="loginForm" id="regPass" placeholder="Пароль">
+          </div>
+          <div class="input-control password">
+            <input type="password" class="loginForm" id="regPassVerify" placeholder="Проверка пароля" oninput="check_pass(this)">
+          </div>
+          <input type="hidden" name="action" value="reg">
+          <input type="hidden" name="nosecurity" value="true">
+          <input type="submit" id="loginFormSubmitButton" class="bg-color-blueDark fg-color-blueLight" value="Создать аккаунт">
+      </div>
+
+    </div>
   </div>
-  
-  <div class="row" style="margin-top: 20px;">
-    <div class="image-container place-left bg-color-green login_or_register" id="register" style="cursor: pointer;">
-      <img src="/images/achi.png">
-      <div class="overlay"><center><p>Заработай свое первое достижение!</p></center></div>
-    </div>
-    <a href="/profile#service">
-    <div class="image-container place-left bg-color-orangeDark">
-      <img src="/images/i_2.png">
-      <div class="overlay"><center><p>Добавляй сервисы</p></center></div>
-    </div>
-    </a>
-    <div class="image-container place-left bg-color-blue">
-      <img src="/images/i_3.png">
-      <div class="overlay"><center><p>Следи за нами в социальных сетях</p></div>
-    </div>
-    <a href="/offer">
-    <div class="image-container place-left">
-      <img src="/images/i_4.png">
-      <div class="overlay"><center><p>Участвуй в Акциях!</p></center></div>
-    </div>
-    </a>
-  </div>
+
   
   <div class="row" style="margin-top: 20px;">
     <center>
@@ -62,3 +68,6 @@
   </div>
   
 </div>
+
+<link href="/stylesheets/achi.css" rel="stylesheet" />
+<script src="/javascripts/achi_index.js"></script>

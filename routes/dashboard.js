@@ -277,6 +277,7 @@ exports.service = function(req, res) {
   }
 };
 
+/*
 exports.user = function(req, res) {
   var uid = req.params.id;
   db.collection('users', function(err, collection) {
@@ -297,6 +298,7 @@ exports.user = function(req, res) {
     });
   });
 };
+*/
 
 exports.service_user = function(req, res) {
   getUserAchievementsByService(req.params.service, req.params.id, function(data){

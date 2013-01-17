@@ -2,9 +2,9 @@ var config = require('../configs/config.js');
 var locale = require('../configs/locale/main.js');
 var ext_achivster = require('../external/achivster.js');
 
-var geoip = require('geoip-lite');
+//var geoip = require('geoip-lite');
 var randomstring = require('randomstring');
-var nodemailer = require("nodemailer");
+//var nodemailer = require("nodemailer");
 
 var db;
 
@@ -21,19 +21,24 @@ function mongoConnect() {
 mongoConnect();
 
 exports.login = function(req, res) {
-  var region = '';
-  //var region = geoip.lookup(req.connection.remoteAddress).country;
+  /*
+  if(req.session.auth && req.session.auth === true) {
+    res.redirect(config.site.url);
+  }*/
+
+  console.log(req.body);
+  if(req.body.nosecurity === 'true') {
+    req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
+  }
+
   db.collection('users', function(err,collection) {
-    if(req.session.auth && req.session.auth === true) {
-      res.redirect(config.site.url);
-    }
 
     if(req.body.action === 'login') {
       collection.findOne({email: req.body.email}, function(err, doc) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
-            add_session(req, doc.uid, doc.email, region, function() {
-              res.end(JSON.stringify({}));
+            add_session(req, doc.uid, doc.email, function() {
+              res.redirect(config.site.url);
             });
           } else {
             res.end(JSON.stringify({error: locale.errors.err1.eng}));
@@ -45,15 +50,15 @@ exports.login = function(req, res) {
     } else if(req.body.action === 'reg') {
       testUser(req.body.email, function(flag) {
         if(flag === true) {
-          registerUser(req.body.email, req.body.pass, region, req, function(){
-            res.end(JSON.stringify({}));
+          registerUser(req.body.email, req.body.pass, req, function(){
+            res.redirect(config.site.url);
           });
         } else {
           res.end(JSON.stringify({error: locale.errors.err2.eng}));
         } 
       });
     } else {
-      res.render('login.ect', { title: 'Login' });
+      res.redirect(config.site.url);
     }
   });
 };
@@ -113,7 +118,7 @@ function add_default_services(uid, cb) {
   });
 }
 
-function registerUser(email, pass, region, req, cb) {
+function registerUser(email, pass, req, cb) {
   var uid = randomstring.generate(20);
   var access_key = randomstring.generate(40);
   db.collection('users', function(err,collection) {
@@ -123,7 +128,7 @@ function registerUser(email, pass, region, req, cb) {
           add_default_services(uid, function() {
             ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
                 //send_mail_confirmation(uid, email, access_key);
-            add_session(req, uid, email, region, function() {
+            add_session(req, uid, email, function() {
               cb();
             });
           });
@@ -133,22 +138,12 @@ function registerUser(email, pass, region, req, cb) {
   });
 }
 
-function add_session(req, uid, email, lang, cb) {
+function add_session(req, uid, email, cb) {
   req.session.auth = true;
   req.session.uid = uid;
   req.session.email = email;
-  req.session.lang = lang;
   cb();
 }
-
-exports.access_key = function(req, res) {
-  var key = req.query.key;
-  db.collection('users', function(err,collection) {
-    collection.update({access_key: key}, {$unset: {access_key: 1}}, function(err, doc) {
-      res.redirect(config.site.url);
-    });
-  });
-};
 
 exports.logout = function(req, res) {
   req.session.auth = false;
