@@ -214,6 +214,12 @@ function vk_ie7bdaVQw0MhHTY008mcVS8EJgYDem(uid, data, aid, db) {
   }
 }
 
+function vk_Kjo7fJlDc41ea2WGfMxs2znDapfCx5(uid, data, aid, db) {
+  if(data.is_achivster === true) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'vkontakte'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
