@@ -1,6 +1,7 @@
 body {
   font-family: "DejaVu Sans Mono", monospace;
   background-color: #fff;
+  min-height: 100%;
 }
 
 div.page {
@@ -16,6 +17,11 @@ div.page {
   text-transform: uppercase;
 }
 
+.footer {
+  border-top: 1px solid rgba(127, 127, 127, .5);
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 /*
 Menu bar block
 */

@@ -26,7 +26,6 @@ exports.login = function(req, res) {
     res.redirect(config.site.url);
   }*/
 
-  console.log(req.body);
   if(req.body.nosecurity === 'true') {
     req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
   }
