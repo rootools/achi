@@ -215,7 +215,7 @@ function vk_ie7bdaVQw0MhHTY008mcVS8EJgYDem(uid, data, aid, db) {
 }
 
 function vk_Kjo7fJlDc41ea2WGfMxs2znDapfCx5(uid, data, aid, db) {
-  if(data.is_achivster === true) {
+  if(data.is_achivster === 1) {
     writeToDB(uid, aid, db);
   }
 }
