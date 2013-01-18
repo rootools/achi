@@ -7,7 +7,7 @@ var async = require('async');
 http.createServer(function (req, res) {
   var query = url.parse(req.url, true).query;
   getData(query.access_token, query.uid, function(data) {
-    console.log(data);
+    console.log(data.is_achivster);
     res.end(JSON.stringify(data));
   });
 }).listen(process.env.VCAP_APP_PORT || 8085);
@@ -60,8 +60,8 @@ function getSingleStat(vk, uid, cb) {
   code += 'var wallCount = API.wall.get()[0];';
   code += 'var audioCount = API.audio.getCount({oid:'+uid+'});';
   code += 'var videoCount = API.video.get()[0];';
-  code += 'var isAchivster = API.group.isMember({gid: achivster});';
-  code += 'var response = {friendsCount: friendsCount, groupsCount:groupsCount, photosCount:photosCount, wallCount:wallCount, audioCount:audioCount, videoCount:videoCount, isAchivster: isAchivster};';
+  code += 'var is_achivster = API.group.isMember({gid: "achivster"});';
+  code += 'var response = {friendsCount: friendsCount, groupsCount:groupsCount, photosCount:photosCount, wallCount:wallCount, audioCount:audioCount, videoCount:videoCount, is_achivster: is_achivster};';
   code += 'return response;';
 
   vk('execute', {code:code}, function(err, data) {
