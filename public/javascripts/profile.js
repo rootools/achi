@@ -8,9 +8,6 @@ $(function() {
   if(document.URL.split('#')[1] === 'friends') {
     showContainer('friends_list');
   }
-  if(document.URL.split('#')[1] === 'service') {
-    showContainer('services_list');
-  }
   
   $('.profile_menu_button').bind('click', function() {
     var elem = this.id;
@@ -51,9 +48,6 @@ $(function() {
 });
 
 function showContainer(param) {
-  if(param === 'services_list') {
-    $('#profile_service_container').fadeIn(200);
-  }
   if(param === 'friends_list') {
     $('#profile_friends_container').fadeIn(200);
   }

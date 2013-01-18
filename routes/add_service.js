@@ -65,7 +65,7 @@ exports.vk = function(req, res) {
         var data = JSON.parse(str);
         delete data.expires_in;
         add_service(req.session, data, 'vkontakte', function() {
-          res.redirect(config.site.url+'profile');
+          res.redirect(config.site.url+'dashboard');
         });
       });
     };
@@ -80,7 +80,7 @@ exports.twitter = function(req, res) {
       var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };
       add_service(req.session, data, 'twitter', function(){
         delete req.session.twitter_request_oauth_token_secret;
-        res.redirect(config.site.url+'profile');
+        res.redirect(config.site.url+'dashboard');
       });
     });
   } else {
@@ -114,7 +114,7 @@ exports.facebook = function(req, res) {
       response.on('end', function() {
         var data = querystring.parse(str).access_token;
         add_service(req.session, data, 'facebook', function(){
-          res.redirect(config.site.url+'profile');
+          res.redirect(config.site.url+'dashboard');
         });
       });
     };
@@ -130,7 +130,7 @@ exports.bitbucket = function(req, res) {
       add_service(req.session, data, 'bitbucket', function(){
         delete req.session.request_oauth_token;
         delete req.session.request_oauth_token_secret;
-        res.redirect(config.site.url+'profile');
+        res.redirect(config.site.url+'dashboard');
       });
     });
   } else {
@@ -162,7 +162,7 @@ exports.github = function(req, res) {
       response.on('end', function() {
         var data = querystring.parse(str);
         add_service(req.session, data, 'github', function(){
-          res.redirect(config.site.url+'profile');
+          res.redirect(config.site.url+'dashboard');
         });
       });
     };

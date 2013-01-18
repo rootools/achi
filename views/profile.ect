@@ -19,10 +19,6 @@
       <span class="icon"><i class="icon-user-3"></i></span>
       <span class="label">Me</span>
     </button>
-    <button class="bg-color-blueLight profile_menu_button shortcut" id="services_list">
-      <span class="icon"><i class="icon-grid-view"></i></span>
-      <span class="label">Services</span>
-    </button>
     <button class="bg-color-blueLight profile_menu_button shortcut" id="friends_list">
       <span class="icon"><i class="icon-address-book"></i></span>
       <span class="label">Friends</span>
@@ -87,43 +83,6 @@
         <button id="me_edit_submit">Submit</button>
       </div>
       
-    </div>
-    
-    <div id="profile_service_container" class="service_container" style="display:none">
-        <% for row in @service_list : %>
-          
-          <% switch row.service : %>
-            <% when 'achivster' : %>
-              <a>
-            <% end %>
-            <% else : %>
-              <a href="/add_service/<%= row.service %>">
-            <% end %>
-          <% end %>
-          
-            <% if row.addtime : %>
-              <button class="me_service_list_add_button shortcut">
-              <span class="icon">
-                <%- row.button_icon %>
-              </span>
-              <span class="label">
-                <%= row.service %>
-              </span>
-              <span class="badge bg-color-blue">
-                <i class="websymbols" style="margin-right: 0px;">V</i>
-              </span>
-            <% else : %>
-              <button class="me_service_list_add_button shortcut bg-color-blueDark">
-              <span class="icon fg-color-blueLight">
-                <%- row.button_icon %>
-              </span>
-              <span class="label fg-color-blueLight">
-                <%= row.service %>
-              </span>
-            <% end %>
-            </button>
-          </a>
-        <% end %>
     </div>
     
     <div id="profile_friends_container" class="service_container" style="display:none">
