@@ -19,7 +19,6 @@ http.createServer(function (req, res) {
 
   twitterOA.get('https://api.twitter.com/1.1/account/verify_credentials.json', query.oauth_token, query.oauth_token_secret, function(err, data) {
     data = JSON.parse(data);
-
     var profile = {};
     profile.statuses_count = data.statuses_count;
     profile.followers_count = data.followers_count;
@@ -29,13 +28,17 @@ http.createServer(function (req, res) {
     profile.favourites_count = data.favourites_count;
     twitterOA.get('https://api.twitter.com/1.1/friendships/lookup.json?screen_name=achivster_ru,achivster', query.oauth_token, query.oauth_token_secret, function(err, is_achivster) {
       is_achivster = JSON.parse(is_achivster);
-      profile.is_achivster = false;
-      for(var i in is_achivster) {
-        if(is_achivster[i].connections[0] === 'following') {
-          profile.is_achivster = true;
+      if(is_achivster.errors) {
+        res.end(JSON.stringify({error: 1}));
+      } else {
+        profile.is_achivster = false;
+        for(var i in is_achivster) {
+          if(is_achivster[i].connections[0] === 'following') {
+            profile.is_achivster = true;
+          }
         }
+        res.end(JSON.stringify(profile));
       }
-      res.end(JSON.stringify(profile));
     });
   
   });
