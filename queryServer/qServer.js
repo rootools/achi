@@ -33,16 +33,15 @@ function createQuery() {
   var now = new Date().getTime();
 
   db.collection('services_connections', function(err, collection) {
-    collection.find({valid: true, lastupdate: {$lt:now - 1800000}, service:{$nin: ['achivster', 'rare']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+    collection.find({valid: true, lastupdate: {$lt:now - 1800000}, service:{$nin: ['achivster', 'rare', 'vkontakte']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
         if(data.error) {
-          console.log(data);
           updateQuery(task.uid, task.service);
           collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
             console.log('Set valid=false: '+task.uid+' '+task.service);
+            callback();
           });
-          callback();
         } else {
           if(task.service === 'twitter') {
             cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
@@ -126,10 +125,6 @@ function getData(service, auth, cb) {
     var str = '';
     res.on('data', function(chunk) {
       str += chunk;
-    });
-
-    res.on('error', function(err) {
-      console.log(err);
     });
 
     res.on('end', function() {

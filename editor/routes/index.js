@@ -72,9 +72,11 @@ exports.editor_api = function(req, res) {
   if(req.body.command === 'get_offer_list') {
     db.collection('offers', function(err, collection) {
       collection.find({}).sort([['aid',1]]).toArray(function(err, doc) {
-        var data = JSON.stringify({data: doc});
-        res.contentType('json');
-        res.end(data);
+        AddNameToOfferList(doc, function(list) {
+          var data = JSON.stringify({data: list});
+          res.contentType('json');
+          res.end(data);
+        });
       });
     });
   }
@@ -101,3 +103,24 @@ exports.editor_api = function(req, res) {
   });
   }
 };
+
+function AddNameToOfferList(data, cb) {
+  var aid_list = [];
+  for(var i in data) {
+    aid_list.push(data[i].aid);
+  }
+
+  db.collection('achievements', function(err,collection) {
+    collection.find({aid: {$in: aid_list}},{name: 1, service: 1, aid: 1, _id:0}).toArray(function(err, doc) {
+      for(var i in data) {
+        for(var t in doc) {
+          if(data[i].aid === doc[t].aid) {
+            data[i].service = doc[t].service;
+            data[i].descr = doc[t].name;
+          }
+        }
+      }
+      cb(data);
+    });
+  });
+}

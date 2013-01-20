@@ -156,10 +156,10 @@ function get_offers_list() {
   content.innerHTML = '';
 
   var html = '<table>';
-  html += '<tr><th>aid</th><th>uid</th><th>name</th></tr>';
+  html += '<tr><th>service</th><th>s_name</th><th>aid</th><th>uid</th><th>name</th></tr>';
   getData({command: 'get_offer_list'}, function(data) {
     for(var i in data) {
-      html += '<tr><td>'+data[i].aid+'</td><td>'+data[i].uid+'</td><td>'+data[i].name+'</td></tr>';
+      html += '<tr><td>'+data[i].service+'</td><td>'+data[i].descr+'</td><td>'+data[i].aid+'</td><td>'+data[i].uid+'</td><td>'+data[i].name+'</td></tr>';
     }
     content.innerHTML = html;
   });
