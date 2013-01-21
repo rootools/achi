@@ -79,7 +79,6 @@ function getMaxLike(method, options, vk, uid, cb) {
   var dirtyArray = [];
   var cb_obj = {};
   vk(method, options, function(err, data) {
-    console.log(data);
     dirtyArray.push(data);
     var queue = data[0] / 100;
     queue = queue -(queue%1);

@@ -33,7 +33,7 @@ function createQuery() {
   var now = new Date().getTime();
 
   db.collection('services_connections', function(err, collection) {
-    collection.find({valid: true, lastupdate: {$lt:now - 1800000}, service:{$nin: ['achivster', 'rare', 'vkontakte']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+    collection.find({valid: true, lastupdate: {$lt:now - 3600000}, service:{$nin: ['achivster', 'rare']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
       q = async.queue(function(task, callback) {
         getData(task.service, task.service_login, function(data) {
         if(data.error) {
@@ -50,6 +50,7 @@ function createQuery() {
             });
           }
           if(task.service === 'vkontakte') {
+        console.log('resp');
             cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
               callback();
@@ -98,6 +99,7 @@ function getData(service, auth, cb) {
         host: 'localhost',
         port: 8085,
         path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
+    console.log(options.path);
   }
 
   if(service == 'facebook') {
