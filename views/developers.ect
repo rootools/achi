@@ -1,0 +1,42 @@
+<% extend 'layout.ect' %>
+
+<div class="grid">
+<div class="row">
+  <button class="command-button bg-color-blue menu_button">
+    Приложения
+    <small>Управление приложениями</small>
+  </button>
+  <button class="command-button bg-color-green menu_button" disabled>
+    Документация
+    <small>Документация API Ачивстера</small>
+  </button>
+</div>
+
+<div class="row" id="dev_app">
+  <h2>Приложения</h2>
+  <% if @app_list?.length : %>
+    <% for app in @app_list : %>
+      <a href="/developers/app/<%- app.app_id %>">
+        <button class="command-button app_button bg-color-orange">
+          <%- app.name %>
+          <small><%- app.url %></small>
+        </button>
+      </a>
+    <% end %>
+    <a href="/developers/app/create">
+    <button class="command-button app_button">
+      Новое приложение
+      <small>&nbsp</small>
+    </button>
+    </a>
+  <% else : %>
+    Увы, приложений не найдено. <a href="/developers/app/create">Создайте приложение</a>.
+  <% end %>
+</div>
+
+<div class="row" id="dev_api">
+  
+</div>
+</div>
+
+<link href="/stylesheets/developers.css" rel="stylesheet" />

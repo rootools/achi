@@ -1,0 +1,50 @@
+<% extend 'layout.ect' %>
+
+<div class="grid" style="margin-top: 30px;">
+	
+	<form method="POST">
+	<div class="row">
+
+		<div class="span1"></div>		
+		<div class="span2">
+			Название:
+		</div>
+		<div class="span4">
+			<div class="input-control text">
+    		<input name="name" type="text" required="required"/>
+    	</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span1"></div>
+		<div class="span2">
+			URL:
+		</div>
+		<div class="span4">
+			<div class="input-control text">
+    		<input name="url" type="url" required="required"/>
+    	</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span1"></div>
+		<div class="span2">
+			Callback URL:
+		</div>
+		<div class="span4">
+			<div class="input-control text">
+    		<input name="callback_url" type="url" required="required"/>
+    	</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="span1"></div>
+		<input type="submit" value="Добавить"/>
+	</div>
+
+	</div>
+	</form>
+</div>
