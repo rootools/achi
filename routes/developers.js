@@ -65,7 +65,7 @@ exports.app_create = function(req, res) {
 				}
 			});
 		} else {
-			res.render('developers_app_create.ect', { title: 'Новое Приложение', session:req.session});
+			res.render('developers_app_create.ect', {title: 'Новое Приложение', session:req.session});
 		}
 	} else {
 		res.redirect(config.site.url);
@@ -73,10 +73,19 @@ exports.app_create = function(req, res) {
 }
 
 exports.app_show = function(req, res) {
-	var app_id = req.params.app_id 
-	db.collection('applications', function(err, collection) {
-  	collection.findOne({app_id: app_id, uid: req.session.uid}, function(err, doc) {
-  		res.render('developers_app_show.ect', { title: doc.name, session:req.session});
+	var app_id = req.params.app_id;
+	if(req.body.url) {
+		db.collection('applications', function(err, collection) {
+			collection.update({uid: req.session.uid, app_id: app_id},{$set: {url: req.body.url, callback_url: req.body.callback_url}}, function(err, doc){
+				res.redirect(config.site.url+'developers/app/'+app_id);
+			});
+		});
+	} else {
+		db.collection('applications', function(err, collection) {
+  		collection.findOne({app_id: app_id, uid: req.session.uid}, function(err, app_info) {
+  			console.log(app_info);
+  			res.render('developers_app_show.ect', {title: app_info.name, session:req.session, app_info: app_info});
+  		});
   	});
-  });
+  }
 }
