@@ -16,6 +16,7 @@ var top_list = require('./routes/top');
 var add_service = require('./routes/add_service');
 var upload = require('./routes/upload');
 var offer = require('./routes/offer');
+var oauth_route = require('./routes/oauth');
 var developers = require('./routes/developers');
 
 var sessionsStorage = require('connect-redis')(express);
@@ -56,6 +57,7 @@ app.all('/top', top_list.main);
 app.all('/profile', profile.main);
 app.all('/upload', upload.main);
 app.all('/offer', offer.main);
+app.all('/oauth', oauth.main);
 app.all('/developers', developers.main);
 app.all('/developers/app/create', developers.app_create);
 app.all('/developers/app/:app_id', developers.app_show);
