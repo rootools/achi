@@ -57,7 +57,7 @@ app.all('/top', top_list.main);
 app.all('/profile', profile.main);
 app.all('/upload', upload.main);
 app.all('/offer', offer.main);
-app.all('/oauth', oauth.main);
+app.all('/oauth', oauth_route.main);
 app.all('/developers', developers.main);
 app.all('/developers/app/create', developers.app_create);
 app.all('/developers/app/:app_id', developers.app_show);
