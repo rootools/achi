@@ -1,0 +1,16 @@
+<% extend 'layout.ect' %>
+
+<div class="span5" style="margin-top: 20px;">
+<form action="/login" method="POST">
+  <div class="input-control text">
+    <input type="email" name="email" class="loginForm" id="loginEmail" placeholder="">
+  </div>
+  <div class="input-control password">
+    <input type="password" name="pass" class="loginForm" id="loginPass" placeholder="">
+  </div>
+  <input type="hidden" name="action" value="login">
+  <input type="hidden" name="nosecurity" value="true">
+  <input type="hidden" name="redirect_params" value="<%- @query %>">
+  <input type="submit" id="loginFormSubmitButton" class="bg-color-blueDark fg-color-blueLight" value="">
+</form>
+</div>

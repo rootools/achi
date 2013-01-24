@@ -82,11 +82,11 @@ function getMaxLike(method, options, vk, uid, cb) {
     dirtyArray.push(data);
     var queue = data[0] / 100;
     queue = queue -(queue%1);
-    if(queue < 1) {
+//    if(queue < 1) {
       cb_obj[name_cb] = calcMaxLike(dirtyArray);
       cb(cb_obj);
-    }
-
+//    }
+/*
     var q = async.queue(function(task, callback) {
       vk(method, task, function(err, data) {
         dirtyArray.push(data);
@@ -104,7 +104,7 @@ function getMaxLike(method, options, vk, uid, cb) {
       options.offset = handler;
       q.push(options, function(err,data) {});
       handler = handler + 100;
-    }
+    }*/
 
     function calcMaxLike(array) {
       var maxLike = 0;

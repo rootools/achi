@@ -37,7 +37,11 @@ exports.login = function(req, res) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
             add_session(req, doc.uid, doc.email, function() {
-              res.redirect(config.site.url);
+              if(req.body.redirect_params) {
+                res.redirect('http://api.achivster.com/'+req.body.redirect_params);
+              } else {
+                res.redirect(config.site.url);
+              }
             });
           } else {
             res.end(JSON.stringify({error: locale.errors.err1.eng}));
