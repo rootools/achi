@@ -2,6 +2,7 @@ var config = require('../configs/config.js');
 var https = require('https');
 var querystring = require('querystring');
 var sys = require('sys');
+var request = require('request');
 var uploads = require('./upload.js');
 
 var ext_achivster = require('../external/achivster.js');
@@ -169,7 +170,23 @@ exports.github = function(req, res) {
 
     https.request(options, callback).end();
   }
-}
+};
+
+exports.instagram = function(req, res) {
+  if(!req.query.code) {
+    res.redirect('https://api.instagram.com/oauth/authorize/?client_id=952cd8726937430f86a277c7133b0df4&redirect_uri=http://achivster.com/add_service/instagram&response_type=code');
+  } else {
+    var code = req.query.code;
+  
+    request.post('https://api.instagram.com/oauth/access_token', {form:{client_id: '952cd8726937430f86a277c7133b0df4', client_secret: '8f7fcd3306854371bc7b1486706cfb37', grant_type: 'authorization_code', redirect_uri: 'http://achivster.com/add_service/instagram',code:code}}, function(e, r, body){
+      var token = JSON.parse(body).access_token;
+      var id = JSON.parse(body).user.id;
+      add_service(req.session, {access_token: token, id: id}, 'instagram', function(){
+        res.redirect(config.site.url+'dashboard');
+      });
+    });
+  } 
+};
 
 function add_service(session, account, service, cb) {
   testService(session.uid, service, function(check, is_first) {
@@ -331,6 +348,16 @@ function get_user_name_by_service(uid, service, account, cb) {
     };
 
     https.request(options, callback).end();
+  }
+  
+  if(service === 'instagram') {
+    request.get('https://api.instagram.com/v1/users/'+account.id+'/?access_token='+account.access_token, function(e, r, body){
+      name = JSON.parse(body).data.full_name;
+      image = JSON.parse(body).data.profile_picture;
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
+      });
+    });
   }
 }
 

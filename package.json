@@ -18,6 +18,7 @@
     "easyimage": "*",
     "randomstring": "*",
     "geoip-lite": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
+    "request": "*"
   }
 }
