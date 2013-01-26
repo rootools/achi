@@ -6,6 +6,7 @@ var cVkontakte = require('./qS_vkontakte');
 var cFacebook = require('./qS_facebook');
 var cBitbucket = require('./qS_bitbucket');
 var cGithub = require('./qS_github');
+var cInstagram = require('./qS_instagram');
 
 var q;
 var db;
@@ -50,7 +51,6 @@ function createQuery() {
             });
           }
           if(task.service === 'vkontakte') {
-        console.log('resp');
             cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
               callback();
@@ -71,6 +71,12 @@ function createQuery() {
           if(task.service === 'github') {
             cGithub.checkGithubAchievements(task.uid, data, db, function(res) {
               updateQuery(task.uid, task.service);
+              callback();
+            });
+          }
+          if(task.service === 'instagram') {
+            cInstagram.checkInstagramAchievements(task.uid, data, db, function(res) {
+              //updateQuery(task.uid, task.service);
               callback();
             });
           }
@@ -99,7 +105,6 @@ function getData(service, auth, cb) {
         host: 'localhost',
         port: 8085,
         path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
-    console.log(options.path);
   }
 
   if(service == 'facebook') {
@@ -121,6 +126,13 @@ function getData(service, auth, cb) {
         host: 'localhost',
         port: 8045,
         path: '/?token='+auth.access_token};
+  }
+  
+  if(service === 'instagram') {
+    var options = {
+        host: 'localhost',
+        port: 8035,
+        path: '/?token='+auth.access_token+'&id='+auth.id};
   }
 
   var callback = function(res) {

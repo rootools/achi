@@ -14,15 +14,33 @@ function mongoConnect() {
 
 mongoConnect();
 
-function write(uid, aid) {
+function TestAllreadyEarned(uid, aid, cb) {
   db.collection('users_achievements', function(err, collection) {
-    collection.update({uid:uid, service: 'achivster'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
+    collection.findOne({uid: uid, service: 'achivster'}, {_id: 0, achievements: 1}, function(err, doc) {
+      var list = doc.achievements;
+      for(var i in list) {
+        if(list[i].aid === aid) {
+          cb(false);
+        }
+      }
+      cb(true);
+    });
+  });
+}
+
+function write(uid, aid) {
+  TestAllreadyEarned(uid, aid, function(check) {
+  if(check) {
+    db.collection('users_achievements', function(err, collection) {
+      collection.update({uid:uid, service: 'achivster'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
+    });
+  }
   });
 }
 
 exports.main = function(uid, aid) {
   write(uid,aid);
-}
+};
 
 exports.check_first_friend = function(uid) {
   db.collection('users_achievements', function(err, users_achievements) {

@@ -241,6 +241,10 @@ function testService(uid, service, cb) {
       ext_achivster.main(uid, 'eSkuacz7tW1yUayFp1Xes710UNc8u1');
     }
     
+    if(sc_doc.length === 7) {
+      ext_achivster.main(uid, 'zsEwcqJlT568iO9C3MaDeGyskjdZUb');
+    }
+    
     ua_collection.findOne({uid: uid, service:service}, function(ua_err, ua_doc) {
       if(sc_err === null && ua_err === null && ua_doc === null) {
         cb(true, is_first);

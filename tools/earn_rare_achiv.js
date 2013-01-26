@@ -12,16 +12,29 @@ function mongoConnect() {
 
 mongoConnect();
 
-var aid = 'h91mpQsZ053OugI2EcDWZkn1fohAbY';
-var uid = 'TZ4fd9uuy94G5QIl1B4b';
+var aid = 'zsEwcqJlT568iO9C3MaDeGyskjdZUb';
+var uid = 'hohtg53NK75E3Tb4Fm0A';
+var service = 'achivster';
 
 function write() {
   db.collection('users_achievements', function(err, collection) {
-    collection.update({uid:uid, service: 'rare'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
+    collection.update({uid:uid, service: service}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
+  });
+}
+
+function writeA() {
+  db.collection('users_achievements', function(err, collection) {
+    collection.aggregate({$group: { _id: "$uid", serv: {$addToSet: "$service"}}}, function(err, doc) {
+      for(var i in doc) {
+        if(doc[i].serv.length >= 7) {
+          console.log(doc[i]);
+        }
+      }
+    });
   });
 }
 
 
 setTimeout(function() {
-  write();
+  //write();
 }, 500);
