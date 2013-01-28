@@ -7,8 +7,8 @@ var path = require('path');
 
 var config = require('./configs/config.js');
 
-
 var authRoutes = require('./routes/auth');
+var restore = require('./routes/restore');
 var webApi = require('./routes/webApi');
 var dashboard = require('./routes/dashboard');
 var profile = require('./routes/profile');
@@ -48,6 +48,8 @@ app.configure('development', function(){
 app.all('/', routes.index);
 app.all('/login', authRoutes.login);
 app.all('/logout', authRoutes.logout);
+app.all('/restore', restore.main);
+app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);
 app.all('/dashboard', dashboard.main);
 app.all('/dashboard/:service', dashboard.service);

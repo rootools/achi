@@ -1,0 +1,17 @@
+<% extend 'layout.ect' %>
+
+<% if @message?.length : %>
+  <p><%- @message %></p>
+<% else : %>
+  <p>Пожалуйста, укажите e-mail, который Вы использовали для входа. На него будет выслан код для смены пароля.</p>
+  
+  <form method="POST">
+    <div class="span5">
+      <div class="input-control text">
+        <input type="email" name="email"/>
+      </div>
+    </div>
+  
+    <input type="submit" value="Восстановить пароль" class="bg-color-blueDark" />
+  </form>
+<% end %>

@@ -27,11 +27,11 @@ function GetUserAppList(uid, cb) {
 function TestAllreadyAppCreate(uid, name, cb) {
 	db.collection('applications', function(err, collection) {
     collection.find({uid: uid, name: name}).toArray(function(err, doc) {
-    	if(doc.length > 0) {
-    		cb(false);
-    	} else {
-    		cb(true);
-    	}
+      if(doc.length > 0) {
+        cb(false);
+      } else {
+        cb(true);
+      }
     });
   });
 }
@@ -56,10 +56,10 @@ exports.app_create = function(req, res) {
 			TestAllreadyAppCreate(uid, req.body.name, function(state) {
 				if(state) {
 					db.collection('applications', function(err, collection) {
-    				collection.insert({uid: uid, name: req.body.name, url: req.body.url, callback_url: req.body.callback_url, app_id: app_id, app_secret: app_secret}, function(err, doc) {
-    					res.redirect(config.site.url+'developers');
-    				});
-    			});
+            collection.insert({uid: uid, name: req.body.name, url: req.body.url, callback_url: req.body.callback_url, app_id: app_id, app_secret: app_secret}, function(err, doc) {
+              res.redirect(config.site.url+'developers');
+            });
+          });
 				} else {
 					
 				}
