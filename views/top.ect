@@ -19,8 +19,10 @@
           <div class="row friends_list_row" id="<%- user.uid %>">
       <% end %>
       <% end %>
+          <a href="/dashboard/user/<%- user.uid %>">
           <img src="<%- user.photo %>" class="friends_list_photo">
           <div class="friends_list_name"><h3><%- user.name %></h3></div>
+          </a>
           <div class="friends_list_points"><h3><%- user.points %> pts</h3></div>
         </div>
       <% end %>
@@ -36,8 +38,10 @@
           <div class="row friends_list_row" id="<%- friend.uid %>">
       <% end %>
       <% end %>
+          <a href="/dashboard/user/<%- friend.uid %>">
           <img src="<%- friend.photo %>" class="friends_list_photo">
           <div class="friends_list_name"><h3><%- friend.name %></h3></div>
+          </a>
           <div class="friends_list_points"><h3><%- friend.points %> pts</h3></div>
         </div>
       <% end %>

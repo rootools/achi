@@ -59,6 +59,34 @@ function inst_mpHGMSuBKCJNMUJ2d23GLT1r2dY6oy(uid, data, aid, db) {
   }
 }
 
+// Add 500 Media
+function inst_hqx178WgQ9BPisD1RsnnehAJugEzMT(uid, data, aid, db) {
+  if(data.media >= 500) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Follow 1 people
+function inst_ZgQdCo45saEu45AOKim6WVnGn5vMfU(uid, data, aid, db) {
+  if(data.follows >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Follow 1 people
+function inst_ZgQdCo45saEu45AOKim6WVnGn5vMfU(uid, data, aid, db) {
+  if(data.follows >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Follow 10 people
+function inst_BZMOU4DCk8NxiN6AIs2xELYJKDJvf8(uid, data, aid, db) {
+  if(data.follows >= 10) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'instagram'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {

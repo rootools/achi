@@ -1,6 +1,6 @@
 .friends_list_photo {
   width: 90px;
-  border: 1px solid;
+  border: 1px solid #000;
 }
 
 .friends_list_name, .friends_list_photo {
