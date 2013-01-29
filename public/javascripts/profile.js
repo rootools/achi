@@ -20,7 +20,6 @@ $(function() {
   $('#me_edit_submit').bind('click', function() {
     var url = document.getElementById('input_me_edit_image_url').value;
     var name = document.getElementById('input_me_edit_name').value;
-    var oldPass = document.getElementById('input_me_edit_oldPass').value;
     var newPass = document.getElementById('input_me_edit_newPass').value;
     var newPassVerify = document.getElementById('input_me_edit_newPassVerify').value;
     if(url.length > 0) {
@@ -29,8 +28,8 @@ $(function() {
     if(name.length > 0) {
       change_name(name);
     }
-    if(oldPass.length > 0 && newPass.length > 0 && newPassVerify.length > 0) {
-      change_pass(oldPass, newPass, newPassVerify);
+    if(newPass.length > 0 && newPassVerify.length > 0) {
+      change_pass(newPass, newPassVerify);
     }
   });
   
@@ -132,9 +131,9 @@ function change_name(name) {
   }
 }
 
-function change_pass(oldPass, newPass, newPassVerify) {
+function change_pass(newPass, newPassVerify) {
   if(newPass === newPassVerify) {
-    sync('/webapi',{action: 'edit_profile_change_password', oldPass: CryptoJS.MD5(oldPass).toString(), newPass: CryptoJS.MD5(newPass).toString()}, function(response) {
+    sync('/webapi',{action: 'edit_profile_change_password', newPass: CryptoJS.MD5(newPass).toString()}, function(response) {
       if(response.error) {
         me_edit_error_message(response.error, 'me_edit_change_password');
       } else {

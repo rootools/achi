@@ -174,16 +174,9 @@ function send_friendship_request(req, res) {
 }
 
 function edit_profile_change_password(req, res) {
-  var oldPass = req.body.oldPass;
-  var newPass = req.body.newPass;
   db.collection('users', function(err,collection) {
-    collection.findOne({uid:req.session.uid}, function(err, doc) {
-      if(doc.password === oldPass) {
-        collection.update({uid:req.session.uid},{$set: {password: newPass}}, function(err, doc){});
-        res.end(JSON.stringify({}));
-      } else {
-        res.end(JSON.stringify({error: 'Incorrect Old password' }));
-      }
+    collection.update({uid:req.session.uid},{$set: {password: req.body.newPass}}, function(err, doc){
+      res.end(JSON.stringify({}));
     });
   });
 }

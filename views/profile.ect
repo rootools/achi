@@ -31,57 +31,45 @@
   <div class="row">
     
     <div id="profile_me_edit_container" class="service_container" style="display:none">
-      
-      <div class="row">
-      
-        <div class="span6">
-          <div class="row">
-            <h3 id="me_edit_title_photo">Photo</h3>
-          </div>
-          <div class="row">
+        
+        <h3 id="me_edit_title_photo">Аватар</h3>
+        <div class="row">
+          <div class="span6">
             <div class="input-control text">
               <input type="url" id="input_me_edit_image_url" placeholder="Url"/>
             </div>
           </div>
         </div>
       
-        <div class="span6">
-          <div class="row">
-            <h3 id="me_edit_title_name">Name</h3>
-          </div>
-          <div class="row">
+        <h3 id="me_edit_title_name">Сменить имя</h3>
+        <div class="row">
+          <div class="span6">
             <div class="input-control text">
-              <input type="text" id="input_me_edit_name" placeholder="Your Name or Nickname"/>
+              <input type="text" id="input_me_edit_name" placeholder="Новый ник-нейм"/>
             </div>
           </div>
         </div>
-      
-      </div>
-      
-      <div class="row">
-        <h3 id="me_edit_change_password">Change Password</h3>
-        <div class="span4">
-          <div class="input-control text">
-            <input type="password" id="input_me_edit_oldPass" placeholder="Old Password"/>
+
+        <h3 id="me_edit_change_password">Смена пароля</h3>
+        <div class="row">  
+          <div class="span6">
+            <div class="input-control text">
+              <input type="password" id="input_me_edit_newPass" placeholder="Новый пароль"/>
+            </div>
+          </div>
+        </div>    
+        <div class="row">
+          <div class="span6">
+            <div class="input-control text">
+              <input type="password" id="input_me_edit_newPassVerify" placeholder="Повторите пароль"/>
+            </div>
           </div>
         </div>
-        <div class="span4">
-          <div class="input-control text">
-            <input type="password" id="input_me_edit_newPass" placeholder="New Password"/>
-          </div>
+    
+        <div class="row">
+          <div id="me_edit_info"></div>
+          <button id="me_edit_submit">Изменить</button>
         </div>
-        <div class="span4">
-          <div class="input-control text">
-            <input type="password" id="input_me_edit_newPassVerify" placeholder="Verify New Password"/>
-          </div>
-        </div>
-        
-      </div>
-      
-      <div class="row">
-        <div id="me_edit_info"></div>
-        <button id="me_edit_submit">Submit</button>
-      </div>
       
     </div>
     
