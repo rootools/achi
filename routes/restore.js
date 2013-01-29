@@ -1,12 +1,14 @@
 var config = require('../configs/config.js');
 var randomstring = require('randomstring');
 var nodemailer = require('nodemailer');
+var fs = require('fs');
 
 var redis = require('redis'),
    client = redis.createClient();
    client.select(8);
 
 var db;
+var mail_layout;
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
@@ -18,14 +20,22 @@ function mongoConnect() {
   });
 }
 
+function GetMailLayout() {
+  fs.readFile('./mailer/layout.html', 'utf8', function (err, layout) {
+    fs.readFile('./mailer/restore.html', 'utf8', function (err, restore) {
+      mail_layout = layout.replace('||content||', restore);
+    });
+  });
+}
+
 mongoConnect();
+GetMailLayout();
 
 function SendEmailCode(email, cb) {
   var code = randomstring.generate(40);
   client.set(code, email, function(err, res){
     client.expire(code, 3600000);
   });
-
 
   var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Yandex",
@@ -35,11 +45,14 @@ function SendEmailCode(email, cb) {
     }
   });
 
+  var message = '<a href="http://achivster.com/restore/code?code='+code+'">http://achivster.com/restore/code?code='+code+'</a>';
+  var html = mail_layout.replace('||link||', message);
+
   var mailOptions = {
     from: "Achivster Support <support@achivster.com>",
     to: email,
-    subject: "Hello", 
-    html: '<a href="http://achivster.com/restore/code?code='+code+'">link</a>'
+    subject: "Восстановление пароля", 
+    html: html
   };
 
   smtpTransport.sendMail(mailOptions, function(error, response){
