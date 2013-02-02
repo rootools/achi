@@ -1,3 +1,20 @@
 .app_button, .menu_button {
 	width: 315px;
 }
+
+.td_achiv_table {
+  border: none;
+  border-bottom: 1px solid #DDD;
+}
+
+.td_achiv_table_edit {
+  border-left: 1px solid #DDD;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#achiv_list_edit {
+  border-left: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+  padding: 15px;
+}

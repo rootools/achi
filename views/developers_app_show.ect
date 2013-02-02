@@ -2,7 +2,72 @@
 
 <div class="grid">
 
-	<form method="POST">
+  <div class="row">
+    <button class="big developers_menu" id="achiv">
+      <i class="icon-trophy"></i>Достижения
+    </button>
+    <button class="big developers_menu" id="settings">
+      <i class="icon-cog"></i>Настройки
+    </button>
+  </div>
+  
+  
+  <div class="row content_row" id="achiv_row">
+  <div id="achiv_list">
+    <% if @achiv_list?.length : %>
+      <table>
+      <% for achiv in @achiv_list : %>
+        <tr id="<%- achiv.aid %>">
+          <td width="64px" class="td_achiv_table"><img src="<%- achiv.icon %>" width="64px" height="64px"></td>
+          <td class="td_achiv_table">
+            <h3><%- achiv.name %></h3>
+            <p><%- achiv.description %></p>
+          </td>
+          <td width="64px" class="td_achiv_table">
+            <center>
+              <h3><%- achiv.points %></h3>
+            </center>
+          </td>
+          <td width="64px" class="td_achiv_table_edit">
+            <center>
+              <i class="icon-pencil" id="edit_achiv_button"></i>
+            </center>
+          </td>
+        </tr>
+      <% end %>
+      </table>
+    <% else : %>
+      <div id="create_new_achiv">
+        К сожалению, достижений не найдено. <a id="add_new_achiv" style="cursor: pointer;">Добавьте первое достижение</a>.
+      </div>
+    <% end %>
+  </div>
+  
+  <div id="achiv_list_edit" style="display:none">
+    <form method="POST">
+      <div class="input-control text">
+        <input name="achiv_name" type="text" placeholder="Название" />
+      </div>
+      <div class="input-control text">
+        <input name="achiv_description" type="text" placeholder="Описание" />
+      </div>
+      <div class="input-control select">
+      <select name="points">
+        <option value=10>10</option>
+        <option value=20>20</option>
+        <option value=30>30</option>
+        <option value=50>50</option>
+      </select>
+      </div>
+    <input type="submit" value="Изменить"/>
+    <button>Закрыть</button>
+    </form>
+  </div>
+</div>
+  
+
+  <div class="row content_row" id="settings_row" style="display:none">
+  <form method="POST">
 	<div class="row">
 		<div class="span2">
 			<h3>App ID</h3>
@@ -45,4 +110,8 @@
 
 	<input type="submit" value="Сохранить изменения"/>
 	</form>
+  </div>
 </div>
+
+<script src="/javascripts/developers_app_show.js"></script>
+<link href="/stylesheets/developers.css" rel="stylesheet" />
