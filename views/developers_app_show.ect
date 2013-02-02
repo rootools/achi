@@ -17,7 +17,7 @@
     <% if @achiv_list?.length : %>
       <table>
       <% for achiv in @achiv_list : %>
-        <tr id="<%- achiv.aid %>">
+        <tr id="achiv_<%- achiv.aid %>">
           <td width="64px" class="td_achiv_table"><img src="<%- achiv.icon %>" width="64px" height="64px"></td>
           <td class="td_achiv_table">
             <h3><%- achiv.name %></h3>
@@ -30,7 +30,7 @@
           </td>
           <td width="64px" class="td_achiv_table_edit">
             <center>
-              <i class="icon-pencil" id="edit_achiv_button"></i>
+              <i class="icon-pencil edit_achiv_button" id="<%- achiv.aid %>"></i>
             </center>
           </td>
         </tr>
@@ -45,20 +45,24 @@
   
   <div id="achiv_list_edit" style="display:none">
     <form method="POST">
+      <h3>Название</h3>
       <div class="input-control text">
-        <input name="achiv_name" type="text" placeholder="Название" />
+        <input id="edit_achiv_name" name="edit_achiv_name" type="text" placeholder="Название" />
       </div>
+      <h3>Описание</h3>
       <div class="input-control text">
-        <input name="achiv_description" type="text" placeholder="Описание" />
+        <input id="edit_achiv_descr" name="edit_achiv_description" type="text" placeholder="Описание" />
       </div>
       <div class="input-control select">
-      <select name="points">
+      <h3>Очки</h3>
+      <select id="edit_achiv_points" name="edit_achiv_points">
         <option value=10>10</option>
         <option value=20>20</option>
         <option value=30>30</option>
         <option value=50>50</option>
       </select>
       </div>
+    <input id="edit_achiv_aid" name="edit_achiv_aid" type="hidden" value="" />
     <input type="submit" value="Изменить"/>
     <button>Закрыть</button>
     </form>

@@ -50,6 +50,14 @@ function WriteNewAchiv(name, descr, points, app_id, cb) {
   });
 }
 
+function UpdateAchiv(name, descr, points, aid, cb) {
+  db.collection('achievements', function(err, collection) {
+    collection.update({aid: aid},{$set: {name: name, description: descr, points: points}}, function(err, collection){
+      cb();
+    });
+  });
+}
+
 function GetAchivmentsByService(app_id, cb) {
   db.collection('achievements', function(err, collection) {
     collection.find({app_id: app_id}).toArray(function(err, doc){
@@ -102,6 +110,14 @@ exports.app_show = function(req, res) {
       var descr = req.body.achiv_description;
       var points = parseFloat(req.body.points);
       WriteNewAchiv(name, descr, points, app_id, function() {
+        res.redirect(config.site.url+'developers/app/'+app_id);
+      });
+    } else if(req.body.edit_achiv_name) {
+      var name = req.body.edit_achiv_name;
+      var descr = req.body.edit_achiv_description;
+      var aid = req.body.edit_achiv_aid;
+      var points = parseFloat(req.body.edit_achiv_points);
+      UpdateAchiv(name, descr, points, aid, function() {
         res.redirect(config.site.url+'developers/app/'+app_id);
       });
     } else {

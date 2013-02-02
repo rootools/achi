@@ -42,9 +42,17 @@ $(function(){
     zone.innerHTML = html;
   });
   
-  $('#edit_achiv_button').bind('click', function() {
+  $('.edit_achiv_button').bind('click', function() {
     $('#achiv_list').addClass('span6');
     $('#achiv_list_edit').addClass('span6');
     $('#achiv_list_edit').css('display','block');
+    var elem = $('#achiv_'+this.id).children();
+    var name = elem.find('h3')[0].innerHTML;
+    var descr = elem.find('p')[0].innerHTML;
+    var points = elem.find('h3')[1].innerHTML;
+    $('#edit_achiv_aid').val(this.id);
+    $('#edit_achiv_name').val(name);
+    $('#edit_achiv_descr').val(descr);
+    $('#edit_achiv_points').val(points);
   });
 });
