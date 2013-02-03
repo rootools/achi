@@ -33,7 +33,7 @@ app.configure(function(){
 //  app.set('view engine', 'ect');
   app.use(express.favicon());
   app.use(express.logger('dev'));
-  app.use(express.bodyParser());
+  app.use(express.bodyParser({keepExtensions: true, uploadDir:'./uploads'}));
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ store: new sessionsStorage({db: 7}), secret: 'lolcat', cookie:{maxAge: 1209600000} }));

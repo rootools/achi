@@ -18,3 +18,17 @@
   border-bottom: 1px solid #DDD;
   padding: 15px;
 }
+
+#edit_achiv_icon {
+  cursor: pointer;
+  width: 165px;
+  height: 32px;
+  position: relative;
+  text-align: right;
+  margin-left: -179px;
+  top: -6px;
+  -moz-opacity:0 ;
+  filter: alpha(opacity: 0);
+  opacity: 0;
+  z-index: 2;
+}

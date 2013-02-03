@@ -12,9 +12,9 @@ function mongoConnect() {
 
 mongoConnect();
 
-var aid = 'zsEwcqJlT568iO9C3MaDeGyskjdZUb';
-var uid = 'hohtg53NK75E3Tb4Fm0A';
-var service = 'achivster';
+var aid = 'h91mpQsZ053OugI2EcDWZkn1fohAbY';
+var uid = 'XrxaHkFzCALLSGEmr1Dx';
+var service = 'rare';
 
 function write() {
   db.collection('users_achievements', function(err, collection) {
@@ -36,5 +36,5 @@ function writeA() {
 
 
 setTimeout(function() {
-  //write();
+  write();
 }, 500);

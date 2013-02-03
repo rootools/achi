@@ -82,3 +82,4 @@ exports.main = function(req, res) {
 };
 
 exports.upload_profile_photo_from_url = upload_profile_photo_from_url;
+exports.convertImage = convertImage;

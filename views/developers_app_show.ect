@@ -44,7 +44,7 @@
   </div>
   
   <div id="achiv_list_edit" style="display:none">
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       <h3>Название</h3>
       <div class="input-control text">
         <input id="edit_achiv_name" name="edit_achiv_name" type="text" placeholder="Название" />
@@ -63,9 +63,16 @@
       </select>
       </div>
     <input id="edit_achiv_aid" name="edit_achiv_aid" type="hidden" value="" />
+    <h3>Иконка</h3>
+    <button class="mini">Выбрать изображение</button>
+    <input id="edit_achiv_icon" name="image" type="file" accept="image/*" />
+    <br>
     <input type="submit" value="Изменить"/>
-    <button>Закрыть</button>
+    <!-- <button>Закрыть</button> -->
     </form>
+  </div>
+  <div id="create_new_achiv">
+    <a id="add_new_achiv" style="cursor: pointer;">Добавьте новое достижение</a>
   </div>
 </div>
   

@@ -1,6 +1,8 @@
 var config = require('../configs/config.js');
 var randomstring = require('randomstring');
+var exec = require('child_process').exec;
 
+var uploadjs = require('./upload.js');
 
 var db;
 var db_api;
@@ -50,11 +52,17 @@ function WriteNewAchiv(name, descr, points, app_id, cb) {
   });
 }
 
-function UpdateAchiv(name, descr, points, aid, cb) {
+function UpdateAchiv(name, descr, points, aid, image, cb) {
   db.collection('achievements', function(err, collection) {
-    collection.update({aid: aid},{$set: {name: name, description: descr, points: points}}, function(err, collection){
-      cb();
-    });
+    if(image) {
+      collection.update({aid: aid},{$set: {name: name, description: descr, points: points, icon: image}}, function(err, collection){    
+        cb();
+      });
+    } else {
+      collection.update({aid: aid},{$set: {name: name, description: descr, points: points}}, function(err, collection){    
+        cb();
+      });
+    }
   });
 }
 
@@ -62,6 +70,15 @@ function GetAchivmentsByService(app_id, cb) {
   db.collection('achievements', function(err, collection) {
     collection.find({app_id: app_id}).toArray(function(err, doc){
       cb(doc);
+    });
+  });
+}
+
+function UploadIcon(image, aid, cb) {
+  var file = image.path.split('/')[1];
+  uploadjs.convertImage('./uploads/', file, aid, function() {
+    exec('mv uploads/'+aid+'.jpg public/images/achievements/', function(error, stdout, stderr) {
+      cb();
     });
   });
 }
@@ -117,8 +134,15 @@ exports.app_show = function(req, res) {
       var descr = req.body.edit_achiv_description;
       var aid = req.body.edit_achiv_aid;
       var points = parseFloat(req.body.edit_achiv_points);
-      UpdateAchiv(name, descr, points, aid, function() {
-        res.redirect(config.site.url+'developers/app/'+app_id);
+      if(req.files.image.size === 0) {
+        var image = false;
+      } else {
+        var image = '/images/achievements/'+aid+'.jpg';
+      }
+      UploadIcon(req.files.image, aid, function() {
+        UpdateAchiv(name, descr, points, aid, image, function() {
+          res.redirect(config.site.url+'developers/app/'+app_id);
+        });
       });
     } else {
       db_api.collection('applications', function(err, collection) {
