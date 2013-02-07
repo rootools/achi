@@ -14,6 +14,10 @@ http.createServer(function (req, res) {
   fql.photo_count = 'SELECT+photo_count+FROM+album+WHERE+owner=me()';
   fql.likes_count = 'SELECT+likes_count+FROM+user+WHERE+uid=me()';
   fql.is_achivster = 'SELECT+page_id+FROM+page_fan+WHERE+uid=me()';
+  fql.movies = 'SELECT+movies+FROM+user+WHERE+uid=me()';
+  fql.books = 'SELECT+books+FROM+user+WHERE+uid=me()';
+  fql.music = 'SELECT+music+FROM+user+WHERE+uid=me()';
+  fql.tv = 'SELECT+tv+FROM+user+WHERE+uid=me()';
   fql = JSON.stringify(fql);
 
   getData(fql, query.access_token, function(data) {
@@ -39,6 +43,8 @@ http.createServer(function (req, res) {
         }
       }
     }
+
+    response = CountUsersFavorites(response); 
     res.end(JSON.stringify(response));
   }
   });
@@ -66,4 +72,32 @@ function getData(query, access_token, cb) {
   }
 
   https.request(options, callback).end();
+}
+
+function CountUsersFavorites(response) {
+    if(response.books.length > 0) {
+      response.books = response.books.split(',').length;
+    } else {
+      response.books = 0;
+    }
+
+    if(response.movies.length > 0) {
+      response.movies = response.movies.split(',').length;
+    } else {
+      response.movies = 0;
+    }
+    
+    if(response.music.length > 0) {
+      response.music = response.music.split(',').length;
+    } else {
+      response.music = 0;
+    }
+
+    if(response.tv.length > 0) {
+      response.tv = response.tv.split(',').length;
+    } else {
+      response.tv = 0;
+    }
+    
+    return response;
 }

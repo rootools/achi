@@ -101,11 +101,41 @@ function fb_DpJUQvJYEaL0jmqSzGwaQBohSeTgyk(uid, data, aid, db) {
   }
 }
 
+// Member of Achivster group?
 function fb_QTBBJJfqWeSWI7W6TcNgKQOAs4BeGj(uid, data, aid, db) {
   if(data.is_achivster === true) {
     writeToDB(uid, aid, db);
   }
 }
+
+// Likes 5 Movies
+function fb_R8l8a0PccUPlz1qnDu43MwEyKdDzjr(uid, data, aid, db) {
+  if(data.movies >= 5) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Likes 5 Books
+function fb_y7Exd7K1j6akecxUn26BUqZtzSWD3r(uid, data, aid, db) {
+  if(data.books >= 5) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Likes 5 Band
+function fb_qqTsk14MLljg891zorZSQgvkyRH7Rh(uid, data, aid, db) {
+  if(data.music >= 5) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Likes 5 tv
+function fb_YYXbmf89bhLejAzvDbcMM0KUZf5jZx(uid, data, aid, db) {
+  if(data.tv >= 5) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
