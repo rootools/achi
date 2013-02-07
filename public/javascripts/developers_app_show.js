@@ -55,4 +55,43 @@ $(function(){
     $('#edit_achiv_descr').val(descr);
     $('#edit_achiv_points').val(points);
   });
+  
+  // Sort method. Use jQuery UI Sortable func.
+  // Width FIX!
+  function SaveButton() {
+    if($('#save_achiv_list_button_area').children().length === 0) {
+      $('#save_achiv_list_button_area').append('<button id="save_achiv_list_button">Сохранить порядок</button>');
+      $('#save_achiv_list_button').click('bind', function() {
+        var aids = $('#sortable').children();
+        var list = [];
+        for(var i in aids) {
+          if(aids[i].id) {
+            var tmpObj = {};
+            tmpObj.aid = aids[i].id.split('_')[1];
+            tmpObj.position = i;
+            list.push(tmpObj);
+          }
+          
+        }
+        sync('/webapi', {action: 'dev_save_achiv_list', list: list}, function(response) {
+          location.reload();
+        });
+      });
+    }
+  }
+  
+  var fixHelper = function(e, ui) {
+    ui.children().each(function() {
+      $(this).width($(this).width());
+    });
+    return ui;
+  };
+  
+  $( "#sortable" ).sortable({ axis: "y", helper: fixHelper }, {
+    update: function( event, ui ) {
+      SaveButton();
+    }
+  });
+  $( "#sortable" ).disableSelection();
+  
 });

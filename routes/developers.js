@@ -68,7 +68,7 @@ function UpdateAchiv(name, descr, points, aid, image, cb) {
 
 function GetAchivmentsByService(app_id, cb) {
   db.collection('achievements', function(err, collection) {
-    collection.find({app_id: app_id}).toArray(function(err, doc){
+    collection.find({app_id: app_id}, {sort: 'position'}).toArray(function(err, doc){
       cb(doc);
     });
   });

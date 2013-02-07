@@ -7,10 +7,13 @@
   border-bottom: 1px solid #DDD;
 }
 
+tr {
+  cursor: pointer;
+}
+
 .td_achiv_table_edit {
   border-left: 1px solid #DDD;
   font-size: 20px;
-  cursor: pointer;
 }
 
 #achiv_list_edit {

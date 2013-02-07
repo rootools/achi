@@ -87,6 +87,48 @@ function inst_BZMOU4DCk8NxiN6AIs2xELYJKDJvf8(uid, data, aid, db) {
   }
 }
 
+// Follow 50 people
+function inst_c9xwE32sZLFJhpApnCBtlHlGFRkNNy(uid, data, aid, db) {
+  if(data.follows >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Follow 100 people
+function inst_2l7cIeLzMF4jQlZgxjUWtluly5WBxH(uid, data, aid, db) {
+  if(data.follows >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Followed 1 people
+function inst_B5NPseFzzYbbVUFk2NqWftfUiVGx6G(uid, data, aid, db) {
+  if(data.followed_by >= 1) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Followed 10 people
+function inst_pDOmoXjoxbSBryVwcVKpVYUwdu0bgg(uid, data, aid, db) {
+  if(data.followed_by >= 10) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Followed 50 people
+function inst_dF7m0NxU4xHnFOsnrdDkcXRzwQP8Wz(uid, data, aid, db) {
+  if(data.followed_by >= 50) {
+    writeToDB(uid, aid, db);
+  }
+}
+
+// Followed 100 people
+function inst_sKwTXo2DgXUbTi3PB89tur9CFYfuG9(uid, data, aid, db) {
+  if(data.followed_by >= 100) {
+    writeToDB(uid, aid, db);
+  }
+}
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'instagram'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {

@@ -242,4 +242,14 @@ function get_new_notifications(req, res) {
   });
 }
 
+function dev_save_achiv_list(req, res) {
+  var list = req.body.list;
+  db.collection('achievements', function(err,collection) {
+    for(var i in list) {
+      collection.update({aid: list[i].aid},{$set: {position: list[i].position}}, function(err, doc) {});
+    }
+    res.end(JSON.stringify({}));
+  });
+}
+
 exports.routing = routing;

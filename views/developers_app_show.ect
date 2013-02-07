@@ -16,6 +16,7 @@
   <div id="achiv_list">
     <% if @achiv_list?.length : %>
       <table>
+      <tbody id="sortable">
       <% for achiv in @achiv_list : %>
         <tr id="achiv_<%- achiv.aid %>">
           <td width="64px" class="td_achiv_table"><img src="<%- achiv.icon %>" width="64px" height="64px"></td>
@@ -34,7 +35,8 @@
             </center>
           </td>
         </tr>
-      <% end %>
+      <% end %>     
+      </tbody>
       </table>
     <% else : %>
       <div id="create_new_achiv">
@@ -70,6 +72,8 @@
     <input type="submit" value="Изменить"/>
     <!-- <button>Закрыть</button> -->
     </form>
+  </div>
+  <div id="save_achiv_list_button_area">
   </div>
   <div id="create_new_achiv">
     <a id="add_new_achiv" style="cursor: pointer;">Добавьте новое достижение</a>
@@ -125,4 +129,5 @@
 </div>
 
 <script src="/javascripts/developers_app_show.js"></script>
+<script src="/javascripts/libs/jquery-ui-1.10.0.custom.min.js"></script>
 <link href="/stylesheets/developers.css" rel="stylesheet" />
