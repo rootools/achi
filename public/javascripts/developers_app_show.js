@@ -54,6 +54,7 @@ $(function(){
     $('#edit_achiv_name').val(name);
     $('#edit_achiv_descr').val(descr);
     $('#edit_achiv_points').val(points);
+    $('#edit_achiv_aid_title').text(this.id);
   });
   
   // Sort method. Use jQuery UI Sortable func.
