@@ -12,22 +12,20 @@
     <div class="user_info_right">
       <h3><%= @user_stat.name %>
         <% if @target_uid : %>
-          <a href="/dashboard/user/<%- @target_uid %>">
+          <a href="/dashboard/user/<%= @target_uid %>" title="Прямая ссылка на профиль">
         <% else : %>
-          <a href="/dashboard/user/<%= @session.uid %>">
+          <a href="/dashboard/user/<%= @session.uid %>" title="Прямая ссылка на профиль">
         <% end %>
           <i class="icon-link dashboard_name_menu_icon" style="font-size: 15px;"></i>
         </a>
         <% switch @friends_flag : %>
           <% when true : %>
-            <a class="add_to_friend_button" id="add_friend_<%- @target_uid %>"><i class="icon-user dashboard_name_menu_icon"></i></a>
+            <a class="add_to_friend_button" id="add_friend_<%- @target_uid %>" title="Добавить в друзья"><i class="icon-user dashboard_name_menu_icon"></i></a>
           <% end %>
         <% end %>
         
       </h3>
       <h4><i class="icon-star-4 fg-color-orange"></i><%= @user_stat.points %> pts</h4>
-       
-
     </div>
   </div>
 
