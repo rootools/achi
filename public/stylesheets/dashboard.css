@@ -29,6 +29,7 @@
 }
 
 .user_info_right {
+  height: 100%;
   margin-left: 12px;
   margin-top: -14px;
   position: relative;
@@ -46,8 +47,8 @@
   opacity: 0.5;
 }
 
-.add_to_friend_button {
+.dashboard_name_menu_icon {
+  margin-left: -3px;
   cursor: pointer;
   position: relative;
-  top: 50px;
 }

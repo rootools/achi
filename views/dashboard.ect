@@ -5,7 +5,7 @@
 
 <div class="grid" id="<%= @session.uid %>">
 
-  <div class="row" style="margin-bottom: 6px">
+  <div class="row" style="margin-bottom: 6px; height: 100%;">
     <div class="user_info_left">
       <img src="<%= @user_stat.photo %>" width="150px" heigt="150px">
     </div>
@@ -16,16 +16,17 @@
         <% else : %>
           <a href="/dashboard/user/<%= @session.uid %>">
         <% end %>
-          <i class="icon-link" style="font-size: 15px;"></i>
+          <i class="icon-link dashboard_name_menu_icon" style="font-size: 15px;"></i>
         </a>
+        <% switch @friends_flag : %>
+          <% when true : %>
+            <a class="add_to_friend_button" id="add_friend_<%- @target_uid %>"><i class="icon-user dashboard_name_menu_icon"></i></a>
+          <% end %>
+        <% end %>
+        
       </h3>
       <h4><i class="icon-star-4 fg-color-orange"></i><%= @user_stat.points %> pts</h4>
        
-        <% switch @friends_flag : %>
-          <% when true : %>
-            <a class="add_to_friend_button" id="add_friend_<%- @target_uid %>">Добавить в друзья</a>
-          <% end %>
-        <% end %>
 
     </div>
   </div>
