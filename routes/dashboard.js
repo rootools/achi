@@ -202,7 +202,7 @@ function countAchivmentsFromService(data) {
 
 function get_user_stat(uid, points, cb) {
   db.collection('users_profile', function(err, collection) {
-    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
+    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1, friends: 1}, function(err, doc) {
       doc.points = points;
       cb(doc);
     });
@@ -434,6 +434,17 @@ function FixToTargetUid(uid, data) {
   return data;
 }
 
+function CheckFriendships(uid, friends) {
+  var flag = true;
+  for(var i in friends) {
+    if(friends[i] === uid) {
+      flag = false;
+      return flag;
+    }
+  }
+  return flag;
+}
+
 exports.main = function(req, res) {
   if(req.session.auth === false) {
     res.redirect(config.site.url);
@@ -468,7 +479,11 @@ exports.user = function(req, res) {
           achivList = FixToTargetUid(uid, achivList);
           get_user_stat(uid, sum, function(user_stat) {
             getLatestAchievements(uid, function(last) {
-              res.render('dashboard.ect', { title: 'Dashboard', session: req.session, user_stat: user_stat, achievements: achivList, target_uid: uid, lastAchivArray: last});
+              var friends_flag;
+              if(req.session.uid === uid) { friends_flag = false } else {
+                friends_flag = CheckFriendships(req.session.uid, user_stat.friends);
+              }
+              res.render('dashboard.ect', { title: 'Dashboard', session: req.session, user_stat: user_stat, achievements: achivList, target_uid: uid, lastAchivArray: last, friends_flag: friends_flag});
             });
           });
         });  

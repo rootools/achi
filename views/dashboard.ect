@@ -20,6 +20,13 @@
         </a>
       </h3>
       <h4><i class="icon-star-4 fg-color-orange"></i><%= @user_stat.points %> pts</h4>
+       
+        <% switch @friends_flag : %>
+          <% when true : %>
+            <a class="add_to_friend_button" id="add_friend_<%- @target_uid %>">Добавить в друзья</a>
+          <% end %>
+        <% end %>
+
     </div>
   </div>
 

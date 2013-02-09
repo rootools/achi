@@ -1,4 +1,5 @@
 var config = require('../configs/config.js');
+var locale = require('../configs/locale/main.js');
 var dashboard = require('./dashboard.js');
 var ext_achivster = require('../external/achivster.js');
 var db;
@@ -159,14 +160,14 @@ function send_friendship_request(req, res) {
       collection.findOne({$or: [{owner_uid: owner_uid, target_uid: target_uid},{owner_uid: target_uid, target_uid: owner_uid}], type: 'friendship_request'}, function(err, doc) {
         if(doc !== null) {
           if(doc.owner_uid === target_uid) {
-            res.end(JSON.stringify({message: 'You are invited'}));
+            res.end(JSON.stringify({message: locale.messages.mes2.ru}));
           } else {
-            res.end(JSON.stringify({message: 'Already send'}));
+            res.end(JSON.stringify({message: locale.messages.mes1.ru}));
           }
         } else {
           var data = 'You are invited to be a friend with '+name;
           collection.insert({owner_uid: owner_uid, target_uid: target_uid, type: 'friendship_request', time: new Date().getTime(), data: data}, function(err, doc){});
-          res.end(JSON.stringify({message: 'Frendship request send'}));
+          res.end(JSON.stringify({message: locale.messages.mes3.ru}));
         }
       });
     });

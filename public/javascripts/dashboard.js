@@ -129,6 +129,18 @@ function create_social_sharing_pannerl(elem, name) {
   return html;
 }
 
+function SendFriendshipRequest(uid) {
+  
+  sync('/webapi', {action: 'send_friendship_request', uid: uid}, function(response) {
+    console.log(response);
+    if(response.error) {
+      $('.add_to_friend_button').text(response.error);
+    } else {
+      $('.add_to_friend_button').text(response.message);
+    }
+  });
+}
+
 $(function() {
 
   $('.dashboard_menu_button').click(function() {
@@ -141,6 +153,10 @@ $(function() {
   
   $('.last_achiv_tile').click(function() {
     last_achiv_event(this);
+  });
+
+  $('.add_to_friend_button').click(function() {
+    SendFriendshipRequest(this.id.split('add_friend_')[1]);
   });
 
   if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1) {} else {
