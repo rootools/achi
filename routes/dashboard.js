@@ -316,7 +316,7 @@ function GetServiceList(uid, cb) {
     
     info: function(callback) {
       db.collection('services_info', function(err, collection) {
-        collection.find({},{_id:0}).toArray(function(err, services_info) {
+        collection.find({type: 'internal'},{_id:0}).toArray(function(err, services_info) {
           callback(null, services_info);
         });
       });

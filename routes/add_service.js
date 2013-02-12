@@ -206,8 +206,8 @@ function add_service(session, account, service, cb) {
       db.collection('services_connections', function(err,collection) {
         db.collection('users_achievements', function(err, ua_collection) {
           if(check === true) {
-            collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 3600000}, function(err, doc) {
-              ua_collection.insert({uid:session.uid, service:service, achievements: []}, function(err, doc) {
+            collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 3600000, type: 'internal'}, function(err, doc) {
+              ua_collection.insert({uid:session.uid, service:service, achievements: [], type: 'internal'}, function(err, doc) {
                 cbk();
               });
             });

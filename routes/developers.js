@@ -86,7 +86,6 @@ function UploadIcon(image, aid, cb) {
 exports.main = function(req, res) {
 	if(req.session.auth) {
 		GetUserAppList(req.session.uid, function(app_list) {
-			console.log(app_list);
 			res.render('developers.ect', { title: 'Разработчикам', session:req.session, app_list: app_list});
 		});
 	} else {
@@ -102,7 +101,11 @@ exports.app_create = function(req, res) {
 			var app_secret = randomstring.generate(40);
 			db_api.collection('applications', function(err, collection) {
         collection.insert({uid: uid, name: req.body.name, url: req.body.url, callback_url: req.body.callback_url, app_id: app_id, app_secret: app_secret}, function(err, doc) {
-          res.redirect(config.site.url+'developers');
+          db.collection('services_info', function(err, collection) {
+            collection.insert({icon: '/images/label.png', service: req.body.name, app_id: app_id}, function(err, doc) {
+              res.redirect(config.site.url+'developers');
+            });
+          });
         });
       });
 		} else {
