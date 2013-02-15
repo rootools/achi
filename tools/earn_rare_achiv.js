@@ -12,13 +12,19 @@ function mongoConnect() {
 
 mongoConnect();
 
-var aid = 'h91mpQsZ053OugI2EcDWZkn1fohAbY';
-var uid = 'XrxaHkFzCALLSGEmr1Dx';
+var aid = 'JdEJC9eomkzMExo7OOYleilpYhlekc';
+//var uid = 'XrxaHkFzCALLSGEmr1Dx';
 var service = 'rare';
 
 function write() {
-  db.collection('users_achievements', function(err, collection) {
-    collection.update({uid:uid, service: service}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
+  db.collection('users', function(err, collection) {
+    collection.find({},{_id:0, uid:1}).toArray(function(err, doc) {
+      for(var i in doc) {
+        db.collection('users_achievements', function(err, collection) {
+          collection.update({uid:doc[i].uid, service: service}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
+        });
+      }
+    });
   });
 }
 

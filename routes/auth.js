@@ -130,6 +130,7 @@ function registerUser(email, pass, req, cb) {
         profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
           add_default_services(uid, function() {
             ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
+            ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
                 //send_mail_confirmation(uid, email, access_key);
             add_session(req, uid, email, function() {
               cb();

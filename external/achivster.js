@@ -42,6 +42,12 @@ exports.main = function(uid, aid) {
   write(uid,aid);
 };
 
+exports.rare = function(uid, aid) {
+  db.collection('users_achievements', function(err, collection) {
+    collection.update({uid:uid, service: 'rare'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
+  });
+};
+
 exports.check_first_friend = function(uid) {
   db.collection('users_achievements', function(err, users_achievements) {
     users_achievements.findOne({uid: uid, service: 'achivster'}, {_id: 0, achievements: 1}, function(err, achiv_list) {
