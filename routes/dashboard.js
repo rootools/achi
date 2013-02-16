@@ -396,6 +396,7 @@ function GetServiceList(uid, cb) {
     for(var n in result.external) {
       data.push(result.external[n]);
     }
+
     for(var i in data) {
       data[i].valid = false;
       data[i].earnedPoints = 0;
@@ -417,6 +418,7 @@ function GetServiceList(uid, cb) {
           data[i].full = result.achievements[a].count;
         }
       }
+      
       if(data[i].valid === true) {
         data[i].url = '/dashboard/'+data[i].service;
       } else {
