@@ -333,7 +333,6 @@ function GetServiceList(uid, cb) {
     users_achievements: function(callback) {
       db.collection('users_achievements', function(err, collection) {
         collection.find({uid: uid},{service: 1, achievements: 1, _id:0}).toArray(function(err, data) {
-          
           var handler = data.length;
           var users_achievements = [];
 
@@ -374,9 +373,29 @@ function GetServiceList(uid, cb) {
         });
       });
     },
+    external: function(callback) {
+      db.collection('services_connections', function(err, collection) {
+        collection.find({uid: uid, type: 'external'},{_id:0, app_id: 1}).toArray(function(err, services_connections) {
+          var app_ids = [];
+          for(var i in services_connections) {
+            app_ids.push(services_connections[i].app_id);
+          }
+          db.collection('services_info', function(err, collection) {
+            collection.find({app_id: {$in: app_ids}},{_id: 0}).toArray(function(err, doc) {
+              callback(null, doc);    
+            });
+          });
+          
+        });
+      });
+    }
   }, function(err, result) {
     var data = result.info;
     
+    // Add external services
+    for(var n in result.external) {
+      data.push(result.external[n]);
+    }
     for(var i in data) {
       data[i].valid = false;
       data[i].earnedPoints = 0;
