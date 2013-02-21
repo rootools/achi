@@ -57,6 +57,7 @@ app.all('/dashboard/:service/user/:id', dashboard.service_user);
 app.all('/dashboard/user/:id', dashboard.user);
 app.all('/top', top_list.main);
 app.all('/profile', profile.main);
+app.all('/profile/save', profile.save);
 app.all('/upload', upload.main);
 app.all('/offer', offer.main);
 app.all('/oauth', oauth_route.main);

@@ -18,10 +18,6 @@
   border: 1px solid;
 }
 
-.profile_menu_button {
-  background-color: #99CCFF !important;
-}
-
 .find_bar {
   position: relative;
   float: left;
@@ -45,10 +41,6 @@
 #add_friend_tile_points {
   margin-bottom: 14px;
   margin-right: 5px;
-}
-
-#me_edit_info {
-  margin-bottom: 10px;
 }
 
 .me_messages_row {
@@ -95,4 +87,18 @@
 
 .me_service_list_add_button {
   margin-top: 10px;
+}
+
+#edit_ava_icon {
+  cursor: pointer;
+  width: 165px;
+  height: 32px;
+  position: relative;
+  text-align: right;
+  margin-left: -179px;
+  top: -6px;
+  -moz-opacity:0 ;
+  filter: alpha(opacity: 0);
+  opacity: 0;
+  z-index: 2;
 }

@@ -15,29 +15,29 @@
     </div>
   </div>
   <div class="row">
-    <button class="profile_menu_button shortcut" id="me_edit">
-      <span class="icon"><i class="icon-user-3"></i></span>
-      <span class="label">Me</span>
+    <button class="bg-color-blueDark fg-color-white profile_menu_button big" id="me_edit">
+      <i class="icon-user-3"></i>Общее
     </button>
-    <button class="bg-color-blueLight profile_menu_button shortcut" id="friends_list">
-      <span class="icon"><i class="icon-address-book"></i></span>
-      <span class="label">Friends</span>
+    
+    <button class="bg-color-blueDark fg-color-white profile_menu_button big" id="friends_list">
+      <i class="icon-address-book"></i>Друзья
     </button>
-    <button class="bg-color-blueLight profile_menu_button shortcut" id="message_list">
-      <span class="icon"><i class="icon-mail"></i></span>
-      <span class="label">Messages</span>
+    
+    <button class="bg-color-blueDark fg-color-white profile_menu_button big" id="message_list">
+      <i class="icon-mail"></i>Сообщения
     </button>
   </div>
   <div class="row">
     
     <div id="profile_me_edit_container" class="service_container" style="display:none">
         
+        <form method="POST" action="/profile/save" enctype="multipart/form-data">
+        
         <h3 id="me_edit_title_photo">Аватар</h3>
         <div class="row">
           <div class="span6">
-            <div class="input-control text">
-              <input type="url" id="input_me_edit_image_url" placeholder="Url"/>
-            </div>
+            <button class="mini">Выбрать изображение</button>
+            <input id="edit_ava_icon" name="image" type="file" accept="image/*" />
           </div>
         </div>
       
@@ -45,7 +45,7 @@
         <div class="row">
           <div class="span6">
             <div class="input-control text">
-              <input type="text" id="input_me_edit_name" placeholder="Новый ник-нейм"/>
+              <input type="text" name="name" id="input_me_edit_name" placeholder="Новый ник-нейм" value="<%- @profile.name %>" autocomplete="off"/>
             </div>
           </div>
         </div>
@@ -54,22 +54,48 @@
         <div class="row">  
           <div class="span6">
             <div class="input-control text">
-              <input type="password" id="input_me_edit_newPass" placeholder="Новый пароль"/>
+              <input type="password" name="password" id="input_me_edit_newPass" placeholder="Новый пароль" autocomplete="off"/>
             </div>
           </div>
         </div>    
         <div class="row">
           <div class="span6">
             <div class="input-control text">
-              <input type="password" id="input_me_edit_newPassVerify" placeholder="Повторите пароль"/>
+              <input type="password" id="input_me_edit_newPassVerify" placeholder="Повторите пароль" autocomplete="off" oninput="check_pass(this)"/>
+            </div>
+          </div>
+        </div>
+
+        <h3>Подписки</h3>
+        <div class="row">
+          <div class="span6">
+            <div class="row">
+              <label class="input-control checkbox">
+                <% if @profile.subscribes.news : %>
+                  <input id="input_me_edit_subs_news" name="subs_news" type="checkbox" checked autocomplete="off"/>
+                <% else : %>
+                  <input id="input_me_edit_subs_news" name="subs_news" type="checkbox" autocomplete="off"/>
+                <% end %>
+                <span class="helper">Новости</span>
+              </label>
+            </div>
+            <div class="row"> 
+              <label class="input-control checkbox">
+                <% if @profile.subscribes.week : %>
+                  <input id="input_me_edit_subs_week" name="subs_week" type="checkbox" checked autocomplete="off"/>
+                <% else : %>
+                  <input id="input_me_edit_subs_week" name="subs_week" type="checkbox" autocomplete="off"/>
+                <% end %>
+                <span class="helper">Еженедельные рассылка</span>
+              </label>
             </div>
           </div>
         </div>
     
         <div class="row">
-          <div id="me_edit_info"></div>
-          <button id="me_edit_submit">Изменить</button>
+          <input type="submit" value="Изменить" />
         </div>
+      </form>
       
     </div>
     

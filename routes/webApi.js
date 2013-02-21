@@ -34,12 +34,14 @@ function routing(req, res) {
   }
 }
 
+/*
+// Проверь используется ли
 function addService(req, res) {
   testService(req.session.uid, req.body.service, function(check) {
     if(check) {
       db.collection('services_connections', function(err,collection) {
         collection.insert({uid: req.session.uid, service:req.body.service, service_login: req.body.account, addtime:new Date().getTime(), valid: true, lastupdate:''}, function(err, doc) {
-          errorist(res, 'Database Error', 'OK');
+          res.end('Database Error');
         });
       });
     } else {
@@ -60,6 +62,7 @@ function testService(uid, service, cb) {
     });
   });
 }
+*/
 
 function getAchievementsList(req, res) {
   db.collection('achievements', function(err,collection) {
@@ -75,15 +78,6 @@ function userAchievementsList(req, res) {
       res.end(JSON.stringify(data));
     });
   });
-}
-
-
-function errorist(res, errS, normalS) {
-  if(err !== null) {
-    res.end(errS);
-  } else {
-    res.end(normalS);
-  }
 }
 
 function find_by_email(req, res) {
@@ -128,22 +122,6 @@ function find_by_email(req, res) {
   });
 }
 
-function edit_profile_name(req, res) {
-  var name = req.body.name;
-  var uid = req.session.uid;
-  db.collection('users_profile', function(err,collection) {
-    collection.findOne({uid:uid}, function(err, doc) {
-      if(doc === null) {
-        collection.insert({uid:uid, name: name, photo: '/images/label.png'}, function(err, doc) {});
-        res.end(JSON.stringify({}));
-      } else {
-        collection.update({uid:uid},{$set: {name: name}}, function(err, doc) {});
-        res.end(JSON.stringify({}));
-      }
-    });
-  });
-}
-
 function get_name_by_uid(uid, cb) {
   db.collection('users_profile', function(err,collection) {
     collection.findOne({uid:uid},{name: 1, _id: 0}, function(err, doc) {
@@ -170,14 +148,6 @@ function send_friendship_request(req, res) {
           res.end(JSON.stringify({message: locale.messages.mes3.ru}));
         }
       });
-    });
-  });
-}
-
-function edit_profile_change_password(req, res) {
-  db.collection('users', function(err,collection) {
-    collection.update({uid:req.session.uid},{$set: {password: req.body.newPass}}, function(err, doc){
-      res.end(JSON.stringify({}));
     });
   });
 }

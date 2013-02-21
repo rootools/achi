@@ -1,6 +1,9 @@
 var config = require('../configs/config.js');
 var async = require('async');
 var moment = require('moment');
+var uploadjs = require('./upload.js');
+var exec = require('child_process').exec;
+
 var db;
 
 var dashboard = require('./dashboard.js');
@@ -155,6 +158,15 @@ function get_friends_list(uid, cb) {
   });
 }
 
+function UploadIcon(image, uid, cb) {
+  var file = image.path.split('/')[1];
+  uploadjs.convertImage('./uploads/', file, uid, function() {
+    exec('mv uploads/'+uid+'.jpg public/images/users_photo/', function(error, stdout, stderr) {
+      cb();
+    });
+  });
+}
+
 exports.main = function(req, res) {
   if(!req.session.auth || req.session.auth === false) {
     res.redirect(config.site.url);
@@ -170,3 +182,64 @@ exports.main = function(req, res) {
     });
   }
 };
+
+exports.save = function(req, res) {
+  if(!req.session.auth || req.session.auth === false) {
+    res.redirect(config.site.url);
+  } else {
+    var uid = req.session.uid;
+
+    // Remove clear fields
+    var query = {};
+    var query_users = {};
+    query_users.subscribes = {};
+    query_users.subscribes.news = false;
+    query_users.subscribes.week = false;
+    var query_users_profile = {};
+
+    for(var i in req.body) {
+      if(req.body[i].length > 0) {
+        query[i] = req.body[i];
+      }
+    }
+
+    // Create query to 'users' collection
+    for(var i in query) {
+      if(i === 'password') {
+        query_users[i] = require('crypto').createHash('md5').update(query[i]).digest('hex');
+      }
+      if(i === 'subs_news') {
+        query_users.subscribes.news = true;
+      }
+      if(i === 'subs_week') {
+        query_users.subscribes.week = true;
+      }
+    }
+
+    // Create query to 'users_profile' collection
+    
+    if(req.files.image.size != 0) {
+      query_users_profile.photo = '/images/users_photo/'+uid+'.jpg';
+    }
+
+    for(var i in query) {
+      if(i === 'name') {
+        query_users_profile[i] = query[i];
+      }
+    }
+
+    db.collection('users_profile', function(err, collection) {
+      collection.update({uid: uid}, {$set: query_users_profile}, function(err, doc) {
+        // Upload image
+        UploadIcon(req.files.image, uid, function() {
+          db.collection('users', function(err, collection) {
+            collection.update({uid: uid}, {$set: query_users}, function(err, subs) {
+              res.redirect('/profile');
+            });
+          });
+        });
+      });
+    });
+
+  }
+}
