@@ -43,7 +43,6 @@ function getServiceList(uid, cb) {
           if(data.all[i].service === 'vkontakte') { response[i].button_icon = '<i class="websymbols">v</i>'}
           if(data.all[i].service === 'facebook') { response[i].button_icon = '<i class="websymbols">f</i>'}
           if(data.all[i].service === 'twitter') { response[i].button_icon = '<i class="websymbols">t</i>'}
-          //if(data.all[i].service === 'bitbucket') { response[i].button_icon = '<i class="websymbols">C</i>'}
           if(data.all[i].service === 'bitbucket') { response[i].button_icon = '<i class="icon-filter"></i>'}
           if(data.all[i].service === 'github') { response[i].button_icon = '<i class="icon-github"></i>'}
           //
@@ -115,7 +114,12 @@ function get_messages(uid, limit, cb) {
 function get_user_profile(uid, cb) {
   db.collection('users_profile', function(err, collection) {
     collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
-      cb(doc);
+      db.collection('users', function(err, collection) {
+        collection.findOne({uid: uid},{subscribes: 1, _id: 0}, function(err, subs) {
+          doc.subscribes = subs.subscribes;
+          cb(doc);
+        });
+      });
     });
   });
 }
