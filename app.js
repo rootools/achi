@@ -16,6 +16,7 @@ var top_list = require('./routes/top');
 var add_service = require('./routes/add_service');
 var upload = require('./routes/upload');
 var offer = require('./routes/offer');
+var offer2 = require('./routes/offer2');
 var oauth_route = require('./routes/oauth');
 var developers = require('./routes/developers');
 
@@ -60,6 +61,7 @@ app.all('/profile', profile.main);
 app.all('/profile/save', profile.save);
 app.all('/upload', upload.main);
 app.all('/offer', offer.main);
+app.all('/offer2', offer2.main);
 app.all('/oauth', oauth_route.main);
 app.all('/developers', developers.main);
 app.all('/developers/app/create', developers.app_create);
