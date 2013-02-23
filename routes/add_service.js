@@ -46,8 +46,7 @@ mongoConnect();
 exports.vk = function(req, res) {
   if(!req.query.code) {
     res.redirect('http://oauth.vk.com/authorize?client_id=3126840&scope=notify,friends,photos,audio,video,status,wall,groups,notifications,offline&display=popup&response_type=code&tt=12&redirect_uri='+config.site.url+'add_service/vkontakte');
-  } 
-  if(req.query.code) {
+  } else {
     
     var options = {
       host: 'oauth.vk.com',
@@ -95,8 +94,7 @@ exports.twitter = function(req, res) {
 exports.facebook = function(req, res) {
   if(!req.query.code) {  
     res.redirect('https://www.facebook.com/dialog/oauth?client_id=258024554279925&redirect_uri='+config.site.url+'add_service/facebook&state=123&scope=publish_actions,user_photos,user_likes,read_stream');
-  } 
-  if(req.query.code) {
+  } else {
     var code = req.query.code;
 
     var options = {
@@ -125,6 +123,7 @@ exports.facebook = function(req, res) {
 };
 
 exports.bitbucket = function(req, res) {
+  console.log(req.query.oauth_token);
   if(req.query.oauth_token) {
     bitbucketOA.getOAuthAccessToken(req.session.request_oauth_token, req.session.request_oauth_token_secret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results){
       var data = {token: oauthAccessToken, secret: oauthAccessTokenSecret};
@@ -136,6 +135,7 @@ exports.bitbucket = function(req, res) {
     });
   } else {
     bitbucketOA.getOAuthRequestToken(function(error, request_oauth_token, request_oauth_token_secret, results){
+      console.log(error, request_oauth_token, request_oauth_token_secret, results);
       req.session.request_oauth_token = request_oauth_token;
       req.session.request_oauth_token_secret = request_oauth_token_secret;
       res.redirect('https://bitbucket.org/!api/1.0/oauth/authenticate?oauth_token='+request_oauth_token);
@@ -189,6 +189,7 @@ exports.instagram = function(req, res) {
 };
 
 function add_service(session, account, service, cb) {
+  console.log('z');
   testService(session.uid, service, function(check, is_first) {
     if(is_first) {
       get_user_name_by_service(session.uid, service, account, function() {
@@ -197,6 +198,7 @@ function add_service(session, account, service, cb) {
         });
       });
     } else {
+      console.log('a');
       write_newuser_to_db(function(){
         cb();
       });
@@ -205,7 +207,7 @@ function add_service(session, account, service, cb) {
     function write_newuser_to_db(cbk) {
       db.collection('services_connections', function(err,collection) {
         db.collection('users_achievements', function(err, ua_collection) {
-          if(check === true) {
+          if(check) {
             collection.insert({uid: session.uid, service:service, service_login: account, addtime:new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 3600000, type: 'internal'}, function(err, doc) {
               ua_collection.insert({uid:session.uid, service:service, achievements: [], type: 'internal'}, function(err, doc) {
                 cbk();
@@ -224,18 +226,16 @@ function add_service(session, account, service, cb) {
 }
 
 function testService(uid, service, cb) {
+  
   db.collection('services_connections', function(sc_err,sc_collection) {
   db.collection('users_achievements', function(ua_err, ua_collection) {
     sc_collection.find({uid: uid}).toArray(function(sc_err, sc_doc) {
     var is_first = false;
+    var check = true;
     if(sc_doc.length === 2) {
       is_first = true;
     }
-    for(var i in sc_doc) {
-      if(sc_doc[i].service === service) {
-        cb(false, is_first);
-      }
-    }
+    
     // Earned achiv for first service
     if(sc_doc.length === 2) {
       ext_achivster.main(uid, 'eSkuacz7tW1yUayFp1Xes710UNc8u1');
@@ -246,13 +246,20 @@ function testService(uid, service, cb) {
     }
     
     ua_collection.findOne({uid: uid, service:service}, function(ua_err, ua_doc) {
+      for(var i in sc_doc) {
+        if(sc_doc[i].service === service) {
+          check = false;
+        }
+      }  
+      
       if(sc_err === null && ua_err === null && ua_doc === null) {
-        cb(true, is_first);
+        check = true;
       } else {
-        cb(false, is_first);
+        check = false;
       }
+      cb(check, is_first);
     });
-    });
+  });
   });
   });
 }

@@ -17,14 +17,18 @@ http.createServer(function (req, res) {
   var query = url.parse(req.url, true).query;
 
   bitbucketOA.get('https://api.bitbucket.org/1.0/user', query.token, query.secret, function(err, data) {
-    data = JSON.parse(data);
+    if(err) {
+      res.end(JSON.stringify({error: 1}));
+    } else {
+      data = JSON.parse(data);
 
-    var profile = {};
-    profile.repo_count = data.repositories.length;
-    profile.lang_list = get_lang_list(data.repositories);
-    profile.have_wiki = have_wiki(data.repositories);
-    profile.have_issues = have_issues(data.repositories);
-    res.end(JSON.stringify(profile));
+      var profile = {};
+      profile.repo_count = data.repositories.length;
+      profile.lang_list = get_lang_list(data.repositories);
+      profile.have_wiki = have_wiki(data.repositories);
+      profile.have_issues = have_issues(data.repositories);
+      res.end(JSON.stringify(profile));
+    }
   
   });
 
