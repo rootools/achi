@@ -6,7 +6,7 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "3.0.0rc3",
+    "express": "*",
     "async": "*",
     "connect-redis": "*",
     "ect": "*",
@@ -19,6 +19,7 @@
     "randomstring": "*",
     "geoip-lite": "*",
     "nodemailer": "*",
-    "request": "*"
+    "request": "*",
+    "underscore": "*"
   }
 }
