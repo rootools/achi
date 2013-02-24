@@ -1,6 +1,7 @@
 var config = require('../configs/config.js');
 var moment = require('moment');
 var async = require('async');
+var underscore = require('underscore');
 
 var db;
 
@@ -93,53 +94,40 @@ function getAllAchievementsCount(cb) {
 // HASH IT!!
 // return 'name', 'icon', 'service', 'time' and 'points' of last 6 achievenments
 function getLatestAchievements(uid, cb) {
-
   db.collection('users_achievements', function(err, collection) {
-    collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
+    collection.aggregate({$match: {uid: uid}},{$unwind: "$achievements"},{$group:{_id: "$uid", achivs: {$addToSet: "$achievements"}}}, function(err, doc) {
+      if(doc.length === 0) {
+        cb([]);
+      } else {
+        
+        var lastAchivArray = doc[0].achivs;
+        lastAchivArray.sort(function(a,b){ return a.time - b.time; }).reverse();
+        
+        var lastAchivArray = lastAchivArray.slice(0, 6);
+      
+      	var aids = [];
+        for(var i in lastAchivArray) {
+          aids.push(lastAchivArray[i].aid);
+        }
 
-  var data = doc;
+	      db.collection('achievements', function(err, collection) {
+          collection.find({aid: {$in: aids}},{_id: 0, description: 0, position: 0}).toArray(function(err, doc){
 
-  var achivArray = [];
-	for(var key in data) {
-		var array = data[key].achievements;
-		for(var inKey in array) {
-			achivArray.push(array[inKey]);
-		}
-	}
+            for(var n in lastAchivArray) {
+              var tmp_data = underscore.find(doc, function(re) { return re.aid === lastAchivArray[n].aid });
+              lastAchivArray[n].name = tmp_data.name;
+              lastAchivArray[n].icon = tmp_data.icon;
+              lastAchivArray[n].points = tmp_data.points;
+              lastAchivArray[n].service = tmp_data.service;
+              lastAchivArray[n].time = moment(lastAchivArray[n].time).format('DD.MM.YYYY');
+            }
 
-  if(achivArray.length === 0) {
-    cb([]);
-  }
-
-  achivArray.sort(function(a,b){ return a.time - b.time; }).reverse();
-	var lastAchivArray = achivArray.slice(0, 6);
-
-  var result = [];
-
-	var handler = lastAchivArray.length;
-
-	var callback = function(i) {
-		return function(err, doc) {
-			result.push({time:lastAchivArray[i].time, points:doc.points, icon:doc.icon, name:doc.name, service:doc.service});
-			handler--;
-			if(handler === 0) {
-				result.sort(function(a,b){ return a.time - b.time; }).reverse();
-				for(var key in result) {
-					result[key].time = moment(result[key].time).format('DD.MM.YYYY');
-				}
-				cb(result);
-			}
-		};
-	};
-
-	db.collection('achievements', function(err, collection) {
-		for(var key in lastAchivArray) {
-			collection.findOne({aid:lastAchivArray[key].aid},{points:1, icon:1, service:1, name:1}, callback(key));
-		}
-	});
-
-});
-});
+            cb(lastAchivArray);
+          });
+        });
+      }
+    });
+  });
 }
 
 
