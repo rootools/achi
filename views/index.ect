@@ -22,10 +22,10 @@
       <div class="login_form">
         <form action="/login" method="POST">
           <div class="input-control text">
-            <input type="email" name="email" class="loginForm" id="loginEmail" placeholder="Электронный адрес">
+            <input type="email" name="email" class="loginForm" id="loginEmail" placeholder="Электронный адрес" required>
           </div>
           <div class="input-control password">
-            <input type="password" name="pass" class="loginForm" id="loginPass" placeholder="Пароль">
+            <input type="password" name="pass" class="loginForm" id="loginPass" placeholder="Пароль" required>
           </div>
           <input type="hidden" name="action" value="login">
           <input type="hidden" name="nosecurity" value="true">
@@ -37,13 +37,13 @@
       <div class="register_form" style="display: none;">
         <form action="/login" method="POST">
           <div class="input-control text">
-            <input type="email" name="email" class="loginForm" id="regEmail" placeholder="Электронный адрес">
+            <input type="email" name="email" class="loginForm" id="regEmail" placeholder="Электронный адрес" required>
           </div>
           <div class="input-control password">
-            <input type="password" name="pass" class="loginForm" id="regPass" placeholder="Пароль">
+            <input type="password" name="pass" class="loginForm" id="regPass" placeholder="Пароль" required>
           </div>
           <div class="input-control password">
-            <input type="password" class="loginForm" id="regPassVerify" placeholder="Проверка пароля" oninput="check_pass(this)">
+            <input type="password" class="loginForm" id="regPassVerify" placeholder="Проверка пароля" oninput="check_pass(this)" required>
           </div>
           <input type="hidden" name="action" value="reg">
           <input type="hidden" name="nosecurity" value="true">

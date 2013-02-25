@@ -32,7 +32,7 @@ exports.login = function(req, res) {
 
   db.collection('users', function(err,collection) {
 
-    if(req.body.action === 'login') {
+    if(req.body.action === 'login' && req.body.pass && req.body.email) {
       collection.findOne({email: req.body.email}, function(err, doc) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
@@ -50,7 +50,7 @@ exports.login = function(req, res) {
           res.end(JSON.stringify({error: locale.errors.err1.eng}));
         }
       });
-    } else if(req.body.action === 'reg') {
+    } else if(req.body.action === 'reg' && req.body.pass && req.body.email) {
       testUser(req.body.email, function(flag) {
         if(flag === true) {
           registerUser(req.body.email, req.body.pass, req, function(){
