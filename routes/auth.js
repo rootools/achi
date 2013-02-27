@@ -125,7 +125,7 @@ function registerUser(email, pass, req, cb) {
   var uid = randomstring.generate(20);
   var access_key = randomstring.generate(40);
   db.collection('users', function(err,collection) {
-    collection.insert({email: email, password: pass, uid: uid/*, access_key: access_key*/}, function(err, doc) {
+    collection.insert({email: email, password: pass, uid: uid, subscribes : {week: true, news: true}}, function(err, doc) {
       db.collection('users_profile', function(err,profiles) {
         profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
           add_default_services(uid, function() {
