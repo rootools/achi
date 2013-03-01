@@ -1,19 +1,24 @@
 <% extend 'layout.ect' %>
 
 <div class="grid">
+  
   <div class="row" id="profile_zone">
     <div id="profile_zone">
+      
       <div id="profile_left">
         <div id="profile_me_photo" style="width: 194px;">
           <img src="<%- @profile.photo %>" width="194px" id="user_photo"></img>
         </div>
       </div>
+      
       <div id="profile_right">
         <h3><%- @profile.name %></h3>
         <h4><i class="icon-star-4 fg-color-orange"></i><%- @points %> pts</h3>
       </div>
+
     </div>
   </div>
+
   <div class="row">
     <button class="bg-color-blueDark fg-color-white profile_menu_button big" id="me_edit">
       <i class="icon-user-3"></i>Общее
@@ -101,24 +106,43 @@
     
     <div id="profile_friends_container" class="service_container" style="display:none">
       <div class="row">
-        <h3>Search</h3>
+        <h3>Поиск</h3>
       </div>
     
       <div class="row">
-        <button class="find_bar" id="button_find_friend">Find</button>
-        <button class="find_bar" id="button_clear_find_friend">Clear</button>
         <div class="input-control text find_bar">
-          <input type="email" id="input_find_friend" placeholder="Friend E-mail"></input>
+          <input type="email" id="input_find_friend" placeholder="Введите e-mail" autocomplite="off" ></input>
         </div>
         <div id="error_search_friends_result"></div>
+      </div>
+
+      <div class="row">
+        <button class="find_bar" id="button_find_friend">Найти</button>
+        <button class="find_bar" id="button_clear_find_friend">Очистить</button>
       </div>
       
       <div class="row">
         <div id="search_friends_result"></div>
       </div>
+
+      <div class="row">
+        <h3>Пригласить друга</h3>
+      </div>
+
+      <div class="row">
+        <form  method="POST" action="/profile/invite_friend" enctype="multipart/form-data">
+          <div class="input-control text find_bar">
+            <input type="email" placeholder="Введите e-mail" autocomplite="off" name="email"></input>
+          </div>
+      </div>
+
+      <div class="row">
+        <input class="bg-color-grey" type="submit" value="Пригласить" />
+        </form>
+      </div>
       
       <div class="row">
-        <h3>Friends List</h3>
+        <h3>Список друзей</h3>
       </div>
       
       <div class="row">

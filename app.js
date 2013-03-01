@@ -59,6 +59,7 @@ app.all('/dashboard/user/:id', dashboard.user);
 app.all('/top', top_list.main);
 app.all('/profile', profile.main);
 app.all('/profile/save', profile.save);
+app.all('/profile/invite_friend', profile.invite_friend);
 app.all('/upload', upload.main);
 app.all('/offer', offer.main);
 app.all('/offer2', offer2.main);

@@ -4,10 +4,10 @@ var dashboard = require('./dashboard.js');
 var ext_achivster = require('../external/achivster.js');
 var db;
 
-var redis = require("redis"),
+/*var redis = require("redis"),
     red = redis.createClient();
     red.select(6);
-
+*/
 function mongoConnect() {
   var mongodb = require("mongodb"),
     mongoserver = new mongodb.Server(config.mongo.host, config.mongo.port, config.mongo.server_config),

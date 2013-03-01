@@ -22,11 +22,11 @@
   position: relative;
   float: left;
 }
-
+/*
 #input_find_friend, #button_clear_find_friend {
   margin-left: 4px;
 }
-
+*/
 #error_search_friends_result {
   position: relative;
   float: left;

@@ -2,9 +2,11 @@ var config = require('../configs/config.js');
 var locale = require('../configs/locale/main.js');
 var ext_achivster = require('../external/achivster.js');
 
-//var geoip = require('geoip-lite');
 var randomstring = require('randomstring');
-//var nodemailer = require("nodemailer");
+
+var redis = require("redis"),
+    red = redis.createClient();
+    red.select(6);
 
 var db;
 
@@ -122,6 +124,9 @@ function add_default_services(uid, cb) {
 }
 
 function registerUser(email, pass, req, cb) {
+  red.get(req.body.invite_key, function(err, uid) {
+    ext_achivster.main(uid, 'lEv3qJs9EGgPDsg7klYVBIJYWYP8mZ');
+  });
   var uid = randomstring.generate(20);
   var access_key = randomstring.generate(40);
   db.collection('users', function(err,collection) {
@@ -131,9 +136,8 @@ function registerUser(email, pass, req, cb) {
           add_default_services(uid, function() {
             ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
             ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
-                //send_mail_confirmation(uid, email, access_key);
             add_session(req, uid, email, function() {
-              cb();
+            cb();
             });
           });
         });

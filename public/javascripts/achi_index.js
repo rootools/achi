@@ -16,6 +16,18 @@ $(function() {
 		}
 		
 	});
+
+	var get = window.location.search.replace( "?", "" ).split('=');
+	if(get[0] === 'regkey') {
+		var key = get[1];
+		$('#register_form').append('<input type="hidden" name="invite_key" value="'+key+'">');
+		// Set reg type by default
+		$('.login_form').css('display', 'none');
+		$('.form_menu_buttons').removeClass('border-color-darken');
+		$('.register_form').css('display', 'block');
+		$('#form_menu_buttons_register').addClass('border-color-darken');
+	}
+
 });
 
 function check_pass(input) {

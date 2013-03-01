@@ -1,12 +1,20 @@
 var config = require('../configs/config.js');
 var async = require('async');
 var moment = require('moment');
+var randomstring = require('randomstring');
+var nodemailer = require('nodemailer');
 var uploadjs = require('./upload.js');
 var exec = require('child_process').exec;
+var fs = require('fs');
 
 var db;
+var mail_layout;
 
 var dashboard = require('./dashboard.js');
+
+var redis = require("redis"),
+    red = redis.createClient();
+    red.select(6);
 
 function mongoConnect() {
   var mongodb = require("mongodb"),
@@ -18,6 +26,15 @@ function mongoConnect() {
   });
 }
 
+function GetMailLayout() {
+  fs.readFile('./mailer/layout.html', 'utf8', function (err, layout) {
+    fs.readFile('./mailer/invite_friend.html', 'utf8', function (err, restore) {
+      mail_layout = layout.replace('||content||', restore);
+    });
+  });
+}
+
+GetMailLayout();
 mongoConnect();
 
 function getServiceList(uid, cb) {
@@ -167,6 +184,46 @@ function UploadIcon(image, uid, cb) {
   });
 }
 
+function SendEmailInvite(email, name, key, cb) {
+  var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Yandex",
+    auth: {
+        user: "support@achivster.com",
+        pass: "AO4dtGvORf"
+    }
+  });
+
+  var html = mail_layout.replace('||username||', '<b>'+name+'</b>');
+  html = html.replace('||key||', key);
+  console.log(html);
+
+  var mailOptions = {
+    from: "Achivster Support <support@achivster.com>",
+    to: email,
+    subject: "Получи свое первое достижение!", 
+    html: html
+  };
+
+  smtpTransport.sendMail(mailOptions, function(error, response){
+    if(error){
+      console.log(error);
+    }else{
+      console.log("Message sent: " + response.message);
+    }
+
+    smtpTransport.close();
+    cb();
+  });
+}
+
+function GetNameByUid(uid, cb) {
+  db.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid},{name: 1, _id: 0}, function(err, doc) {
+      cb(doc.name);
+    });
+  });
+}
+
 exports.main = function(req, res) {
   if(!req.session.auth || req.session.auth === false) {
     res.redirect(config.site.url);
@@ -241,5 +298,23 @@ exports.save = function(req, res) {
       });
     });
 
+  }
+}
+
+exports.invite_friend = function(req, res) {
+  if(!req.session.auth || req.session.auth === false) {
+    res.redirect(config.site.url);
+  } else {
+    var uid = req.session.uid;
+    var email = req.body.email;
+    var reg_key = randomstring.generate(40);
+    GetNameByUid(uid, function(name) {
+      SendEmailInvite(email, name, reg_key, function() {
+        red.set(reg_key, uid, function(err, doc) {
+          red.expire(reg_key, 1209600);
+          res.redirect('/profile');
+        });
+      });
+    });
   }
 }
