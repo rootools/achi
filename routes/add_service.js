@@ -123,7 +123,6 @@ exports.facebook = function(req, res) {
 };
 
 exports.bitbucket = function(req, res) {
-  console.log(req.query.oauth_token);
   if(req.query.oauth_token) {
     bitbucketOA.getOAuthAccessToken(req.session.request_oauth_token, req.session.request_oauth_token_secret, req.query.oauth_verifier, function(error, oauthAccessToken, oauthAccessTokenSecret, results){
       var data = {token: oauthAccessToken, secret: oauthAccessTokenSecret};

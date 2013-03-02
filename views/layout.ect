@@ -23,10 +23,10 @@
           <% end %>
           <div class="nav-bar bg-color-white">
             <div class="nav-bar-inner">
+              <% if @session.auth : %>
               <ul class="menu place-left">
                 <li><a href="/offer"><i class="websymbols fg-color-red">W</i><span class="fg-color-red">Акция!</span></a></li>
               </ul>
-              <% if @session.auth : %>
               <ul class="menu place-right">
                 <li id="notifications"></li>
                 <li><a href="/dashboard"><i class="icon-gift"></i>dashboard</a></li>
