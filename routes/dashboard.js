@@ -55,7 +55,6 @@ function getUserAchievementsPoints(data, cb) {
           response[doc[i].service] = doc[i].points;             
         }
       }
-      console.log(response);
       cb(response);
     });
   });
