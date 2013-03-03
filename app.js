@@ -19,6 +19,7 @@ var offer = require('./routes/offer');
 var offer2 = require('./routes/offer2');
 var oauth_route = require('./routes/oauth');
 var developers = require('./routes/developers');
+var feed = require('./routes/feed');
 
 var sessionsStorage = require('connect-redis')(express);
 
@@ -67,6 +68,7 @@ app.all('/oauth', oauth_route.main);
 app.all('/developers', developers.main);
 app.all('/developers/app/create', developers.app_create);
 app.all('/developers/app/:app_id', developers.app_show);
+app.all('/feed', feed.main);
 
 app.all('/add_service/vkontakte', add_service.vk);
 app.all('/add_service/twitter', add_service.twitter);
