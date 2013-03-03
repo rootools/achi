@@ -1,5 +1,7 @@
 var config = require('../configs/config.js');
 var underscore = require('underscore');
+var moment = require('moment');
+moment.lang('ru');
 
 var db;
 
@@ -61,7 +63,11 @@ function GetLatestAchievements(uids, cb) {
         result.push(arr);
       }
       result = underscore.flatten(result);
+      result.sort(function(a,b){ return a.time - b.time; }).reverse();
       
+      //Latest 20 row!!
+      result = result.slice(0, 20);
+
       GetAchivInfo(result, function(achiv_info) {
         for(var k in result) {
           var a = underscore.find(achiv_info, function(re) { return re.aid === result[k].aid });
@@ -70,14 +76,16 @@ function GetLatestAchievements(uids, cb) {
           result[k].icon = a.icon;
           result[k].points = a.points;
           result[k].service = a.service;
+          var duration = new Date().getTime() - result[k].time;
+          result[k].time = moment.duration(duration, "milliseconds").humanize();
         }
         GetUsersProfiles(uids, function(users) {
           for(var z in result) {
             var u = underscore.find(users, function(re) { return re.uid === result[z].uid });
-            console.log(u);
             result[z].name = u.name;
             result[z].photo = u.photo;
           }
+          
           cb(result);
         });
 
@@ -90,8 +98,7 @@ function GetLatestAchievements(uids, cb) {
 exports.main = function(req, res) {
   CreateUids(req.session.uid, function(uids_list) {
     GetLatestAchievements(uids_list, function(latest_achivs) {
-      console.log(latest_achivs);
-      res.render('feed.ect', { title: 'Новости', session:req.session} );
+      res.render('feed.ect', { title: 'Новости', session:req.session, list: latest_achivs} );
     });
   });
 }

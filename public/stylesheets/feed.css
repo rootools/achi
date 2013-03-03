@@ -1,0 +1,13 @@
+.news_row {
+  position: relative;
+  float: left;
+}
+
+#news_img_elem {
+  width: 200px;
+  height: 80px;
+}
+
+#news_text_elem {
+  max-width: 75%;
+}

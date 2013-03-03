@@ -1,3 +1,18 @@
 <% extend 'layout.ect' %>
 
-aaa
+<div class="grid">
+<% for row in @list : %>
+  <div class="row" style="margin-bottom: 15px;">
+    <div class="news_row" id="news_img_elem">
+      <img src="<%- row.photo %>" width="80px" height="80px">
+      <img src="<%- row.icon %>" width="80px" height="80px">
+    </div>
+    <div class="news_row" id="news_text_elem">
+      <p>Пользователь <a href="/dashboard/user/<%- row.uid %>" target="_blank"><strong><%- row.name %></strong></a> Заработал достижение <strong><%- row.aname %></strong> за <%- row.points %> очков.</p>
+      <p><small><%- row.time %> назад</small></p>
+    </div>
+  </div>
+<% end %>
+</div>
+
+<link href="/stylesheets/feed.css" rel="stylesheet" />
