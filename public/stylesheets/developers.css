@@ -2,6 +2,10 @@
 	width: 315px;
 }
 
+.hr_row {
+  opacity: 0.5;
+}
+
 .td_achiv_table {
   border: none;
   border-bottom: 1px solid #DDD;

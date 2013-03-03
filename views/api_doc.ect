@@ -1,0 +1,147 @@
+<h2>Авторизация</h2>
+  
+  <h3><strong>GET /authorize</strong></h3>
+  <p>Редирект на <em>callback_url</em>. Возвращает <em>code</em> в URL ответа</p>
+  
+    <h4>Resource URL</h4>
+    http://api.achivster.com/authorize
+
+    <h4>Parameters</h4>
+    <ul>
+      <li>response_type - Example Values: code</li>
+      <li>client_id - App ID Вашего приложения. Example Values: HUhnVHcOc7YsiWD</li>
+      <li>redirect_uri - Callback URL приложения. Example Values: http://domain/callback</li>
+    </ul>
+
+    <h4>Example Request</h4>
+    <blockquote>http://api.achivster.com/authorize?response_type=code&client_id=HUhnVHcOc7YsiWD&redirect_uri=http://domain/callback</blockquote>
+
+    <h4>Response</h4>
+    <blockquote>Redirect to http://domain/callback?code=<em>code</em></blockquote>
+
+    <h4>Errors</h4>
+    Placeholder
+  
+  <hr class="hr_row">
+
+  <h3><strong>POST /token</strong></h3>
+  <p>Возвращает access_token</p>
+
+    <h4>Resource URL</h4>
+    http://api.achivster.com/token
+
+    <h4>Parameters</h4>
+    <ul>
+      <li>client_id - App ID Вашего приложения. Example Values: HUhnVHcOc7YsiWD</li>
+      <li>client_secret - App Secret Вашего приложения. Example Values: 0mXAjqVzmY0aJHMUr15OzNbmDMzYFaJ69DNOGWgi</li>
+      <li>redirect_uri - Callback URL приложения. Example Values: http://domain/callback</li>
+      <li>grant_type - Example Values: authorization_code</li>
+      <li>code - Request code полученные через /authorize</li>
+    </ul>
+
+    <h4>Example Request</h4>
+    <blockquote>POST: http://api.achivster.com/token</blockquote>
+    <blockquote>POST-data: client_id=HUhnVHcOc7YsiWD&client_secret=0mXAjqVzmY0aJHMUr15OzNbmDMzYFaJ69DNOGWgi&redirect_uri=http://domain/callback&grant_type=grant_type&code=CCCC</blockquote>
+
+    <h4>Response</h4>
+    <pre class="prettyprint linenums">
+    {"access_token":"D6iCys1hLaB5W0V30sfvOMs5TzWBv33S46i3e9skHMBXCpTSTp"}</pre>
+
+    <h4>Errors</h4>
+    Placeholder
+
+  <hr class="hr_row">
+
+<h2>Пользователь</h2>
+
+  <h3><strong>GET /1/user</strong></h3>
+  <p>Возвращает информацию о пользователе</p>
+
+    <h4>Resource URL</h4>
+    http://api.achivster.com/1/user
+
+    <h4>Parameters</h4>
+    <ul>
+      <li>access_token - access_token пользователя. Example Values: D6iCys1hLaB5W0V30sfvOMs5TzWBv33S46i3e9skHMBXCpTSTp</li>
+    </ul>
+
+    <h4>Example Request</h4>
+    <blockquote>http://api.achivster.com/1/user?access_token=D6iCys1hLaB5W0V30sfvOMs5TzWBv33S46i3e9skHMBXCpTSTp</blockquote>
+
+    <h4>Response</h4>
+    <pre class="prettyprint linenums">
+      {"friends":[],
+      "name":"Barack Obama",
+      "photo":"/images/users_photo/NYg48TcI0cMcCHHkNFHf.jpg",
+      "uid":"NYg48TcI0cMcCHHkNFHf"}</pre>
+
+    <h4>Errors</h4>
+    Placeholder
+
+  <hr class="hr_row">
+    
+<h2>Достижения</h2>
+
+  <h3><strong>GET /1/achievement/list</strong></h3>
+  <p>Возвращает достижения сервиса которому принадлежит access_token</p>
+
+    <h4>Resource URL</h4>
+    http://api.achivster.com/1/achievement/list
+
+    <h4>Parameters</h4>
+    <ul>
+      <li>access_token - access_token пользователя. Example Values: D6iCys1hLaB5W0V30sfvOMs5TzWBv33S46i3e9skHMBXCpTSTp</li>
+    </ul>
+
+    <h4>Example Request</h4>
+    <blockquote>http://api.achivster.com/1/achievement/list?access_token=D6iCys1hLaB5W0V30sfvOMs5TzWBv33S46i3e9skHMBXCpTSTp</blockquote>
+
+    <h4>Response</h4>
+    <pre class="prettyprint linenums">
+    [
+      {"aid":"abcUQ4D4S9Gqp5oXrr5zFusxATwI8U",
+      "description":"TestDescription",
+      "icon":"/images/achievements/abcUQ4D4S9Gqp5oXrr5zFusxATwI8U.jpg",
+      "name":"TestName",
+      "points":10,
+      "position":"0",
+      "earned":true,
+      "time":1360793042065},
+      {"aid":"zxcUQ4D4S9Gqp5oXrr5zFusxATwI8U",
+      "description":"TestDescription2",
+      "icon":"/images/label.png",
+      "name":"TestName2",
+      "points":10,
+      "position":"1",
+      "earned":false,
+      "time":false}
+    ]
+    </pre>
+
+    <h4>Errors</h4>
+    Placeholder
+
+  <hr class="hr_row">
+
+  <h3><strong>POST /1/achievement/award</strong></h3>
+  <p>Зачисляет пользователю достжение сервиса которому принадлежит access_token</p>
+
+    <h4>Resource URL</h4>
+    http://api.achivster.com/1/achievement/award
+
+    <h4>Parameters</h4>
+    <ul>
+      <li>access_token - access_token пользователя. Example Values: D6iCys1hLaB5W0V30sfvOMs5TzWBv33S46i3e9skHMBXCpTSTp</li>
+      <li>aid - Уникальный идентификатор достижения. Example Values: EJ0lu3V4lzPGZI2Ni8uYy2lnV66jk1</li>
+    </ul>
+
+    <h4>Example Request</h4>
+    <blockquote>POST: http://api.achivster.com/1/achievement/award</blockquote>
+    <blockquote>POST-data: access_token=D6iCys1hLaB5W0V30sfvOMs5TzWBv33S46i3e9skHMBXCpTSTp&aid=EJ0lu3V4lzPGZI2Ni8uYy2lnV66jk1</blockquote>
+
+    <h4>Response</h4>
+    <pre class="prettyprint linenums">
+    {"status": "ok"}</pre>
+
+    <h4>Errors</h4>
+    Placeholder

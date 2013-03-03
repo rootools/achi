@@ -2,11 +2,11 @@
 
 <div class="grid">
 <div class="row">
-  <button class="command-button bg-color-blue menu_button">
+  <button class="command-button bg-color-blue menu_button" id="dev_app">
     Приложения
     <small>Управление приложениями</small>
   </button>
-  <button class="command-button bg-color-green menu_button" disabled>
+  <button class="command-button bg-color-green menu_button" id="dev_api">
     Документация
     <small>Документация API Ачивстера</small>
   </button>
@@ -34,9 +34,10 @@
   <% end %>
 </div>
 
-<div class="row" id="dev_api">
-  
+<div class="row" id="dev_api" style="display: none;">
+  <% include 'api_doc.ect' %>
 </div>
 </div>
 
 <link href="/stylesheets/developers.css" rel="stylesheet" />
+<script src="/javascripts/developers.js"></script>
