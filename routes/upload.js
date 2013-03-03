@@ -64,7 +64,7 @@ function write_to_db(uid, cb) {
 
 function convertImage(dir, file_name, uid, cb) {
   easyimg.convert({src: dir+file_name, dst: dir+uid+'.jpg', quality:90}, function(err, stdout, stderr) {
-    easyimg.resize({src: dir+uid+'.jpg', dst: dir+uid+'.jpg', width: 194, height:194}, function(err, stdout, stderr) {
+    easyimg.resize({src: dir+uid+'.jpg', dst: dir+uid+'.jpg', width: 194, height:194, fill: true}, function(err, stdout, stderr) {
       if(uid+'.jpg' !== file_name) {
         fs.unlink(dir+file_name, function(err, res) {});
         cb({});
