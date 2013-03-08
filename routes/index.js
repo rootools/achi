@@ -16,7 +16,7 @@ mongoConnect();
 
 exports.index = function(req, res){
   if(!req.session.auth || req.session.auth === false) {
-    res.render('index.ect', { title: 'Ачивстер', session: req.session});
+    res.render('index.ect', { title: 'Ачивстер', session: req.session, error: ''});
   } else {
     res.redirect(config.site.url+'dashboard');
   }

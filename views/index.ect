@@ -19,6 +19,12 @@
     </div>
     <div class="div_index_right">
 
+      <% if @error : %>
+        <div class="row">
+          <p class="fg-color-red" style="margin-left: 5px;"><%- @error %></p>
+        </div>
+      <% end %>
+
       <div class="login_form">
         <form action="/login" method="POST">
           <div class="input-control text">

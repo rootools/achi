@@ -46,10 +46,12 @@ exports.login = function(req, res) {
               }
             });
           } else {
-            res.end(JSON.stringify({error: locale.errors.err1.eng}));
+            res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err1.ru});
+            //res.end(JSON.stringify({error: locale.errors.err1.eng}));
           }
         } else {
-          res.end(JSON.stringify({error: locale.errors.err1.eng}));
+          res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err1.ru});
+          //res.end(JSON.stringify({error: locale.errors.err1.eng}));
         }
       });
     } else if(req.body.action === 'reg' && req.body.pass && req.body.email) {
@@ -59,7 +61,8 @@ exports.login = function(req, res) {
             res.redirect(config.site.url);
           });
         } else {
-          res.end(JSON.stringify({error: locale.errors.err2.eng}));
+          res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err2.ru});
+          //res.end(JSON.stringify({error: locale.errors.err2.eng}));
         } 
       });
     } else {
