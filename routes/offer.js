@@ -1,4 +1,5 @@
 var config = require('../configs/config.js');
+var i18n = require('i18n');
 
 var db;
 
@@ -23,6 +24,7 @@ function achivname(cb) {
 }
 
 exports.main = function(req, res) {
+  console.log(i18n.__('hello'));
   if(!req.session.auth || req.session.auth === false) {
     res.render('offer.ect', { title: 'Акция', session:req.session, message: 'Простите, но принимать участие в акциях могут только зарегистрированные пользователи.'} );
   } else {
