@@ -192,7 +192,19 @@ function getUserAchievementsByService(service, uid, cb) {
     collection.findOne({uid:uid, service:service},{achievements:1}, function(err, udoc) {
       db.collection('achievements', function(err, collection) {
         collection.find({service:service},{sort: 'position'}).toArray(function(err, doc) {
-          cb(markedEarnedAchievements(udoc.achievements, doc));
+          var response = markedEarnedAchievements(udoc.achievements, doc);
+          // Hide rare non-earned achivs
+          if(service === 'rare') {
+            var newresp = [];
+            for(var i in response) {
+              if(response[i].earned === true) {
+                newresp.push(response[i]);
+              }
+            }
+            cb(newresp);
+          } else {
+            cb(response);
+          }
         });
       });
     });
