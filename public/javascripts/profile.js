@@ -12,6 +12,10 @@ $(function() {
   if(document.URL.split('#')[1] === 'settings') {
     showContainer('me_edit');
   }
+
+  if(document.URL.split('#')[1] === 'userbars') {
+    showContainer('userbars_list');
+  }
   
   $('.profile_menu_button').bind('click', function() {
     var elem = this.id;
@@ -44,6 +48,9 @@ function showContainer(param) {
   }
   if(param === 'message_list') {
     $('#profile_me_messages').fadeIn(200);
+  }
+  if(param === 'userbars_list') {
+    $('#profile_me_userbars').fadeIn(200);
   }
 }
 

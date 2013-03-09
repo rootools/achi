@@ -20,6 +20,8 @@
     "geoip-lite": "*",
     "nodemailer": "*",
     "request": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "i18n": "*",
+    "userbar": "*"
   }
 }
