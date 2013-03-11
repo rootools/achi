@@ -170,7 +170,14 @@
     </div>
 
     <div id="profile_me_userbars" class="service_container" style="display:none">
-      <img src="/images/userbars/SW7QtRBCUVgZeelC6DVx.png">
+      <p>Используйте следующий код для вставки:</p>
+      <fieldset id="userbar_fieldset">
+        &lta href="http://achivster.com/dashboard/user/<%- @session.uid %>" target="_blank"&gt<br>
+        &ltimg src="http://userbars.achivster.com/<%- @session.uid %>.png"&gt<br>
+        &lt/a&gt
+      </fieldset>
+      <br>
+      <img src="/images/userbars/<%- @session.uid %>.png">
     </div>
   
   </div>
