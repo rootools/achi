@@ -39,6 +39,11 @@ div.page {
   margin-right: 20px;
   margin-top: 30px;
 }
+
+.nav-bar .nav-bar-inner > ul.menu > li {
+  padding-top: 7px;
+}
+
 /*
 Menu bar block
 */
