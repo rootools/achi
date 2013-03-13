@@ -188,7 +188,6 @@ exports.instagram = function(req, res) {
 };
 
 function add_service(session, account, service, cb) {
-  console.log('z');
   testService(session.uid, service, function(check, is_first) {
     if(is_first) {
       get_user_name_by_service(session.uid, service, account, function() {
@@ -197,7 +196,6 @@ function add_service(session, account, service, cb) {
         });
       });
     } else {
-      console.log('a');
       write_newuser_to_db(function(){
         cb();
       });

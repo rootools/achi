@@ -30,6 +30,7 @@ function TestAllreadyEarned(uid, aid, cb) {
 
 function write(uid, aid) {
   TestAllreadyEarned(uid, aid, function(check) {
+  console.log(check);
   if(check) {
     db.collection('users_achievements', function(err, collection) {
       collection.update({uid:uid, service: 'achivster'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});
@@ -39,7 +40,7 @@ function write(uid, aid) {
 }
 
 exports.main = function(uid, aid) {
-  write(uid,aid);
+  write(uid, aid);
 };
 
 exports.rare = function(uid, aid) {
