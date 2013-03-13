@@ -232,7 +232,7 @@ exports.main = function(req, res) {
       get_messages(req.session.uid, 10, function(messages) {
         get_user_profile(req.session.uid, function(profile) {
           get_friends_list(req.session.uid, function(friends) {
-            res.render('profile.ect', { title: 'Profile', session:req.session, points: points, profile: profile, messages: messages, friends: friends} );
+            res.render('profile.ect', { title: 'Профиль', session:req.session, points: points, profile: profile, messages: messages, friends: friends} );
           });
         });
       });

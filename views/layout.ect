@@ -17,19 +17,20 @@
       <div id="login_zone"></div>
     <% end %>
     <div class="page">
+      
       <div class="page-header">
         <div class="page-header-content">
           <% if @service_info : %>
             <h1><i class="icon-arrow-left-3 dashboard_back" style="cursor: pointer;"></i><%- @title %></h1>
           <% else : %>
-            <h1><%- @title %></h1>
+            
           <% end %>
           <div class="nav-bar bg-color-white">
             <div class="nav-bar-inner">
               <% if @session.auth : %>
-              <ul class="menu place-left">
+              <!--<ul class="menu place-left">
                 <li><a href="/offer"><i class="websymbols fg-color-red">W</i><span class="fg-color-red">Акция!</span></a></li>
-              </ul>
+              </ul>-->
               <ul class="menu place-right">
                 <li id="notifications"></li>
                 <li><a href="/feed"><i class="icon-earth"></i>Новости</a></li>
@@ -43,11 +44,14 @@
                 <li><a href="/"><i class="icon-enter"></i>Войти</a></li>
               </ul>
               <% end %>
+
             </div>
+          <img id="achi_logo" src="/images/logo3.png">
+          <h1 id="page_title"><%- @title %></h1>
           </div>
-          
         </div>
       </div>
+      
       <div class="page-region">
         <div class="page-region-content">
           <% content %>
@@ -63,7 +67,7 @@
             <img src="/images/share/twitter.png" class="social_button_group">
           </a>
           <a href="http://www.facebook.com/Achivster">
-            <img src="/images/share/facebook.png" class="social_button_group"></h3>
+            <img src="/images/share/facebook.png" class="social_button_group">
           </a>
         </center>
       </div>

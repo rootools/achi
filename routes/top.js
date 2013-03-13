@@ -110,7 +110,7 @@ function get_world_toplist(cb) {
 exports.main = function(req, res) {
   get_world_toplist(function(world_list) {
     get_friends_list(req.session.uid, function(friends_list) {
-      res.render('top.ect', { title: 'Top', session:req.session, friends_list: friends_list, world_list: world_list});
+      res.render('top.ect', { title: 'Топ', session:req.session, friends_list: friends_list, world_list: world_list});
     });
   });
 };

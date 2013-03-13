@@ -96,9 +96,13 @@ function GetLatestAchievements(uids, cb) {
 }
 
 exports.main = function(req, res) {
-  CreateUids(req.session.uid, function(uids_list) {
-    GetLatestAchievements(uids_list, function(latest_achivs) {
-      res.render('feed.ect', { title: 'Новости', session:req.session, list: latest_achivs} );
+  if(req.session.auth === false) {
+    res.redirect(config.site.url);
+  } else {
+    CreateUids(req.session.uid, function(uids_list) {
+      GetLatestAchievements(uids_list, function(latest_achivs) {
+        res.render('feed.ect', { title: 'Новости', session:req.session, list: latest_achivs} );
+      });
     });
-  });
+  }
 }

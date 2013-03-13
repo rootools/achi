@@ -9,6 +9,12 @@ div.page {
   width: 984px;
 }
 
+.page-header-content, .page-header, .nav-bar {
+  height: 145px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(127, 127, 127, .5);
+}
+
 .centered {
   text-align: center;
 }
@@ -21,6 +27,17 @@ div.page {
   border-top: 1px solid rgba(127, 127, 127, .5);
   padding-top: 20px;
   padding-bottom: 20px;
+}
+
+#achi_logo {
+  margin-top: -45px;
+}
+
+#page_title {
+  position: relative;
+  float: right;
+  margin-right: 20px;
+  margin-top: 30px;
 }
 /*
 Menu bar block

@@ -243,7 +243,7 @@ exports.service = function(req, res) {
     getUserAchievementsByService(req.params.service, req.session.uid, function(data){
       var service_info_count = countAchivmentsFromService(data);
       getServiceInfo(req.params.service, function(serviceInfo) {
-        res.render('dashboard_service.ect', { title: 'Dashboard', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
+        res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
       });
     });
   }
@@ -253,7 +253,7 @@ exports.service_user = function(req, res) {
   getUserAchievementsByService(req.params.service, req.params.id, function(data){
     getServiceInfo(req.params.service, function(serviceInfo) {
       var service_info_count = countAchivmentsFromService(data);
-      res.render('dashboard_service.ect', { title: 'Dashboard', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
+      res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
     });
   });
 };
@@ -425,7 +425,7 @@ exports.main = function(req, res) {
       }
       get_user_stat(uid, sum, function(user_stat) {
         getLatestAchievements(uid, function(last) {
-          res.render('dashboard.ect', { title: 'Dashboard', session: req.session, user_stat: user_stat, achievements: achivList, lastAchivArray: last});
+          res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, lastAchivArray: last});
         });
       });  
     });
@@ -451,7 +451,7 @@ exports.user = function(req, res) {
               if(req.session.uid === uid) { friends_flag = false } else {
                 friends_flag = CheckFriendships(req.session.uid, user_stat.friends);
               }
-              res.render('dashboard.ect', { title: 'Dashboard', session: req.session, user_stat: user_stat, achievements: achivList, target_uid: uid, lastAchivArray: last, friends_flag: friends_flag});
+              res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, target_uid: uid, lastAchivArray: last, friends_flag: friends_flag});
             });
           });
         });  
