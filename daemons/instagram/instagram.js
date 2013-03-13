@@ -11,6 +11,7 @@ http.createServer(function (req, res) {
     response.media = body.media;
     response.followed_by = body.followed_by;
     response.follows = body.follows;
+    console.log(response);
     res.end(JSON.stringify(response));
   });  
   
