@@ -18,19 +18,19 @@ function TestAllreadyEarned(uid, aid, cb) {
   db.collection('users_achievements', function(err, collection) {
     collection.findOne({uid: uid, service: 'achivster'}, {_id: 0, achievements: 1}, function(err, doc) {
       var list = doc.achievements;
+      var flag = true;
       for(var i in list) {
         if(list[i].aid === aid) {
-          cb(false);
+          flag = false;
         }
       }
-      cb(true);
+      cb(flag);
     });
   });
 }
 
 function write(uid, aid) {
   TestAllreadyEarned(uid, aid, function(check) {
-  console.log(check);
   if(check) {
     db.collection('users_achievements', function(err, collection) {
       collection.update({uid:uid, service: 'achivster'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {});

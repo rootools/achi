@@ -134,7 +134,6 @@ exports.bitbucket = function(req, res) {
     });
   } else {
     bitbucketOA.getOAuthRequestToken(function(error, request_oauth_token, request_oauth_token_secret, results){
-      console.log(error, request_oauth_token, request_oauth_token_secret, results);
       req.session.request_oauth_token = request_oauth_token;
       req.session.request_oauth_token_secret = request_oauth_token_secret;
       res.redirect('https://bitbucket.org/!api/1.0/oauth/authenticate?oauth_token='+request_oauth_token);
