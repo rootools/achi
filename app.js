@@ -97,6 +97,7 @@ app.all('/add_service/facebook', add_service.facebook);
 app.all('/add_service/bitbucket', add_service.bitbucket);
 app.all('/add_service/github', add_service.github);
 app.all('/add_service/instagram', add_service.instagram);
+app.all('/add_service/foursquare', add_service.foursquare);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

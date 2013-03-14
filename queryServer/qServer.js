@@ -7,6 +7,7 @@ var cFacebook = require('./qS_facebook');
 var cBitbucket = require('./qS_bitbucket');
 var cGithub = require('./qS_github');
 var cInstagram = require('./qS_instagram');
+var cFoursquare = require('./qS_foursquare');
 
 var q;
 var db;
@@ -76,6 +77,12 @@ function createQuery() {
           }
           if(task.service === 'instagram') {
             cInstagram.checkInstagramAchievements(task.uid, data, db, function(res) {
+              updateQuery(task.uid, task.service);
+              callback();
+            });
+          }
+          if(task.service === 'foursquare') {
+            cFoursquare.checkFoursquareAchievements(task.uid, data, db, function(res) {
               //updateQuery(task.uid, task.service);
               callback();
             });
@@ -132,6 +139,13 @@ function getData(service, auth, cb) {
     var options = {
         host: 'localhost',
         port: 8035,
+        path: '/?token='+auth.access_token+'&id='+auth.id};
+  }
+
+  if(service === 'foursquare') {
+    var options = {
+        host: 'localhost',
+        port: 8025,
         path: '/?token='+auth.access_token+'&id='+auth.id};
   }
 

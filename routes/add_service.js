@@ -186,6 +186,20 @@ exports.instagram = function(req, res) {
   } 
 };
 
+exports.foursquare = function(req, res) {
+  if(!req.query.code) {
+    res.redirect('https://foursquare.com/oauth2/authenticate?client_id=ZJ3Q5X3NIYGJNBMWC1Q5KZC0RLDNNBNIJ5Y2V4X0GIQTMK3J&response_type=code&redirect_uri=http://localhost:8001/add_service/foursquare');
+  } else {
+    var code = req.query.code;
+    request.post('https://foursquare.com/oauth2/access_token', {form:{client_id: 'ZJ3Q5X3NIYGJNBMWC1Q5KZC0RLDNNBNIJ5Y2V4X0GIQTMK3J', client_secret: 'NJ4PUMNEO3ZVKYCML1V5CSMN5TJAPDYDHF4TRQLLITKZKC2R', grant_type: 'authorization_code', redirect_uri: 'http://localhost:8001/add_service/foursquare',code:code}}, function(e, r, body){
+      var token = JSON.parse(body).access_token;
+      add_service(req.session, {access_token: token}, 'foursquare', function(){
+        res.redirect(config.site.url+'dashboard');
+      });
+    });
+  }
+}
+
 function add_service(session, account, service, cb) {
   testService(session.uid, service, function(check, is_first) {
     if(is_first) {
@@ -361,6 +375,17 @@ function get_user_name_by_service(uid, service, account, cb) {
     request.get('https://api.instagram.com/v1/users/'+account.id+'/?access_token='+account.access_token, function(e, r, body){
       name = JSON.parse(body).data.full_name;
       image = JSON.parse(body).data.profile_picture;
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
+      });
+    });
+  }
+
+  if(service === 'foursquare') {
+    console.log(account.access_token);
+    request.get('https://api.foursquare.com/v2/users/self?oauth_token='+account.access_token, function(e,r,body) {
+      name = JSON.parse(body).response.user.firstName + ' ' + JSON.parse(body).response.user.lastName;
+      image = JSON.parse(body).response.user.photo;
       write_name_and_image_from_service(uid, image, name, function() {
         cb();
       });
