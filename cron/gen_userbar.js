@@ -66,6 +66,8 @@ function Generate() {
 }
 
 
-setInterval(function(){
+setTimeout(function(){
+//setInterval(function(){
   Generate();
-}, 86400000);
+//}, 86400000);
+}, 1000);
