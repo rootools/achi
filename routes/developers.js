@@ -102,7 +102,7 @@ exports.app_create = function(req, res) {
 			db_api.collection('applications', function(err, collection) {
         collection.insert({uid: uid, name: req.body.name, url: req.body.url, callback_url: req.body.callback_url, app_id: app_id, app_secret: app_secret}, function(err, doc) {
           db.collection('services_info', function(err, collection) {
-            collection.insert({icon: '/images/label.png', service: req.body.name, app_id: app_id}, function(err, doc) {
+            collection.insert({icon: '/images/label.png', service: req.body.name, app_id: app_id, type: 'external'}, function(err, doc) {
               res.redirect(config.site.url+'developers');
             });
           });
