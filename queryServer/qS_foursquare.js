@@ -23,6 +23,18 @@ function checkFoursquareAchievements(uid, data, db, cb) {
       if(res.users == undefined || res.users.length == 0) {res.users = [];}
 
       var notRecieved = [];
+      
+      // Dump unknown achivs
+      for(var i in res.all) {
+        for(var n in data) {
+          if(res.all[i] === '000000'+data[n].badgeId) {
+            delete data[n];
+          }
+        }
+      }
+      console.log(data[n]);
+
+
       for(var i in res.all) {
         if(res.users.indexOf(res.all[i]) === -1) {
           notRecieved.push(res.all[i]);
@@ -39,9 +51,11 @@ function checkFoursquareAchievements(uid, data, db, cb) {
 }
 
 // 1 Checkin
-function frs_lbZPaiQ9EKi0c3uq52UhsSBhO0uqJB(uid, data, aid, db) {
-  if(data.checkins >= 1) {
-    writeToDB(uid, aid, db);
+function frs_0000004c4f08667a0803bbaa202ab7(uid, data, aid, db) {
+  for(var n in data) {
+    if(data[n].badgeId === '4c4f08667a0803bbaa202ab7') {
+      writeToDB(uid, aid, db);
+    }
   }
 }
 
