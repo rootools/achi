@@ -213,6 +213,52 @@ function frs_0000004d24bfee668f60fc7b32b26f(uid, data, aid, db) {
   }
 }
 
+// 'Warhol'
+function frs_0000004c4f08667a0803bbdf202ab7(uid, data, aid, db) {
+  for(var n in data) {
+    if(data[n].badgeId === '4c4f08667a0803bbdf202ab7') {
+      writeToDB(uid, aid, db);
+    }
+  }
+}
+
+// 'Bento'
+function frs_0000004ebb07357bebd6a83f116c24(uid, data, aid, db) {
+  for(var n in data) {
+    if(data[n].badgeId === '4ebb07357bebd6a83f116c24') {
+      writeToDB(uid, aid, db);
+    }
+  }
+}
+
+// 'Bookworm'
+function frs_0000004cf5199da41a60fcf71d2fc0(uid, data, aid, db) {
+  for(var n in data) {
+    if(data[n].badgeId === '4cf5199da41a60fcf71d2fc0') {
+      writeToDB(uid, aid, db);
+    }
+  }
+}
+
+// 'Greasy Spoon'
+function frs_0000004e988be87beb567e777d83e9(uid, data, aid, db) {
+  for(var n in data) {
+    if(data[n].badgeId === '4e988be87beb567e777d83e9') {
+      writeToDB(uid, aid, db);
+    }
+  }
+}
+
+// 'Crunked'
+function frs_0000004c4f08667a0803bbaf202ab7(uid, data, aid, db) {
+  for(var n in data) {
+    if(data[n].badgeId === '4c4f08667a0803bbaf202ab7') {
+      writeToDB(uid, aid, db);
+    }
+  }
+}
+
+
 function writeToDB(uid, aid, db) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: 'foursquare'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
@@ -231,7 +277,7 @@ function createAIDarray(data) {
 function dump_unknown(all, list) {
   var dump = []
   // Ban badges
-  all.push('000000510ad6a2011c1712eb17a700');
+//  all.push('000000510ad6a2011c1712eb17a700');
   for(var n in list) {
     if(all.indexOf('000000'+list[n].badgeId) === -1) {
       dump.push(list[n]);
