@@ -47,8 +47,10 @@ exports.vk = function(req, res) {
   if(!req.query.code) {
     res.redirect('http://oauth.vk.com/authorize?client_id=3126840&scope=notify,friends,photos,audio,video,status,wall,groups,notifications,offline&display=popup&response_type=code&tt=12&redirect_uri='+config.site.url+'add_service/vkontakte');
   } else {
-    
-    var options = {
+    request.get('https://oauth.vk.com/access_token?client_id=3126840&client_secret=nlKuMIbXcEV6HqLn1W1n&code='+req.query.code+'&redirect_uri='+config.site.url+'add_service/vkontakte', function(e,r,body) {
+      console.login(body);
+    });
+/*    var options = {
       host: 'oauth.vk.com',
       method: 'GET',
       path: '/access_token?client_id=3126840&client_secret=nlKuMIbXcEV6HqLn1W1n&code='+req.query.code+'&redirect_uri='+config.site.url+'add_service/vkontakte&'
@@ -71,7 +73,7 @@ exports.vk = function(req, res) {
     };
 
     https.request(options, callback).end();
-  }
+  }*/
 };
 
 exports.twitter = function(req, res) {
