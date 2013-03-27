@@ -83,7 +83,7 @@ function createQuery() {
           }
           if(task.service === 'foursquare') {
             cFoursquare.checkFoursquareAchievements(task.uid, data, db, function(res) {
-              //updateQuery(task.uid, task.service);
+              updateQuery(task.uid, task.service);
               callback();
             });
           }
