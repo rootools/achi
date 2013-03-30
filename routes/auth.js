@@ -117,6 +117,7 @@ function add_default_services(uid, cb) {
         db.collection('users_achievements', function(err, users_achievements) {  
           users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {
             users_achievements.insert({uid: uid, service: 'rare', achievements: []}, function(err, doc) {
+console.log('added');
               cb();
             });
           });
@@ -127,9 +128,9 @@ function add_default_services(uid, cb) {
 }
 
 function registerUser(email, pass, req, cb) {
-  red.get(req.body.invite_key, function(err, uid) {
-    ext_achivster.main(uid, 'lEv3qJs9EGgPDsg7klYVBIJYWYP8mZ');
-  });
+//            red.get(req.body.invite_key, function(err, uid) {
+//              ext_achivster.main(uid, 'lEv3qJs9EGgPDsg7klYVBIJYWYP8mZ');
+//            });
   var uid = randomstring.generate(20);
   var access_key = randomstring.generate(40);
   db.collection('users', function(err,collection) {
@@ -139,9 +140,9 @@ function registerUser(email, pass, req, cb) {
           add_default_services(uid, function() {
             ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
             ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
-            add_session(req, uid, email, function() {
-            cb();
-            });
+              add_session(req, uid, email, function() {
+                cb();
+              });
           });
         });
       });
