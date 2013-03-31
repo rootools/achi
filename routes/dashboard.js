@@ -1,25 +1,14 @@
-var config = require('../configs/config.js');
-var moment = require('moment');
-var async = require('async');
-var underscore = require('underscore');
+var app = require('../init.js').init(['config', 'db', 'moment', 'async', 'underscore'])
 
-var db;
+console.log(app.db);
 
-function mongoConnect() {
-  var mongodb = require("mongodb"),
-    mongoserver = new mongodb.Server(config.mongo.host, config.mongo.port, config.mongo.server_config),
-    db_connector = new mongodb.Db(config.mongo.db, mongoserver, config.mongo.connector_config);
-
-  db_connector.open(function(err, dbs) {
-    db = dbs;
-  });
-}
-
-mongoConnect();
+setTimeout(function () {
+  console.log(app.db);
+}, 10000);
 
 // HASH IT!!
 function getUserAchievements(uid, cb) {
-  db.collection('users_achievements', function(err, collection) {
+  app.db.conn.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
       getLatestAchievements(doc, function(last) {
         getUserAchievementsPoints(doc, function(points) {
@@ -45,7 +34,7 @@ function getUserAchievementsPoints(data, cb) {
     cb([]);
   }
 
-  db.collection('achievements', function(err, collection) {
+  app.db.conn.collection('achievements', function(err, collection) {
     collection.find({aid: {$in: aids}},{service: 1, points:1, _id:0}).toArray(function(err, doc) {
       var response = {};
       for(var i in doc) {
@@ -64,7 +53,7 @@ function getUserAchievementsPoints(data, cb) {
 // HASH IT!!
 function getAllAchievementsCount(cb) {
 	var result = {};
-	db.collection('achievements', function(err, collection) {
+	app.db.conn.collection('achievements', function(err, collection) {
 		collection.find({},{service: 1, points:1}).toArray(function(err, doc) {
 			for(var i=0;i<doc.length;i++){
         if(result[doc[i].service+'_count'] !== undefined) {
@@ -83,7 +72,7 @@ function getAllAchievementsCount(cb) {
 // HASH IT!!
 // return 'name', 'icon', 'service', 'time' and 'points' of last 6 achievenments
 function getLatestAchievements(uid, cb) {
-  db.collection('users_achievements', function(err, collection) {
+  app.db.conn.collection('users_achievements', function(err, collection) {
     collection.aggregate({$match: {uid: uid}},{$unwind: "$achievements"},{$group:{_id: "$uid", achivs: {$addToSet: "$achievements"}}}, function(err, doc) {
       if(doc.length === 0) {
         cb([]);
@@ -99,16 +88,16 @@ function getLatestAchievements(uid, cb) {
           aids.push(lastAchivArray[i].aid);
         }
 
-	      db.collection('achievements', function(err, collection) {
+	      app.db.conn.collection('achievements', function(err, collection) {
           collection.find({aid: {$in: aids}},{_id: 0, description: 0, position: 0}).toArray(function(err, doc){
 
             for(var n in lastAchivArray) {
-              var tmp_data = underscore.find(doc, function(re) { return re.aid === lastAchivArray[n].aid });
+              var tmp_data = app.underscore.find(doc, function(re) { return re.aid === lastAchivArray[n].aid });
               lastAchivArray[n].name = tmp_data.name;
               lastAchivArray[n].icon = tmp_data.icon;
               lastAchivArray[n].points = tmp_data.points;
               lastAchivArray[n].service = tmp_data.service;
-              lastAchivArray[n].time = moment(lastAchivArray[n].time).format('DD.MM.YYYY');
+              lastAchivArray[n].time = app.moment(lastAchivArray[n].time).format('DD.MM.YYYY');
             }
 
             cb(lastAchivArray);
@@ -154,7 +143,7 @@ function get_achievment_stat(achivList, allAchievements, points, cb) {
 }
 
 function get_service_icon(cb) {
-  db.collection('services_info', function(err, collection){
+  app.db.conn.collection('services_info', function(err, collection){
     collection.find({},{service:1, icon:1, _id: 0}).toArray(function(err, doc){
       cb(doc);
     });
@@ -178,7 +167,7 @@ function countAchivmentsFromService(data) {
 }
 
 function get_user_stat(uid, points, cb) {
-  db.collection('users_profile', function(err, collection) {
+  app.db.conn.collection('users_profile', function(err, collection) {
     collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1, friends: 1}, function(err, doc) {
       doc.points = points;
       cb(doc);
@@ -188,9 +177,9 @@ function get_user_stat(uid, points, cb) {
 
 // HASH IT!!
 function getUserAchievementsByService(service, uid, cb) {
-  db.collection('users_achievements', function(err, collection) {
+  app.db.conn.collection('users_achievements', function(err, collection) {
     collection.findOne({uid:uid, service:service},{achievements:1}, function(err, udoc) {
-      db.collection('achievements', function(err, collection) {
+      app.db.conn.collection('achievements', function(err, collection) {
         collection.find({service:service},{sort: 'position'}).toArray(function(err, doc) {
           var response = markedEarnedAchievements(udoc.achievements, doc);
           // Hide rare non-earned achivs
@@ -217,7 +206,7 @@ function markedEarnedAchievements(uAch, fAch) {
 		for(var r in uAch) {
 			if(uAch[r].aid == fAch[i].aid) {
 				response[i].earned = true;
-				response[i].time = moment(uAch[r].time).format('DD.MM.YYYY');
+				response[i].time = app.moment(uAch[r].time).format('DD.MM.YYYY');
 			}
 		}
 		if(!response[i].earned) {
@@ -229,7 +218,7 @@ function markedEarnedAchievements(uAch, fAch) {
 }
 
 function getServiceInfo(service, cb) {
-  db.collection('services_info', function(err, collection) {
+  app.db.conn.collection('services_info', function(err, collection) {
     collection.findOne({service:service}, function(err, doc) {  
       cb(doc);
     });
@@ -238,7 +227,7 @@ function getServiceInfo(service, cb) {
 
 exports.service = function(req, res) {
   if(req.session.auth === false) {
-    res.redirect(config.site.url);
+    res.redirect(app.config.site.url);
   } else {
     getUserAchievementsByService(req.params.service, req.session.uid, function(data){
       var service_info_count = countAchivmentsFromService(data);
@@ -259,10 +248,10 @@ exports.service_user = function(req, res) {
 };
 
 function GetServiceList(uid, cb) {
-  async.parallel({
+  app.async.parallel({
     
     info: function(callback) {
-      db.collection('services_info', function(err, collection) {
+      app.db.conn.collection('services_info', function(err, collection) {
         collection.find({type: 'internal'},{_id:0}).toArray(function(err, services_info) {
           callback(null, services_info);
         });
@@ -270,7 +259,7 @@ function GetServiceList(uid, cb) {
     },
     
     connections: function(callback) {
-      db.collection('services_connections', function(err, collection) {
+      app.db.conn.collection('services_connections', function(err, collection) {
         collection.find({uid: uid},{valid: 1, service: 1, _id:0}).toArray(function(err, services_connections) {
           callback(null, services_connections);
         });
@@ -278,18 +267,18 @@ function GetServiceList(uid, cb) {
     },
     
     users_achievements: function(callback) {
-      db.collection('users_achievements', function(err, collection) {
+      app.db.conn.collection('users_achievements', function(err, collection) {
         collection.find({uid: uid},{service: 1, achievements: 1, _id:0}).toArray(function(err, data) {
           var handler = data.length;
           var users_achievements = [];
 
-          var q = async.queue(function(task) {
+          var q = app.async.queue(function(task) {
             var aids = [];
             for(var h in task.achievements) {
               aids.push(task.achievements[h].aid);
             }
             
-            db.collection('achievements', function(err, collection) {
+            app.db.conn.collection('achievements', function(err, collection) {
               collection.find({aid: {$in: aids}},{points: 1, _id:0}).toArray(function(err, doc) {
                 
                 var sum = 0;
@@ -314,20 +303,20 @@ function GetServiceList(uid, cb) {
       });
     },
     achievements: function(callback) {
-      db.collection('achievements', function(err, collection) {
+      app.db.conn.collection('achievements', function(err, collection) {
         collection.aggregate({$group: {_id: "$service", points: {$sum: "$points"}, count: {$sum: 1}}}, function(err, doc) {
           callback(null, doc);
         });
       });
     },
     external: function(callback) {
-      db.collection('services_connections', function(err, collection) {
+      app.db.conn.collection('services_connections', function(err, collection) {
         collection.find({uid: uid, type: 'external'},{_id:0, app_id: 1}).toArray(function(err, services_connections) {
           var app_ids = [];
           for(var i in services_connections) {
             app_ids.push(services_connections[i].app_id);
           }
-          db.collection('services_info', function(err, collection) {
+          app.db.conn.collection('services_info', function(err, collection) {
             collection.find({app_id: {$in: app_ids}},{_id: 0}).toArray(function(err, doc) {
               callback(null, doc);    
             });
@@ -415,7 +404,7 @@ function CheckFriendships(uid, friends) {
 
 exports.main = function(req, res) {
   if(req.session.auth === false) {
-    res.redirect(config.site.url);
+    res.redirect(app.config.site.url);
   } else {
     var uid = req.session.uid;
     GetServiceList(uid, function(achivList) {
@@ -434,7 +423,7 @@ exports.main = function(req, res) {
 
 exports.user = function(req, res) {
   var uid = req.params.id;
-  db.collection('users', function(err, collection) {
+  app.db.conn.collection('users', function(err, collection) {
     collection.findOne({uid:uid}, function(err, doc) {
       if(doc === null) {
         res.end();  
