@@ -1,10 +1,5 @@
 var app = require('../init.js').init(['config', 'db', 'moment', 'async', 'underscore'])
 
-console.log(app.db);
-
-setTimeout(function () {
-  console.log(app.db);
-}, 10000);
 
 // HASH IT!!
 function getUserAchievements(uid, cb) {
