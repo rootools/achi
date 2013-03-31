@@ -9,7 +9,8 @@ exports.require = function(modules) {
   var app = {};
   var init = this;
 
-  for (name in modules) {
+  for (var i = 0; i < modules.length; i++) {
+    var name = modules[i];
     if (typeof models[name] !== 'undefined') {
       app[name] = require(models[name]);
     } else {
