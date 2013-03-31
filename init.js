@@ -1,4 +1,4 @@
-exports.require = function(modules) {
+exports.init = function(modules) {
   var models = {
     config: './configs/config',
     users: './models/users',
@@ -17,6 +17,8 @@ exports.require = function(modules) {
       app[name] = require(name);
     }
   }
+
+  return app;
 };
 
 //var uploads = require('routes/upload.js');
