@@ -1,4 +1,4 @@
-var config = init.require('config').config.mongo;
+var config = require('../init.js').init(['config']).config.mongo;
 
 var mongodb = require("mongodb");
 var mongoserver = new mongodb.Server(config.host, config.port, config.server_config);
@@ -9,9 +9,9 @@ exports.conn = null;
 
 exports.mongoConnect = function () {
   db_connector.open(function(err, dbs) {
-    conn = dbs;
+    exports.conn = dbs;
   });
 };
 
 
-mongoConnect();
+exports.mongoConnect();
