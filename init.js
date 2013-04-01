@@ -3,6 +3,7 @@ exports.init = function(modules) {
     config: './configs/config',
     users: './models/users',
     achivments: './models/achivments',
+    top: './models/top',
     db: './models/db'
   };
 
