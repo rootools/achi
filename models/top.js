@@ -1,4 +1,4 @@
-var app = require('../init.js').init(['db', 'async']);
+var app = require('../init.js').init(['db', 'async', 'users']);
 
 exports.WorldTop = function(cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
@@ -40,6 +40,42 @@ exports.WorldTop = function(cb) {
       }
       
       app.async.forEach(doc, callback, function(err) {});
+    });
+  });
+}
+
+exports.FriendsTop = function(uid, cb) {
+  var friends_list = [];
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid},{friends: 1, _id: 0}, function(err, doc) {
+      
+      var friends_uid_list = doc.friends;
+      friends_uid_list.push(uid);
+      var handler = friends_uid_list.length;
+      if(handler === 0) {
+        cb([]);
+      }
+
+      function callback(uid) {
+        collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {
+          app.users.GetPointSum(uid, function(points) {
+            profile.points = points;
+            if(profile.name === '') { profile.name = 'anonymous';}
+            friends_list.push(profile);
+            handler--;
+            if(handler === 0) {
+              friends_list.sort(function(a,b) {
+                if (a.points > b.points) {return -1;}
+                if (a.points < b.points) {return 1;}
+                return 0;
+              });
+              cb(friends_list);
+            }
+          });
+        });
+      }
+      
+      app.async.forEach(friends_uid_list, callback, function(err) {});
     });
   });
 }
