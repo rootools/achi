@@ -1,4 +1,6 @@
-var app = require('../init.js').init(['db', 'moment', 'underscore', 'users']);
+var init = require('../init.js');
+var app = init.initModels(['db', 'users']);
+var mod = init.initModules(['moment', 'underscore']);
 
 // FIXME:
 function get_service_icon(cb) {
@@ -45,12 +47,12 @@ exports.getLatest = function (uid, cb) {
           collection.find({aid: {$in: aids}},{_id: 0, description: 0, position: 0}).toArray(function(err, doc){
 
             for(var n in lastAchivArray) {
-              var tmp_data = app.underscore.find(doc, function(re) { return re.aid === lastAchivArray[n].aid });
+              var tmp_data = mod.underscore.find(doc, function(re) { return re.aid === lastAchivArray[n].aid });
               lastAchivArray[n].name = tmp_data.name;
               lastAchivArray[n].icon = tmp_data.icon;
               lastAchivArray[n].points = tmp_data.points;
               lastAchivArray[n].service = tmp_data.service;
-              lastAchivArray[n].time = app.moment(lastAchivArray[n].time).format('DD.MM.YYYY');
+              lastAchivArray[n].time = mod.moment(lastAchivArray[n].time).format('DD.MM.YYYY');
             }
 
             cb(lastAchivArray);
@@ -147,7 +149,7 @@ exports.markedEarned = function (uAch, fAch) {
     for(var r in uAch) {
       if(uAch[r].aid == fAch[i].aid) {
         response[i].earned = true;
-        response[i].time = app.moment(uAch[r].time).format('DD.MM.YYYY');
+        response[i].time = mod.moment(uAch[r].time).format('DD.MM.YYYY');
       }
     }
     if(!response[i].earned) {

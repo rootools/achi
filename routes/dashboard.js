@@ -1,4 +1,6 @@
-var app = require('../init.js').init(['config', 'db', 'achivments', 'users', 'async']);
+var init = require('../init.js');
+var app = init.initModels(['config', 'db', 'achivments', 'users']);
+var mod = init.initModules(['async']);
 
 
 function getServiceInfo(service, cb) {
@@ -32,7 +34,7 @@ exports.service_user = function(req, res) {
 };
 
 function GetServiceList(uid, cb) {
-  app.async.parallel({
+  mod.async.parallel({
     
     info: function(callback) {
       app.db.conn.collection('services_info', function(err, collection) {
@@ -56,7 +58,7 @@ function GetServiceList(uid, cb) {
           var handler = data.length;
           var users_achievements = [];
 
-          var q = app.async.queue(function(task) {
+          var q = mod.async.queue(function(task) {
             var aids = [];
             for(var h in task.achievements) {
               aids.push(task.achievements[h].aid);

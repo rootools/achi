@@ -1,4 +1,6 @@
-var app = require('../init.js').init(['db', 'async', 'users']);
+var init = require('../init.js');
+var app = init.initModels(['db', 'users']);
+var mod = init.initModules(['async']);
 
 function WorldTop(cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
@@ -39,7 +41,7 @@ function WorldTop(cb) {
         });
       }
       
-      app.async.forEach(doc, callback, function(err) {});
+      mod.async.forEach(doc, callback, function(err) {});
     });
   });
 }
@@ -75,7 +77,7 @@ function FriendsTop(uid, cb) {
         });
       }
       
-      app.async.forEach(friends_uid_list, callback, function(err) {});
+      mod.async.forEach(friends_uid_list, callback, function(err) {});
     });
   });
 }

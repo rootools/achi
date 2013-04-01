@@ -1,4 +1,4 @@
-var app = require('../init.js').init(['db']);
+var app = require('../init.js').initModels(['db']);
 
 //get_user_stat
 exports.getStat = function (uid, points, cb) {
