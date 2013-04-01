@@ -1,4 +1,4 @@
-var app = require('../init.js').init(['db', 'moment', 'underscore']);
+var app = require('../init.js').init(['db', 'moment', 'underscore', 'users']);
 
 // FIXME:
 function get_service_icon(cb) {
@@ -15,65 +15,13 @@ exports.getAll = function (uid, cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
       exports.getLatest(doc, function(last) {
-        exports.getPoints(doc, function(points) {
+        app.users.GetPointSum(uid, function(points) {
           cb(doc, last, points);
         });
       });
     });
   });
 };
-
-//getUserAchievementsPoints
-// private
-exports.getPoints = function (data, cb) {
-
-    var pointsList = [];
-    var aids = [];
-
-    for(var i in data) {
-        for(var r in data[i].achievements) {
-            aids.push(data[i].achievements[r].aid);
-        }
-    }
-
-  if(aids.length === 0) {
-    cb([]);
-  }
-
-  app.db.conn.collection('achievements', function(err, collection) {
-    collection.find({aid: {$in: aids}},{service: 1, points:1, _id:0}).toArray(function(err, doc) {
-      var response = {};
-      for(var i in doc) {
-        if(response[doc[i].service] !== undefined) {
-          response[doc[i].service] += doc[i].points;
-        } else {
-          response[doc[i].service] = doc[i].points;             
-        }
-      }
-      cb(response);
-    });
-  });
-}
-
-//getAllAchievementsCount
-// private
-exports.getAllCount = function (cb) {
-    var result = {};
-    app.db.conn.collection('achievements', function(err, collection) {
-        collection.find({},{service: 1, points:1}).toArray(function(err, doc) {
-            for(var i=0;i<doc.length;i++){
-        if(result[doc[i].service+'_count'] !== undefined) {
-                    result[doc[i].service+'_count'] += 1;
-                    result[doc[i].service+'_points'] += doc[i].points;
-                } else {
-                    result[doc[i].service+'_count'] = 1;
-                    result[doc[i].service+'_points'] = doc[i].points;
-                }
-      }
-      cb(result);
-        });
-    });
-}
 
 //getLatestAchievements
 exports.getLatest = function (uid, cb) {
