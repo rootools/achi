@@ -1,15 +1,7 @@
 var init = require('../init.js');
-var app = init.initModels(['config', 'db', 'achivments', 'users']);
+var app = init.initModels(['config', 'db', 'achivments', 'users', 'services']);
 var mod = init.initModules(['async']);
 
-
-function getServiceInfo(service, cb) {
-  app.db.conn.collection('services_info', function(err, collection) {
-    collection.findOne({service:service}, function(err, doc) {  
-      cb(doc);
-    });
-  });
-}
 
 exports.service = function(req, res) {
   if(req.session.auth === false) {
@@ -17,7 +9,7 @@ exports.service = function(req, res) {
   } else {
     app.achivments.getByService(req.params.service, req.session.uid, function(data){
       var service_info_count = app.achivments.getCountFromService(data);
-      getServiceInfo(req.params.service, function(serviceInfo) {
+      app.services.GetServiceInfo(req.params.service, function(serviceInfo) {
         res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
       });
     });
@@ -26,7 +18,7 @@ exports.service = function(req, res) {
 
 exports.service_user = function(req, res) {
   app.achivments.getByService(req.params.service, req.params.id, function(data){
-    getServiceInfo(req.params.service, function(serviceInfo) {
+    app.services.GetServiceInfo(req.params.service, function(serviceInfo) {
       var service_info_count = app.achivments.getCountFromService(data);
       res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
     });

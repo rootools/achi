@@ -3,6 +3,7 @@ exports.initModels = function(models) {
     config: './configs/config',
     users: './models/users',
     achivments: './models/achivments',
+    services: './models/services',
     db: './models/db'
   };
 
