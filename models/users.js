@@ -11,7 +11,7 @@ exports.getStat = function (uid, points, cb) {
       cb(doc);
     });
   });
-}
+};
 
 exports.getPointSum = function(uid, cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
@@ -41,7 +41,7 @@ exports.getPointSum = function(uid, cb) {
 
     });
   });
-}
+};
 
 //GetNameByUid
 exports.getName = function (uid, cb) {
@@ -50,7 +50,7 @@ exports.getName = function (uid, cb) {
       cb(doc.name);
     });
   });
-}
+};
 
 exports.getProfiles = function(uids, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
@@ -58,7 +58,7 @@ exports.getProfiles = function(uids, cb) {
       cb(doc);
     });
   });
-}
+};
 
 //get_user_profile
 exports.getProfile = function (uid, cb) {
@@ -72,7 +72,7 @@ exports.getProfile = function (uid, cb) {
       });
     });
   });
-}
+};
 
 exports.getFriendsUids = function(uid, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
@@ -80,7 +80,7 @@ exports.getFriendsUids = function(uid, cb) {
       cb(doc.friends);
     });
   });
-}
+};
 
 //get_friends_list
 exports.getFriendsList = function (uid, cb) {
@@ -110,7 +110,7 @@ exports.getFriendsList = function (uid, cb) {
       mod.async.forEach(friends_uid_list, callback, function(err) {});
     });
   });
-}
+};
 
 exports.getNewsByUids = function(uids, cb) {
   var result = [];
@@ -161,7 +161,7 @@ exports.getNewsByUids = function(uids, cb) {
 
     });
   });
-}
+};
 
 //get_messages
 exports.getMessages = function (uid, limit, cb) {
@@ -325,7 +325,7 @@ exports.GetServiceList = function(uid, cb) {
     }
     cb(data);
   });
-}
+};
 
 //GetUserAppList
 exports.getAppList = function (uid, cb) {
@@ -334,7 +334,7 @@ exports.getAppList = function (uid, cb) {
       cb(doc);
     });
   });
-}
+};
 
 // upload_profile_photo_from_url
 exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
@@ -368,7 +368,7 @@ exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
     });
 
   });
-}
+};
 
 //UploadIcon
 exports.uploadIcon = function (image, uid, cb) {
@@ -390,4 +390,96 @@ exports.uploadIcon = function (image, uid, cb) {
         })
     });
   });
-}
+};
+
+//testUser
+exports.test = function (email, cb) {
+  app.db.conn.collection('users', function(err,collection) {
+    collection.findOne({email: email}, function(err, doc) {
+      if(doc !== null) { 
+        cb(false);
+      } else {
+        cb(true);
+      }
+    });
+  });  
+};
+
+//send_mail_confirmation
+// non used
+exports.sendMailConfirmation = function (uid, email, access_key) {
+  var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Yandex",
+    auth: {
+        user: "support@achivster.com",
+        pass: "AO4dtGvORf"
+    }
+  });
+
+  var mailOptions = {
+    from: "Achivster Support <support@achivster.com>",
+    to: email,
+    subject: "Hello", 
+    html: '<a href="'+config.site.url+'login/access_key?key='+access_key+'">Подтвердить</a>'
+  };
+
+  smtpTransport.sendMail(mailOptions, function(error, response){
+    if(error){
+      console.log(error);
+    }else{
+      console.log("Message sent: " + response.message);
+    }
+
+    smtpTransport.close();
+  });
+};
+
+//add_default_services
+function addDefaultServices(uid, cb) {
+  app.db.conn.collection('services_connections', function(err, services_connections) {
+    services_connections.insert({uid: uid, service: 'achivster', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+      services_connections.insert({uid: uid, service: 'rare', service_login: '', addtime: new Date().getTime(), valid: true, lastupdate: new Date().getTime() - 1800000}, function(err, doc) {
+        app.db.conn.collection('users_achievements', function(err, users_achievements) {  
+          users_achievements.insert({uid: uid, service: 'achivster', achievements: []}, function(err, doc) {
+            users_achievements.insert({uid: uid, service: 'rare', achievements: []}, function(err, doc) {
+console.log('added');
+              cb();
+            });
+          });
+        });
+      });
+    });
+  });
+};
+
+//registerUser
+exports.register = function (email, pass, req, cb) {
+//            red.get(req.body.invite_key, function(err, uid) {
+//              ext_achivster.main(uid, 'lEv3qJs9EGgPDsg7klYVBIJYWYP8mZ');
+//            });
+  var uid = mod.randomstring.generate(20);
+  var access_key = mod.randomstring.generate(40);
+  app.db.conn.collection('users', function(err,collection) {
+    collection.insert({email: email, password: pass, uid: uid, subscribes : {week: true, news: true}}, function(err, doc) {
+      app.db.conn.collection('users_profile', function(err,profiles) {
+        profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
+          addDefaultServices(uid, function() {
+            ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
+            ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
+              exports.addSession(req, uid, email, function() {
+                cb();
+              });
+          });
+        });
+      });
+    });
+  });
+};
+
+//add_session
+exports.addSession = function (req, uid, email, cb) {
+  req.session.auth = true;
+  req.session.uid = uid;
+  req.session.email = email;
+  cb();
+};

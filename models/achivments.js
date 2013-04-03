@@ -1,15 +1,6 @@
-var app = init.initModels(['db', 'users']);
+var app = init.initModels(['db', 'users', 'services']);
 var mod = init.initModules(['moment', 'underscore', 'randomstring']);
 
-// FIXME:
-function get_service_icon(cb) {
-  app.db.conn.collection('services_info', function(err, collection){
-    collection.find({},{service:1, icon:1, _id: 0}).toArray(function(err, doc){
-      cb(doc);
-    });
-  });
-}
-// /FIXME
 
 //getUserAchievements
 exports.getAll = function (uid, cb) {
@@ -66,7 +57,7 @@ exports.getLatest = function (uid, cb) {
 // private
 // non used
 exports.getStat = function (achivList, allAchievements, points, cb) {
-  get_service_icon(function(service_icon){
+  app.services.getIcons(function(service_icon){
     var achivStat = [];
     for(var i=0;i<achivList.length;i++){
       var tmpObj = {};
@@ -147,7 +138,7 @@ exports.getByService = function (app_id, cb) {
       cb(doc);
     });
   });
-}
+};
 
 //markedEarnedAchievements
 // private
@@ -204,7 +195,7 @@ exports.update = function (name, descr, points, aid, image, cb) {
       });
     }
   });
-}
+};
 
 //UploadIcon
 exports.uploadIcon = function (image, aid, cb) {
@@ -227,4 +218,13 @@ exports.uploadIcon = function (image, aid, cb) {
         })
     });
   });
-}
+};
+
+//achivname
+exports.achivName = function (cb) {
+  db.collection('achievements', function(err, collection) {
+    collection.find({$where: "this.description.length < 1"},{aid: 1, name: 1, _id: 0, description: 1, service: 1}).toArray(function(err, doc) {
+      cb(doc);
+    });
+  });
+};

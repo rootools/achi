@@ -1,4 +1,4 @@
-var app = init.initModels(['config', 'users', 'db']);
+var app = init.initModels(['config', 'users', 'db', 'achivments']);
 var mod = init.initModules(['randomstring']);
 
 

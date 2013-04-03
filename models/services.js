@@ -8,6 +8,15 @@ exports.getServiceInfo = function(service, cb) {
   });
 }
 
+//get_service_icon
+exports.getIcons = function (cb) {
+  app.db.conn.collection('services_info', function(err, collection){
+    collection.find({},{service:1, icon:1, _id: 0}).toArray(function(err, doc){
+      cb(doc);
+    });
+  });
+}
+
 //add_service
 exports.add = function (session, account, service, cb) {
   testService(session.uid, service, function(check, is_first) {
