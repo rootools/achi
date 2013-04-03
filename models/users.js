@@ -1,5 +1,5 @@
 var app = init.initModels(['db', 'achivments', 'files']);
-var mod = init.initModules(['underscore', 'moment', 'async']);
+var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer']);
 
 mod.moment.lang('ru');
 
@@ -9,6 +9,19 @@ exports.getStat = function (uid, points, cb) {
     collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1, friends: 1}, function(err, doc) {
       doc.points = points;
       cb(doc);
+    });
+  });
+};
+
+//getUserAchievements
+exports.getAchievements = function (uid, cb) {
+  app.db.conn.collection('users_achievements', function(err, collection) {
+    collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
+      exports.getLatest(doc, function(last) {
+        app.users.getPointSum(uid, function(points) {
+          cb(doc, last, points);
+        });
+      });
     });
   });
 };
@@ -399,7 +412,7 @@ exports.test = function (email, cb) {
       if(doc !== null) { 
         cb(false);
       } else {
-        cb(true);
+        cb(true, doc.uid);
       }
     });
   });  

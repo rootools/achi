@@ -1,32 +1,18 @@
-var config = require('../configs/config.js');
+var app = init.initModels(['users']);
+var mod = init.initModules(['randomstring', 'redis', 'nodemailer', 'fs']);
+
 var locale = require('../configs/locale/main.js');
-var dashboard = require('./dashboard.js');
 var ext_achivster = require('../external/achivster.js');
-var db;
 
-/*var redis = require("redis"),
-    red = redis.createClient();
-    red.select(6);
-*/
-function mongoConnect() {
-  var mongodb = require("mongodb"),
-    mongoserver = new mongodb.Server(config.mongo.host, config.mongo.port, config.mongo.server_config),
-    db_connector = new mongodb.Db(config.mongo.db, mongoserver, config.mongo.connector_config);
-
-  db_connector.open(function(err, dbs) {
-    db = dbs;
-  });
-}
-
-mongoConnect();
+var functions = {}
 
 function routing(req, res) {
   if(req.session.auth === true) {
-    try {
-      var runFunc = eval(req.body.action);
-      runFunc(req, res);
-    } catch(e) {
-      console.log(e + 'Error Method');
+    var func_name = req.body.action;
+    if (typeof functions[func_name] == 'function') {
+      functions[func_name](req, res);
+    } else {
+      console.log('Error Method ' + func_name);
       res.end('');
     }
   } else {
@@ -34,37 +20,7 @@ function routing(req, res) {
   }
 }
 
-/*
-// Проверь используется ли
-function addService(req, res) {
-  testService(req.session.uid, req.body.service, function(check) {
-    if(check) {
-      db.collection('services_connections', function(err,collection) {
-        collection.insert({uid: req.session.uid, service:req.body.service, service_login: req.body.account, addtime:new Date().getTime(), valid: true, lastupdate:''}, function(err, doc) {
-          res.end('Database Error');
-        });
-      });
-    } else {
-      res.end('Allready in DB');
-    }
-  });
-  res.end('');
-}
-
-function testService(uid, service, cb) {
-  db.collection('services_connections', function(err,collection) {
-    collection.findOne({uid: uid, service:service}, function(err, doc) {
-      if(err === null && doc === null) {
-        cb(true);
-      } else {
-        cb(false);
-      }
-    });
-  });
-}
-*/
-
-function getAchievementsList(req, res) {
+functions.getAchievementsList = function (req, res) {
   db.collection('achievements', function(err,collection) {
     collection.find({service:req.body.service}).sort({position: 1}).toArray(function(err, data) {
       res.end(JSON.stringify(data));
@@ -72,7 +28,7 @@ function getAchievementsList(req, res) {
   });
 }
 
-function userAchievementsList(req, res) {
+functions.userAchievementsList = function (req, res) {
   db.collection('users_achievements', function(err,collection) {
     collection.findOne({uid:req.session.uid, service:req.body.service},{achievements:1},function(err ,data) {
       res.end(JSON.stringify(data));
@@ -80,7 +36,7 @@ function userAchievementsList(req, res) {
   });
 }
 
-function find_by_email(req, res) {
+functions.find_by_email = function (req, res) {
   var email = req.body.email;
   if(email === req.session.email) {
     res.end(JSON.stringify({error: 'It`s You!'}));
@@ -98,7 +54,7 @@ function find_by_email(req, res) {
                 res.end(JSON.stringify({error: 'Allready your friend'}));
               }
             }
-            dashboard.getUserAchievements(doc.uid, function(smth, last, data) {
+            app.users.getAchievements(doc.uid, function(smth, last, data) {
               if(last.length === 0) {
                 doc.last = '';
               } else {
@@ -122,7 +78,7 @@ function find_by_email(req, res) {
   });
 }
 
-function get_name_by_uid(uid, cb) {
+functions.get_name_by_uid = function (uid, cb) {
   db.collection('users_profile', function(err,collection) {
     collection.findOne({uid:uid},{name: 1, _id: 0}, function(err, doc) {
       cb(doc.name);
@@ -130,7 +86,7 @@ function get_name_by_uid(uid, cb) {
   });
 }
 
-function send_friendship_request(req, res) {
+functions.send_friendship_request = function (req, res) {
   var target_uid = req.body.uid;
   var owner_uid = req.session.uid;
   get_name_by_uid(owner_uid, function(name) {
@@ -152,7 +108,7 @@ function send_friendship_request(req, res) {
   });
 }
 
-function friendship_accept_or_reject(req, res) {
+functions.friendship_accept_or_reject = function (req, res) {
   var command = req.body.command;
   var owner_uid = req.body.owner_uid;
   var target_uid = req.body.target_uid;
@@ -172,7 +128,7 @@ function friendship_accept_or_reject(req, res) {
   res.end(JSON.stringify({}));
 }
 
-function remove_friendship(req, res) {
+functions.remove_friendship = function (req, res) {
   var uid = req.session.uid;
   var friends_uid = req.body.friends_uid;
   remove_friend_by_uid(uid, friends_uid);
@@ -180,7 +136,7 @@ function remove_friendship(req, res) {
   res.end(JSON.stringify({}));
 }
 
-function remove_friend_by_uid(uid, friends_uid) {
+functions.remove_friend_by_uid = function (uid, friends_uid) {
   db.collection('users_profile', function(err,collection) {
     collection.findOne({uid: uid},{friends: 1, _id:0}, function(err, doc) {
       var friends_list = doc.friends;
@@ -195,7 +151,7 @@ function remove_friend_by_uid(uid, friends_uid) {
   });
 }
 
-function restore_friendship(req, res) {
+functions.restore_friendship = function (req, res) {
   var uid = req.session.uid;
   var friends_uid = req.body.friends_uid;
   db.collection('users_profile', function(err,collection) {
@@ -205,7 +161,7 @@ function restore_friendship(req, res) {
   });
 }
 
-function get_new_notifications(req, res) {
+functions.get_new_notifications = function (req, res) {
   db.collection('messages', function(err,collection) {
     collection.find({target_uid: req.session.uid}).toArray(function(err, data){
       res.end(data.length+'');
@@ -213,7 +169,7 @@ function get_new_notifications(req, res) {
   });
 }
 
-function dev_save_achiv_list(req, res) {
+functions.dev_save_achiv_list = function (req, res) {
   var list = req.body.list;
   db.collection('achievements', function(err,collection) {
     for(var i in list) {

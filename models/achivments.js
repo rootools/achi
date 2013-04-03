@@ -2,19 +2,6 @@ var app = init.initModels(['db', 'users', 'services']);
 var mod = init.initModules(['moment', 'underscore', 'randomstring']);
 
 
-//getUserAchievements
-exports.getAll = function (uid, cb) {
-  app.db.conn.collection('users_achievements', function(err, collection) {
-    collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
-      exports.getLatest(doc, function(last) {
-        app.users.getPointSum(uid, function(points) {
-          cb(doc, last, points);
-        });
-      });
-    });
-  });
-};
-
 //getLatestAchievements
 exports.getLatest = function (uid, cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {

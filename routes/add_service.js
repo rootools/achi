@@ -3,7 +3,7 @@ var mod = init.initModules(['https', 'querystring', 'request', 'oauth']);
 
 var ext_achivster = require('../external/achivster.js');
 
-var oauth = app.oauth.OAuth;
+var oauth = mod.oauth.OAuth;
 
 var twitterOA = new oauth(
   'https://api.twitter.com/oauth/request_token',
@@ -76,7 +76,7 @@ exports.facebook = function(req, res) {
       });
 
       response.on('end', function() {
-        var data = querystringmod..parse(str).access_token;
+        var data = mod.querystring.parse(str).access_token;
         app.services.add(req.session, data, 'facebook', function(){
           res.redirect(app.config.site.url+'dashboard');
         });

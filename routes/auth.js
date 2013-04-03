@@ -4,7 +4,7 @@ var mod = init.initModules(['randomstring', 'redis']);
 var locale = require('../configs/locale/main.js');
 var ext_achivster = require('../external/achivster.js');
 
-var red = app.redis.createClient();
+var red = mod.redis.createClient();
     red.select(6);
 
 exports.login = function(req, res) {

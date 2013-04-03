@@ -2,8 +2,9 @@ var config = init.initModels(['config']).config.mongo;
 
 var mongodb = require("mongodb");
 var mongoserver = new mongodb.Server(config.host, config.port, config.server_config);
+var mongoserver_api = new mongodb.Server(config.host, config.port, config.server_config);
 var db_connector = new mongodb.Db(config.db, mongoserver, config.connector_config);
-var db_connector_api = new mongodb.Db(config.db_api, mongoserver, config.connector_config);
+var db_connector_api = new mongodb.Db(config.db_api, mongoserver_api, config.connector_config);
 
 
 exports.conn = null;
