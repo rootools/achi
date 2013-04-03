@@ -5,7 +5,8 @@ exports.initModels = function(models) {
     achivments: './models/achivments',
     services: './models/services',
     mails: './models/mails',
-    db: './models/db'
+    db: './models/db',
+    files: './models/files'
   };
 
   var initModels = {};
