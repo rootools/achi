@@ -50,7 +50,7 @@ app.configure(function(){
   });
 
   app.use(app.router);
-  app.use(express.static(config.dirs.public)));
+  app.use(express.static(config.dirs.public));
 });
 
 app.configure('development', function(){
