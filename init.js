@@ -1,5 +1,7 @@
+var initedModels = {};
+var initedModules = {};
+
 exports.initModels = function(models) {
-  var initedModels = {};
   var modelsConfig = {
     config: './configs/config',
     users: './models/users',
@@ -28,7 +30,6 @@ exports.initModels = function(models) {
 };
 
 exports.initModules = function(modules) {
-  var initedModules = {};
   var initModules = {};
 
   for (var i = 0; i < modules.length; i++) {
