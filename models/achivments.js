@@ -159,3 +159,11 @@ exports.markedEarned = function (uAch, fAch) {
   }
   return response;
 };
+
+exports.GetAchievementsInfoByAids = function(aids, cb) {
+  app.db.conn.collection('achievements', function(err, collection) {
+    collection.find({aid: {$in: aids}}, {_id: 0, position: 0}).toArray(function(err, doc) {
+      cb(doc);
+    });
+  });
+}

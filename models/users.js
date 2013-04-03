@@ -39,3 +39,19 @@ exports.GetPointSum = function(uid, cb) {
     });
   });
 }
+
+exports.GetUsersProfiles = function(uids, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, uid: 1}).toArray(function(err, doc) {
+      cb(doc);
+    });
+  });
+}
+
+exports.GetUsersFriendsUids = function(uid, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid}, {_id:0, friends: 1}, function(err, doc) {
+      cb(doc.friends);
+    });
+  });
+}
