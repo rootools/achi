@@ -1,5 +1,6 @@
-var app = require('../init.js').initModels(['db', 'achivments', 'users']);
-var mod = require('../init.js').initModules(['underscore', 'moment', 'async']);
+var init = require('../init.js');
+var app = init.initModels(['db', 'achivments', 'files']);
+var mod = init.initModules(['underscore', 'moment', 'async']);
 
 mod.moment.lang('ru');
 
@@ -13,7 +14,7 @@ exports.getStat = function (uid, points, cb) {
   });
 }
 
-exports.GetPointSum = function(uid, cb) {
+exports.getPointSum = function(uid, cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
     collection.find({uid: uid},{achievements: 1, _id: 0}).toArray(function(err, doc) {
 
@@ -43,7 +44,16 @@ exports.GetPointSum = function(uid, cb) {
   });
 }
 
-exports.GetUsersProfiles = function(uids, cb) {
+//GetNameByUid
+exports.getName = function (uid, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid},{name: 1, _id: 0}, function(err, doc) {
+      cb(doc.name);
+    });
+  });
+}
+
+exports.getProfiles = function(uids, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
     collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, uid: 1}).toArray(function(err, doc) {
       cb(doc);
@@ -51,7 +61,7 @@ exports.GetUsersProfiles = function(uids, cb) {
   });
 }
 
-exports.GetUsersFriendsUids = function(uid, cb) {
+exports.getFriendsUids = function(uid, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
     collection.findOne({uid: uid}, {_id:0, friends: 1}, function(err, doc) {
       cb(doc.friends);
@@ -59,7 +69,35 @@ exports.GetUsersFriendsUids = function(uid, cb) {
   });
 }
 
-exports.GetUsersNewsByUids = function(uids, cb) {
+//get_friends_list
+exports.getFriendsList = function (uid, cb) {
+  var friends_list = [];
+  exports.getFriendsUids(uid, function(friends_uid_list) {
+      
+    var handler = friends_uid_list.length;
+    if(handler === 0) {
+      cb([]);
+    }      
+    
+    function callback(uid) {
+      collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {
+        exports.getPointSum(uid, function(points) {
+          profile.points = points;
+          if(profile.name === '') { profile.name = 'anonymous'};
+          friends_list.push(profile);
+          handler--;
+          if(handler === 0) {
+            cb(friends_list);
+          }
+        });
+      });
+    }
+    
+    mod.async.forEach(friends_uid_list, callback, function(err) {});
+  });
+}
+
+exports.getNewsByUids = function(uids, cb) {
   var result = [];
   var stamp = 0;
   app.db.conn.collection('users_achievements', function(err, collection) {
@@ -94,7 +132,7 @@ exports.GetUsersNewsByUids = function(uids, cb) {
           var duration = new Date().getTime() - result[k].time;
           result[k].time = mod.moment.duration(duration, "milliseconds").humanize();
         }
-        app.users.GetUsersProfiles(uids, function(users) {
+        exports.getProfiles(uids, function(users) {
           for(var z in result) {
             var u = mod.underscore.find(users, function(re) { return re.uid === result[z].uid });
             result[z].name = u.name;
@@ -106,6 +144,37 @@ exports.GetUsersNewsByUids = function(uids, cb) {
 
       });
 
+    });
+  });
+}
+
+//get_messages
+exports.getMessages = function (uid, limit, cb) {
+  var messages = [];
+  app.db.conn.collection('messages', function(err, collection) {
+    collection.find({target_uid: uid}).toArray(function(err, doc) {
+      
+    var handler = doc.length;
+    if(handler === 0) {
+      cb([]);
+    }
+    
+    function callback(message) {
+      app.db.conn.collection('users_profile', function(err, collection) {
+        collection.findOne({uid: message.owner_uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
+          message.owner_name = doc.name;
+          message.time = mod.moment(message.time).format('DD.MM.YYYY hh:mm');
+          message.photo = doc.photo;
+          messages.push(message);
+          handler--;
+          if(handler === 0) {
+            cb(messages);
+          }
+        });
+      });
+    }    
+    
+    mod.async.forEach(doc, callback, function(err) {});
     });
   });
 }
@@ -240,5 +309,61 @@ exports.GetServiceList = function(uid, cb) {
       }
     }
     cb(data);
+  });
+}
+
+// upload_profile_photo_from_url
+exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
+  var path = app.config.dirs.profilePhotos+'/'+uid+'.jpg';
+
+  app.files.downloadFromUrl(url, path, function (params) {
+
+    params.quality = 90;
+    params.width = 194;
+    params.height = 194;
+    params.fill = true;
+
+    app.files.convertImage(params, function () {
+      app.files.createThumbnail(params, function () {
+
+        app.db.collection('users_profile', function(err,profile) {
+          profile.findOne({uid: uid}, function(err, doc) {
+            if(doc === null) {
+              profile.insert({uid: uid, photo: app.config.dirs.profilePhotos+'/'+uid+'.jpg'}, function(err, doc) {
+                cb({});
+              });
+            } else {
+              profile.update({uid: uid},{$set: {photo: app.config.dirs.profilePhotos+'/'+uid+'.jpg'}}, function(err, doc) {
+                cb({});
+              });
+            }
+          });
+        });
+
+      });
+    });
+
+  });
+}
+
+//UploadIcon
+exports.uploadIcon = function (image, uid, cb) {
+  var file = image.path.split('/');
+  file = file[file.length-1];
+
+  params = {
+    path: app.config.dirs.uploads+'/'+file,
+    quality: 90,
+    width: 194,
+    height: 194,
+    fill: true
+  }
+
+  app.files.convertImage(params, function () {
+      app.files.createThumbnail(params, function () {
+        fs.rename(params.path, app.config.dirs.profilePhotos+'/'+uid+'.jpg', function() {
+          cb();
+        })
+    });
   });
 }

@@ -60,7 +60,7 @@ function FriendsTop(uid, cb) {
 
       function callback(uid) {
         collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {
-          app.users.GetPointSum(uid, function(points) {
+          app.users.getPointSum(uid, function(points) {
             profile.points = points;
             if(profile.name === '') { profile.name = 'anonymous';}
             friends_list.push(profile);

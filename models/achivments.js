@@ -17,7 +17,7 @@ exports.getAll = function (uid, cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
     collection.find({uid:uid},{achievements:1, service:1}).toArray(function(err, doc) {
       exports.getLatest(doc, function(last) {
-        app.users.GetPointSum(uid, function(points) {
+        app.users.getPointSum(uid, function(points) {
           cb(doc, last, points);
         });
       });

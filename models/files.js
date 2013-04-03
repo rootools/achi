@@ -1,6 +1,6 @@
 var init = require('../init.js');
 var app = init.initModels(['config']);
-var mod = init.initModules(['fs', 'easyimg', 'url', 'http', 'extend']);
+var mod = init.initModules(['fs', 'easyimage', 'url', 'http', 'extend']);
 
 //upload_profile_photo_from_url
 exports.downloadFromUrl = function (url, path, cb) {
@@ -49,7 +49,7 @@ exports.convertImage = function (params, cb) {
   };
   params = mod.extend({}, defaultParams, params);
 
-  mod.easyimg.convert(params, function(err, stdout, stderr) {
+  mod.easyimage.convert(params, function(err, stdout, stderr) {
     return cb(params);
   });
 }
@@ -69,7 +69,7 @@ exports.createThumbnail = function (params, cb) {
   };
   params = mod.extend({}, defaultParams, params);
 
-  mod.easyimg.thumbnail(params, function(err, stdout, stderr) {
+  mod.easyimage.thumbnail(params, function(err, stdout, stderr) {
     return cb(params);
   });
 }
