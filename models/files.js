@@ -1,4 +1,3 @@
-var init = require('../init.js');
 var app = init.initModels(['config']);
 var mod = init.initModules(['fs', 'easyimage', 'url', 'http', 'extend']);
 

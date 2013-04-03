@@ -1,4 +1,4 @@
-var app = require('../init.js').initModels(['config', 'db']);
+var app = init.initModels(['config', 'db']);
 
 exports.GetServiceInfo = function(service, cb) {
   app.db.conn.collection('services_info', function(err, collection) {

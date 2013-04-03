@@ -1,4 +1,3 @@
-var init = require('../init.js');
 var app = init.initModels(['db', 'config', 'users', 'files']);
 var mod = init.initModules(['async', 'moment', 'randomstring', 'nodemailer', 'fs', 'redis']);
 

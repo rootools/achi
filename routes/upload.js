@@ -1,4 +1,3 @@
-var init = require('../init.js');
 var app = init.initModels(['users']);
 
 exports.main = function(req, res) {

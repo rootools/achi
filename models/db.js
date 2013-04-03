@@ -1,4 +1,4 @@
-var config = require('../init.js').initModels(['config']).config.mongo;
+var config = init.initModels(['config']).config.mongo;
 
 var mongodb = require("mongodb");
 var mongoserver = new mongodb.Server(config.host, config.port, config.server_config);

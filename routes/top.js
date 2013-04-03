@@ -1,4 +1,3 @@
-var init = require('../init.js');
 var app = init.initModels(['db', 'users']);
 var mod = init.initModules(['async']);
 

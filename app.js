@@ -1,3 +1,4 @@
+init = require('./init.js');
 rootdir = __dirname;
 var config = require('./configs/config.js');
 
