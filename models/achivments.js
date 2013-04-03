@@ -122,7 +122,7 @@ exports.getByService = function (service, uid, cb) {
     collection.findOne({uid:uid, service:service},{achievements:1}, function(err, udoc) {
       app.db.conn.collection('achievements', function(err, collection) {
         collection.find({service:service},{sort: 'position'}).toArray(function(err, doc) {
-          var response = exports.markedEarned(udoc.achievements, doc);
+          var response = MarkedEarned(udoc.achievements, doc);
           // Hide rare non-earned achivs
           if(service === 'rare') {
             var newresp = [];
@@ -143,7 +143,7 @@ exports.getByService = function (service, uid, cb) {
 
 //markedEarnedAchievements
 // private
-exports.markedEarned = function (uAch, fAch) {
+function MarkedEarned(uAch, fAch) {
   var response = fAch;
   for(var i in fAch) {
     for(var r in uAch) {

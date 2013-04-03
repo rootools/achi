@@ -3,6 +3,25 @@ var app = init.initModels(['config', 'db', 'achivments', 'users', 'services']);
 var mod = init.initModules(['async']);
 
 
+exports.main = function(req, res) {
+  if(req.session.auth === false) {
+    res.redirect(app.config.site.url);
+  } else {
+    var uid = req.session.uid;
+    app.users.GetServiceList(uid, function(achivList) {
+      var sum = 0;
+      for(var i in achivList) {
+        sum += achivList[i].earnedPoints;
+      }
+      app.users.getStat(uid, sum, function(user_stat) {
+        app.achivments.getLatest(uid, function(last) {
+          res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, lastAchivArray: last});
+        });
+      });  
+    });
+  }
+};
+
 exports.service = function(req, res) {
   if(req.session.auth === false) {
     res.redirect(app.config.site.url);
@@ -16,6 +35,34 @@ exports.service = function(req, res) {
   }
 };
 
+exports.user = function(req, res) {
+  var uid = req.params.id;
+  app.db.conn.collection('users', function(err, collection) {
+    collection.findOne({uid:uid}, function(err, doc) {
+      if(doc === null) {
+        res.end();  
+      } else {
+        app.users.GetServiceList(uid, function(achivList) {
+          var sum = 0;
+          for(var i in achivList) {
+            sum += achivList[i].earnedPoints;
+          }
+          achivList = FixToTargetUid(uid, achivList);
+          app.users.getStat(uid, sum, function(user_stat) {
+            app.achivments.getLatest(uid, function(last) {
+              var friends_flag;
+              if(req.session.uid === uid) { friends_flag = false } else {
+                friends_flag = CheckFriendships(req.session.uid, user_stat.friends);
+              }
+              res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, target_uid: uid, lastAchivArray: last, friends_flag: friends_flag});
+            });
+          });
+        });  
+      }
+    });
+  });
+};
+
 exports.service_user = function(req, res) {
   app.achivments.getByService(req.params.service, req.params.id, function(data){
     app.services.GetServiceInfo(req.params.service, function(serviceInfo) {
@@ -24,139 +71,6 @@ exports.service_user = function(req, res) {
     });
   });
 };
-
-function GetServiceList(uid, cb) {
-  mod.async.parallel({
-    
-    info: function(callback) {
-      app.db.conn.collection('services_info', function(err, collection) {
-        collection.find({type: 'internal'},{_id:0}).toArray(function(err, services_info) {
-          callback(null, services_info);
-        });
-      });
-    },
-    
-    connections: function(callback) {
-      app.db.conn.collection('services_connections', function(err, collection) {
-        collection.find({uid: uid},{valid: 1, service: 1, _id:0}).toArray(function(err, services_connections) {
-          callback(null, services_connections);
-        });
-      });
-    },
-    
-    users_achievements: function(callback) {
-      app.db.conn.collection('users_achievements', function(err, collection) {
-        collection.find({uid: uid},{service: 1, achievements: 1, _id:0}).toArray(function(err, data) {
-          var handler = data.length;
-          var users_achievements = [];
-
-          var q = mod.async.queue(function(task) {
-            var aids = [];
-            for(var h in task.achievements) {
-              aids.push(task.achievements[h].aid);
-            }
-            
-            app.db.conn.collection('achievements', function(err, collection) {
-              collection.find({aid: {$in: aids}},{points: 1, _id:0}).toArray(function(err, doc) {
-                
-                var sum = 0;
-                for(var s in doc) {
-                  sum += doc[s].points;
-                }
-                task.points = sum;
-                users_achievements.push(task);
-                handler--;
-                if(handler === 0) {
-                  callback(null, users_achievements);
-                }
-                
-              });
-            });
-          }, data.length);
-
-          for(var g in data) {
-            q.push(data[g], function(err) {});
-          }
-        });
-      });
-    },
-    achievements: function(callback) {
-      app.db.conn.collection('achievements', function(err, collection) {
-        collection.aggregate({$group: {_id: "$service", points: {$sum: "$points"}, count: {$sum: 1}}}, function(err, doc) {
-          callback(null, doc);
-        });
-      });
-    },
-    external: function(callback) {
-      app.db.conn.collection('services_connections', function(err, collection) {
-        collection.find({uid: uid, type: 'external'},{_id:0, app_id: 1}).toArray(function(err, services_connections) {
-          var app_ids = [];
-          for(var i in services_connections) {
-            app_ids.push(services_connections[i].app_id);
-          }
-          app.db.conn.collection('services_info', function(err, collection) {
-            collection.find({app_id: {$in: app_ids}},{_id: 0}).toArray(function(err, doc) {
-              callback(null, doc);    
-            });
-          });
-          
-        });
-      });
-    }
-  }, function(err, result) {
-    var data = result.info;
-    
-    // Add external services
-    for(var n in result.external) {
-      data.push(result.external[n]);
-    }
-
-    for(var i in data) {
-      data[i].valid = false;
-      data[i].earnedPoints = 0;
-      data[i].earned = 0;
-      for(var u in result.users_achievements) {
-        if(data[i].service === result.users_achievements[u].service) {
-          data[i].earned = result.users_achievements[u].achievements.length;
-          data[i].earnedPoints = result.users_achievements[u].points;
-        }
-      }
-      for(var c in result.connections) {
-        if(data[i].service === result.connections[c].service) {
-          data[i].valid = result.connections[c].valid;
-        }
-      }
-      for(var a in result.achievements) {
-        if(data[i].service === result.achievements[a]._id) {
-          data[i].fullPoints = result.achievements[a].points;
-          data[i].full = result.achievements[a].count;
-        }
-      }
-      
-      if(data[i].valid === true) {
-        data[i].url = '/dashboard/'+data[i].service;
-      } else {
-        data[i].url = '/add_service/'+data[i].service;
-      }
-    }
-
-    data.sort(function(a, b) {
-      if(a.valid) { return -1;}
-      if(!a.valid) { return 1;}
-    });
-
-    for(var i in data) {
-      if(data[i].service === 'rare' && data[i].earned === 0) {
-        data.splice(i, 1);
-      } else if(data[i].service === 'rare') {
-        var rare = data.splice(i,1);
-        data.push(rare[0]);
-        break;
-      }
-    }
-    cb(data);
-  });
-}
 
 function FixToTargetUid(uid, data) {
   for(var i in data) {
@@ -179,52 +93,3 @@ function CheckFriendships(uid, friends) {
   }
   return flag;
 }
-
-exports.main = function(req, res) {
-  if(req.session.auth === false) {
-    res.redirect(app.config.site.url);
-  } else {
-    var uid = req.session.uid;
-    GetServiceList(uid, function(achivList) {
-      var sum = 0;
-      for(var i in achivList) {
-        sum += achivList[i].earnedPoints;
-      }
-      app.users.getStat(uid, sum, function(user_stat) {
-        app.achivments.getLatest(uid, function(last) {
-          res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, lastAchivArray: last});
-        });
-      });  
-    });
-  }
-};
-
-exports.user = function(req, res) {
-  var uid = req.params.id;
-  app.db.conn.collection('users', function(err, collection) {
-    collection.findOne({uid:uid}, function(err, doc) {
-      if(doc === null) {
-        res.end();  
-      } else {
-        GetServiceList(uid, function(achivList) {
-          var sum = 0;
-          for(var i in achivList) {
-            sum += achivList[i].earnedPoints;
-          }
-          achivList = FixToTargetUid(uid, achivList);
-          app.users.getStat(uid, sum, function(user_stat) {
-            app.achivments.getLatest(uid, function(last) {
-              var friends_flag;
-              if(req.session.uid === uid) { friends_flag = false } else {
-                friends_flag = CheckFriendships(req.session.uid, user_stat.friends);
-              }
-              res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, target_uid: uid, lastAchivArray: last, friends_flag: friends_flag});
-            });
-          });
-        });  
-      }
-    });
-  });
-};
-
-exports.getUserAchievements = app.achivments.getAll;

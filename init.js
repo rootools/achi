@@ -4,6 +4,7 @@ exports.initModels = function(models) {
     users: './models/users',
     achivments: './models/achivments',
     services: './models/services',
+    mails: './models/mails',
     db: './models/db'
   };
 
