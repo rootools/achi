@@ -327,9 +327,18 @@ exports.GetServiceList = function(uid, cb) {
   });
 }
 
+//GetUserAppList
+exports.getAppList = function (uid, cb) {
+  db_api.collection('applications', function(err, collection) {
+    collection.find({uid: uid}).toArray(function(err, doc) {
+      cb(doc);
+    });
+  });
+}
+
 // upload_profile_photo_from_url
 exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
-  var path = app.config.dirs.profilePhotos+'/'+uid+'.jpg';
+  var path = app.config.dirs.profileImages+'/'+uid+'.jpg';
 
   app.files.downloadFromUrl(url, path, function (params) {
 
@@ -344,11 +353,11 @@ exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
         app.db.collection('users_profile', function(err,profile) {
           profile.findOne({uid: uid}, function(err, doc) {
             if(doc === null) {
-              profile.insert({uid: uid, photo: app.config.dirs.profilePhotos+'/'+uid+'.jpg'}, function(err, doc) {
+              profile.insert({uid: uid, photo: app.config.dirs.profileImages+'/'+uid+'.jpg'}, function(err, doc) {
                 cb({});
               });
             } else {
-              profile.update({uid: uid},{$set: {photo: app.config.dirs.profilePhotos+'/'+uid+'.jpg'}}, function(err, doc) {
+              profile.update({uid: uid},{$set: {photo: app.config.dirs.profileImages+'/'+uid+'.jpg'}}, function(err, doc) {
                 cb({});
               });
             }
@@ -376,7 +385,7 @@ exports.uploadIcon = function (image, uid, cb) {
 
   app.files.convertImage(params, function () {
       app.files.createThumbnail(params, function () {
-        fs.rename(params.path, app.config.dirs.profilePhotos+'/'+uid+'.jpg', function() {
+        fs.rename(params.path, app.config.dirs.profileImages+'/'+uid+'.jpg', function() {
           cb();
         })
     });

@@ -5,6 +5,7 @@ exports.site = {
 
 exports.mongo = {
   db: 'achi',
+  db_api: 'achi-api',
   port: 27017,
   host: '127.0.0.1',
   server_config: {
@@ -25,5 +26,7 @@ exports.dirs = {
   uploads: rootdir+'/upload',
   views: rootdir+'/views',
   public: rootdir+'/public',
+  profileImages: rootdir+'/public/images/users_photo',
+  achievementImages: rootdir+'/public/images/achievements',
   locale: rootdir+'/configs/locale'
 }

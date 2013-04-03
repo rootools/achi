@@ -25,9 +25,9 @@ exports.service = function(req, res) {
   if(req.session.auth === false) {
     res.redirect(app.config.site.url);
   } else {
-    app.achivments.getByService(req.params.service, req.session.uid, function(data){
+    app.achivments.getByServiceUser(req.params.service, req.session.uid, function(data){
       var service_info_count = app.achivments.getCountFromService(data);
-      app.services.GetServiceInfo(req.params.service, function(serviceInfo) {
+      app.services.getServiceInfo(req.params.service, function(serviceInfo) {
         res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
       });
     });
@@ -63,8 +63,8 @@ exports.user = function(req, res) {
 };
 
 exports.service_user = function(req, res) {
-  app.achivments.getByService(req.params.service, req.params.id, function(data){
-    app.services.GetServiceInfo(req.params.service, function(serviceInfo) {
+  app.achivments.getByServiceUser(req.params.service, req.params.id, function(data){
+    app.services.getServiceInfo(req.params.service, function(serviceInfo) {
       var service_info_count = app.achivments.getCountFromService(data);
       res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
     });

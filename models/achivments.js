@@ -1,5 +1,5 @@
 var app = init.initModels(['db', 'users']);
-var mod = init.initModules(['moment', 'underscore']);
+var mod = init.initModules(['moment', 'underscore', 'randomstring']);
 
 // FIXME:
 function get_service_icon(cb) {
@@ -116,7 +116,7 @@ exports.getCountFromService = function (data) {
 };
 
 //getUserAchievementsByService
-exports.getByService = function (service, uid, cb) {
+exports.getByServiceUser = function (service, uid, cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
     collection.findOne({uid:uid, service:service},{achievements:1}, function(err, udoc) {
       app.db.conn.collection('achievements', function(err, collection) {
@@ -139,6 +139,15 @@ exports.getByService = function (service, uid, cb) {
     });
   });
 };
+
+//GetAchivmentsByService
+exports.getByService = function (app_id, cb) {
+  app.db.conn.collection('achievements', function(err, collection) {
+    collection.find({app_id: app_id}, {sort: 'position'}).toArray(function(err, doc){
+      cb(doc);
+    });
+  });
+}
 
 //markedEarnedAchievements
 // private
@@ -163,6 +172,59 @@ exports.GetAchievementsInfoByAids = function(aids, cb) {
   app.db.conn.collection('achievements', function(err, collection) {
     collection.find({aid: {$in: aids}}, {_id: 0, position: 0}).toArray(function(err, doc) {
       cb(doc);
+    });
+  });
+};
+
+//WriteNewAchiv
+exports.new = function (name, descr, points, app_id, cb) {
+  var aid = mod.randomstring.generate(30);
+  app.db.conn_api.collection('applications', function(err, collection) {
+    collection.findOne({app_id: app_id}, {_id: 0, name: 1}, function(err, doc) {
+      var serv_name = doc.name;
+      app.db.conn.collection('achievements', function(err, collection) {
+        collection.insert({aid: aid, name: name, description: descr, icon: '/images/label.png', points: points, service: serv_name, app_id: app_id, position: 1}, function(err, collection){
+          cb();
+        });
+      });
+    });
+  });
+};
+
+//UpdateAchiv
+exports.update = function (name, descr, points, aid, image, cb) {
+  app.db.conn.collection('achievements', function(err, collection) {
+    if(image) {
+      collection.update({aid: aid},{$set: {name: name, description: descr, points: points, icon: image}}, function(err, collection){    
+        cb();
+      });
+    } else {
+      collection.update({aid: aid},{$set: {name: name, description: descr, points: points}}, function(err, collection){    
+        cb();
+      });
+    }
+  });
+}
+
+//UploadIcon
+exports.uploadIcon = function (image, aid, cb) {
+  var path = app.config.dirs.achievementImages+'/'+aid+'.jpg';
+  var file = image.path.split('/');
+  file = file[file.length-1];
+
+  params = {
+    path: app.config.dirs.uploads+'/'+file,
+    quality: 90,
+    width: 194,
+    height: 194,
+    fill: true
+  }
+
+  app.files.convertImage(params, function () {
+      app.files.createThumbnail(params, function () {
+        fs.rename(params.path, path, function() {
+          cb(path);
+        })
     });
   });
 }
