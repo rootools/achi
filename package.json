@@ -22,6 +22,7 @@
     "request": "*",
     "underscore": "*",
     "i18n": "*",
-    "userbar": "*"
+    "userbar": "*",
+    "extend": "*"
   }
 }
