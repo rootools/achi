@@ -19,3 +19,11 @@ exports.mail = {
   support_name: 'support@achivster.com',
   support_pass: 'AO4dtGvORf'
 }
+
+exports.dirs = {
+  root: rootdir,
+  uploads: rootdir+'/upload',
+  views: rootdir+'/views',
+  public: rootdir+'/public',
+  locale: rootdir+'/configs/locale'
+}

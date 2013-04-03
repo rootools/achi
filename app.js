@@ -1,3 +1,6 @@
+rootdir = __dirname;
+var config = require('./configs/config.js');
+
 // Init modules
 // Basic Express modules
 var express = require('express');
@@ -6,7 +9,6 @@ var http = require('http');
 var path = require('path');
 var i18n = require('i18n');
 
-var config = require('./configs/config.js');
 
 var authRoutes = require('./routes/auth');
 var restore = require('./routes/restore');
@@ -26,18 +28,18 @@ var sessionsStorage = require('connect-redis')(express);
 
 var app = express();
 var ECT = require('ect');
-var ectRenderer = ECT({ cache: false, watch: false, root: __dirname + '/views' });
+var ectRenderer = ECT({ cache: false, watch: false, root: config.dirs.views });
 
 app.engine('.ect', ectRenderer.render);
 
 app.configure(function(){
   app.set('port', process.env.PORT || config.site.port);
-  app.set('views', __dirname + '/views');
+  app.set('views', config.dirs.views);
 //  app.set('view engine', 'ect');
   app.use(i18n.init);
   app.use(express.favicon());
   app.use(express.logger('dev'));
-  app.use(express.bodyParser({keepExtensions: true, uploadDir:'./uploads'}));
+  app.use(express.bodyParser({keepExtensions: true, uploadDir: config.dirs.uploads}));
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ store: new sessionsStorage({db: 7}), secret: 'lolcat', cookie:{maxAge: 1209600000} }));
@@ -48,7 +50,7 @@ app.configure(function(){
   });
 
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(config.dirs.public)));
 });
 
 app.configure('development', function(){
@@ -58,7 +60,7 @@ app.configure('development', function(){
 i18n.configure({
   locales:['en', 'ru'],
   defaultLocale: 'ru',
-  directory: './configs/locale',
+  directory: config.dirs.locale,
   debug: true
 });
 
