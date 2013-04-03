@@ -61,6 +61,20 @@ exports.getProfiles = function(uids, cb) {
   });
 }
 
+//get_user_profile
+exports.getProfile = function (uid, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
+      app.db.conn.collection('users', function(err, collection) {
+        collection.findOne({uid: uid},{subscribes: 1, _id: 0}, function(err, subs) {
+          doc.subscribes = subs.subscribes;
+          cb(doc);
+        });
+      });
+    });
+  });
+}
+
 exports.getFriendsUids = function(uid, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
     collection.findOne({uid: uid}, {_id:0, friends: 1}, function(err, doc) {
@@ -73,27 +87,29 @@ exports.getFriendsUids = function(uid, cb) {
 exports.getFriendsList = function (uid, cb) {
   var friends_list = [];
   exports.getFriendsUids(uid, function(friends_uid_list) {
+    app.db.conn.collection('users_profile', function(err, collection) {
       
-    var handler = friends_uid_list.length;
-    if(handler === 0) {
-      cb([]);
-    }      
-    
-    function callback(uid) {
-      collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {
-        exports.getPointSum(uid, function(points) {
-          profile.points = points;
-          if(profile.name === '') { profile.name = 'anonymous'};
-          friends_list.push(profile);
-          handler--;
-          if(handler === 0) {
-            cb(friends_list);
-          }
+      var handler = friends_uid_list.length;
+      if(handler === 0) {
+        cb([]);
+      }
+
+      function callback(uid) {
+        collection.findOne({uid: uid},{_id: 0, friends: 0}, function(err, profile) {
+          exports.getPointSum(uid, function(points) {
+            profile.points = points;
+            if(profile.name === '') { profile.name = 'anonymous'};
+            friends_list.push(profile);
+            handler--;
+            if(handler === 0) {
+              cb(friends_list);
+            }
+          });
         });
-      });
-    }
-    
-    mod.async.forEach(friends_uid_list, callback, function(err) {});
+      }
+
+      mod.async.forEach(friends_uid_list, callback, function(err) {});
+    });
   });
 }
 

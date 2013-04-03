@@ -55,8 +55,7 @@ exports.main = function(req, res) {
   } else {
     app.users.getPointSum(req.session.uid, function(points) {
       app.users.getMessages(req.session.uid, 10, function(messages) {
-        app.users.getProfiles([req.session.uid], function(profile) {
-          profile = profile[0];
+        app.users.getProfile(req.session.uid, function(profile) {
           app.users.getFriendsList(req.session.uid, function(friends) {
             res.render('profile.ect', { title: 'Профиль', session:req.session, points: points, profile: profile, messages: messages, friends: friends} );
           });
