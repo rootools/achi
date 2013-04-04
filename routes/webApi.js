@@ -1,4 +1,4 @@
-var app = init.initModels(['users']);
+var app = init.initModels(['db', 'users']);
 var mod = init.initModules(['randomstring', 'redis', 'nodemailer', 'fs']);
 
 var locale = require('../configs/locale/main.js');
@@ -21,7 +21,7 @@ function routing(req, res) {
 }
 
 functions.getAchievementsList = function (req, res) {
-  db.collection('achievements', function(err,collection) {
+  app.db.conn.collection('achievements', function(err,collection) {
     collection.find({service:req.body.service}).sort({position: 1}).toArray(function(err, data) {
       res.end(JSON.stringify(data));
     });
@@ -29,7 +29,7 @@ functions.getAchievementsList = function (req, res) {
 }
 
 functions.userAchievementsList = function (req, res) {
-  db.collection('users_achievements', function(err,collection) {
+  app.db.conn.collection('users_achievements', function(err,collection) {
     collection.findOne({uid:req.session.uid, service:req.body.service},{achievements:1},function(err ,data) {
       res.end(JSON.stringify(data));
     });
@@ -42,12 +42,12 @@ functions.find_by_email = function (req, res) {
     res.end(JSON.stringify({error: 'It`s You!'}));
   }
   
-  db.collection('users', function(err,collection) {
+  app.db.conn.collection('users', function(err,collection) {
     collection.findOne({email: email},{uid: 1, _id: 0, email: 1}, function(err, doc) {
       if(doc === null) {
         res.end(JSON.stringify({error: 'Did not match'}));
       } else {
-        db.collection('users_profile', function(err,profile) {
+        app.db.conn.collection('users_profile', function(err,profile) {
           profile.findOne({uid: doc.uid},{_id: 0, name: 1, photo: 1, friends: 1}, function(err, profile) {
             for(var r in profile.friends) {
               if(profile.friends[r] === req.session.uid) {
@@ -79,7 +79,7 @@ functions.find_by_email = function (req, res) {
 }
 
 functions.get_name_by_uid = function (uid, cb) {
-  db.collection('users_profile', function(err,collection) {
+  app.db.conn.collection('users_profile', function(err,collection) {
     collection.findOne({uid:uid},{name: 1, _id: 0}, function(err, doc) {
       cb(doc.name);
     });
@@ -90,7 +90,7 @@ functions.send_friendship_request = function (req, res) {
   var target_uid = req.body.uid;
   var owner_uid = req.session.uid;
   get_name_by_uid(owner_uid, function(name) {
-    db.collection('messages', function(err,collection) {
+    app.db.conn.collection('messages', function(err,collection) {
       collection.findOne({$or: [{owner_uid: owner_uid, target_uid: target_uid},{owner_uid: target_uid, target_uid: owner_uid}], type: 'friendship_request'}, function(err, doc) {
         if(doc !== null) {
           if(doc.owner_uid === target_uid) {
@@ -112,12 +112,12 @@ functions.friendship_accept_or_reject = function (req, res) {
   var command = req.body.command;
   var owner_uid = req.body.owner_uid;
   var target_uid = req.body.target_uid;
-  db.collection('messages', function(err,collection) {
+  app.db.conn.collection('messages', function(err,collection) {
     if(command === 'reject') {
       
     }
     if(command === 'accept') {
-      db.collection('users_profile', function(err, profile) {
+      app.db.conn.collection('users_profile', function(err, profile) {
         profile.update({uid: owner_uid},{$push: {friends: target_uid}}, function(err, doc) {});
         profile.update({uid: target_uid},{$push: {friends: owner_uid}}, function(err, doc) {});
       });
@@ -137,7 +137,7 @@ functions.remove_friendship = function (req, res) {
 }
 
 functions.remove_friend_by_uid = function (uid, friends_uid) {
-  db.collection('users_profile', function(err,collection) {
+  app.db.conn.collection('users_profile', function(err,collection) {
     collection.findOne({uid: uid},{friends: 1, _id:0}, function(err, doc) {
       var friends_list = doc.friends;
       var new_friends_list = [];
@@ -154,7 +154,7 @@ functions.remove_friend_by_uid = function (uid, friends_uid) {
 functions.restore_friendship = function (req, res) {
   var uid = req.session.uid;
   var friends_uid = req.body.friends_uid;
-  db.collection('users_profile', function(err,collection) {
+  app.db.conn.collection('users_profile', function(err,collection) {
     collection.update({uid: uid},{$push: {friends: friends_uid}}, function(err, doc){});
     collection.update({uid: friends_uid},{$push: {friends: uid}}, function(err, doc){});
     res.end(JSON.stringify({}));
@@ -162,7 +162,7 @@ functions.restore_friendship = function (req, res) {
 }
 
 functions.get_new_notifications = function (req, res) {
-  db.collection('messages', function(err,collection) {
+  app.db.conn.collection('messages', function(err,collection) {
     collection.find({target_uid: req.session.uid}).toArray(function(err, data){
       res.end(data.length+'');
     });
@@ -171,7 +171,7 @@ functions.get_new_notifications = function (req, res) {
 
 functions.dev_save_achiv_list = function (req, res) {
   var list = req.body.list;
-  db.collection('achievements', function(err,collection) {
+  app.db.conn.collection('achievements', function(err,collection) {
     for(var i in list) {
       collection.update({aid: list[i].aid},{$set: {position: list[i].position}}, function(err, doc) {});
     }
