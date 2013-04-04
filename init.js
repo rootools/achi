@@ -9,7 +9,8 @@ exports.initModels = function(models) {
     services: './models/services',
     mails: './models/mails',
     db: './models/db',
-    files: './models/files'
+    files: './models/files',
+    mails: './models/mails'
   };
 
   var initModels = {};

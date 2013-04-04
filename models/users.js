@@ -409,10 +409,10 @@ exports.uploadIcon = function (image, uid, cb) {
 exports.test = function (email, cb) {
   app.db.conn.collection('users', function(err,collection) {
     collection.findOne({email: email}, function(err, doc) {
-      if(doc !== null) { 
-        cb(false);
-      } else {
+      if(doc) { 
         cb(true, doc.uid);
+      } else {
+        cb(false);
       }
     });
   });  
