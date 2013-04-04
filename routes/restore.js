@@ -9,7 +9,7 @@ exports.main = function(req, res) {
     if(req.body.email) {
       app.users.test(req.body.email, function(check) {
         if(check) {
-          app.mails.SendEmailRestoreCode(req.body.email, function(){
+          app.mails.sendEmailRestoreCode(req.body.email, function(){
             res.render('restore.ect', { title: 'Восстановление пароля', session:req.session, message: 'Вам выслан код для смены пароля.'});
           });
         } else {

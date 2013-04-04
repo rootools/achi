@@ -1,52 +1,9 @@
-var app = init.initModels(['db', 'config', 'users', 'files']);
+var app = init.initModels(['db', 'config', 'users', 'files', 'mails']);
 var mod = init.initModules(['async', 'moment', 'randomstring', 'nodemailer', 'fs', 'redis']);
-
-var mail_layout;
 
 var red = mod.redis.createClient();
     red.select(6);
 
-function GetMailLayout() {
-  mod.fs.readFile('./mailer/layout.html', 'utf8', function (err, layout) {
-    mod.fs.readFile('./mailer/invite_friend.html', 'utf8', function (err, restore) {
-      mail_layout = layout.replace('||content||', restore);
-    });
-  });
-}
-
-GetMailLayout();
-
-function SendEmailInvite(email, name, key, cb) {
-  var smtpTransport = mod.nodemailer.createTransport("SMTP",{
-    service: "Yandex",
-    auth: {
-        user: "support@achivster.com",
-        pass: "AO4dtGvORf"
-    }
-  });
-
-  var html = mail_layout.replace('||username||', '<b>'+name+'</b>');
-  html = html.replace('||key||', key);
-  console.log(html);
-
-  var mailOptions = {
-    from: "Achivster Support <support@achivster.com>",
-    to: email,
-    subject: "Получи свое первое достижение!", 
-    html: html
-  };
-
-  smtpTransport.sendMail(mailOptions, function(error, response){
-    if(error){
-      console.log(error);
-    }else{
-      console.log("Message sent: " + response.message);
-    }
-
-    smtpTransport.close();
-    cb();
-  });
-}
 
 exports.main = function(req, res) {
   if(!req.session.auth || req.session.auth === false) {
@@ -133,7 +90,7 @@ exports.invite_friend = function(req, res) {
     var email = req.body.email;
     var reg_key = mod.randomstring.generate(40);
     app.users.getName(uid, function(name) {
-      SendEmailInvite(email, name, reg_key, function() {
+      app.mails.sendEmailInvite(email, name, reg_key, function() {
         red.set(reg_key, uid, function(err, doc) {
           red.expire(reg_key, 1209600);
           res.redirect('/profile');
