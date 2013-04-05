@@ -6,7 +6,7 @@ exports.getServiceInfo = function(service, cb) {
       cb(doc);
     });
   });
-}
+};
 
 //get_service_icon
 exports.getIcons = function (cb) {
@@ -15,7 +15,7 @@ exports.getIcons = function (cb) {
       cb(doc);
     });
   });
-}
+};
 
 //add_service
 exports.add = function (session, account, service, cb) {
@@ -51,7 +51,7 @@ exports.add = function (session, account, service, cb) {
     }
     
   });
-}
+};
 
 function testService(uid, service, cb) {
   

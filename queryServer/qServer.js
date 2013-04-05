@@ -1,94 +1,106 @@
-var http = require('http');
-var async = require('async');
+init = require('../init.js');
+rootdir = __dirname + '/..';
+var app = init.initModels(['db', 'achivments', 'users']);
+var mod = init.initModules(['async', 'http']);
 
-var cTwitter = require('./qS_twitter');
-var cVkontakte = require('./qS_vkontakte');
-var cFacebook = require('./qS_facebook');
-var cBitbucket = require('./qS_bitbucket');
-var cGithub = require('./qS_github');
-var cInstagram = require('./qS_instagram');
-var cFoursquare = require('./qS_foursquare');
+var services = {
+  'twitter': require('./qS_twitter'),
+  'vkontakte': require('./qS_vkontakte'),
+  'facebook': require('./qS_facebook'),
+  'bitbucket': require('./qS_bitbucket'),
+  'github': require('./qS_github'),
+  'instagram': require('./qS_instagram'),
+  'foursquare': require('./qS_foursquare')
+};
 
 var q;
-var db;
-
-function mongoConnect() {
-  var mongodb = require("mongodb"),
-    mongoserver = new mongodb.Server('127.0.0.1', 27017, {auto_reconnect: true}),
-    db_connector = new mongodb.Db('achi', mongoserver, {safe: true});
-
-  db_connector.open(function(err, dbs) {
-    db = dbs;
-  });
-}
-
-mongoConnect();
 
 function updateQuery(uid, service) {
   var now = new Date().getTime();
-  db.collection('services_connections', function(err, collection) {
+  app.db.conn.collection('services_connections', function(err, collection) {
     collection.update({uid: uid, service:service},{$set: {lastupdate:now}}, function(err, doc) {});
   });
+}
+
+function createAIDarray(data) {
+  var newArray = [];
+  for(var i=0;i<data.length;i++) {
+    newArray.push(data[i].aid);
+  }
+  return newArray;
+}
+
+function dump_unknown(all, list) {
+  var dump = []
+  // Ban badges
+//  all.push('000000510ad6a2011c1712eb17a700');
+  for(var n in list) {
+    if(all.indexOf('000000'+list[n].badgeId) === -1) {
+      dump.push(list[n]);
+    }
+  }
+  console.log(dump);
 }
 
 function createQuery() {
   var now = new Date().getTime();
 
-  db.collection('services_connections', function(err, collection) {
+  app.db.conn.collection('services_connections', function(err, collection) {
     collection.find({type: 'internal', valid: true, lastupdate: {$lt:now - 3600000}, service:{$nin: ['achivster', 'rare']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
-      q = async.queue(function(task, callback) {
-        getData(task.service, task.service_login, function(data) {
-        if(data.error) {
-          updateQuery(task.uid, task.service);
-          collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
-            console.log('Set valid=false: '+task.uid+' '+task.service);
-            callback();
+      q = mod.async.queue(function(task, callback) {
+
+        if (typeof services[task.service] != "undefined") {
+
+          getData(task.service, task.service_login, function(data) {
+            if(data.error) {
+              updateQuery(task.uid, task.service);
+              collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
+                console.log('Set valid=false: '+task.uid+' '+task.service);
+                callback();
+              });
+            } else {
+
+              mod.async.parallel({
+                users: function(cb) { app.users.getAchievementsByService(task.uid, task.service, cb); },
+                all: function(cb) { app.achivments.getAllByService(task.service, cb); },
+                }, function(err, res) {
+                  res.all = createAIDarray(res.all);
+                  res.users = createAIDarray(res.users);
+                  if(res.users === undefined || res.users.length == 0) {res.users = [];}
+
+                  var notRecieved = [];
+
+                  if (task.service == 'foursquare') {
+                    // Dump unknown achivs
+                    dump_unknown(res.all, data);
+                  }
+
+                  for(var i in res.all) {
+                    if(res.users.indexOf(res.all[i]) === -1) {
+                      notRecieved.push(res.all[i]);
+                    }
+                  }
+
+                  for(var i=0;i<notRecieved.length;i++) {
+                    var name = notRecieved[i];
+                    if (typeof services[task.service].functions[name] == 'function') {
+                      if (services[task.service].functions[name](data)) {
+                        app.users.addAchievement(task.uid, aid, task.service);
+                      }
+                    }
+                  }
+
+                  updateQuery(task.uid, task.service);
+                  callback();
+
+                }
+              );
+
+            }
           });
-        } else {
-          if(task.service === 'twitter') {
-            cTwitter.checkTwitterAchievements(task.uid, data, db, function(res) {
-              updateQuery(task.uid, task.service);
-              callback();
-            });
-          }
-          if(task.service === 'vkontakte') {
-            cVkontakte.checkVkontakteAchievements(task.uid, data, db, function(res) {
-              updateQuery(task.uid, task.service);
-              callback();
-            });
-          }
-          if(task.service === 'facebook') {
-            cFacebook.checkFacebookAchievements(task.uid, data, db, function(res) {
-              updateQuery(task.uid, task.service);
-              callback();
-            });
-          }
-          if(task.service === 'bitbucket') {
-            cBitbucket.checkBitbucketAchievements(task.uid, data, db, function(res) {
-              updateQuery(task.uid, task.service);
-              callback();
-            });
-          }
-          if(task.service === 'github') {
-            cGithub.checkGithubAchievements(task.uid, data, db, function(res) {
-              updateQuery(task.uid, task.service);
-              callback();
-            });
-          }
-          if(task.service === 'instagram') {
-            cInstagram.checkInstagramAchievements(task.uid, data, db, function(res) {
-              updateQuery(task.uid, task.service);
-              callback();
-            });
-          }
-          if(task.service === 'foursquare') {
-            cFoursquare.checkFoursquareAchievements(task.uid, data, db, function(res) {
-              updateQuery(task.uid, task.service);
-              callback();
-            });
-          }
+
         }
-        });
+
       }, doc.length);
 
       for(var i in doc) {
@@ -100,54 +112,8 @@ function createQuery() {
 }
 
 function getData(service, auth, cb) {
-  if(service == 'twitter') {
-    var options = {
-        host: 'localhost',
-        port: 8065,
-        path: '/?oauth_token='+auth.oauth_token+'&oauth_token_secret='+auth.oauth_token_secret};
-  }
-  
-  if(service == 'vkontakte') {
-    var options = {
-        host: 'localhost',
-        port: 8085,
-        path: '/?access_token='+auth.access_token+'&uid='+auth.user_id};
-  }
 
-  if(service == 'facebook') {
-    var options = {
-        host: 'localhost',
-        port: 8075,
-        path: '/?access_token='+auth};
-  }
-
-  if(service == 'bitbucket') {
-    var options = {
-        host: 'localhost',
-        port: 8055,
-        path: '/?token='+auth.token+'&secret='+auth.secret};
-  }
-
-  if(service == 'github') {
-    var options = {
-        host: 'localhost',
-        port: 8045,
-        path: '/?token='+auth.access_token};
-  }
-  
-  if(service === 'instagram') {
-    var options = {
-        host: 'localhost',
-        port: 8035,
-        path: '/?token='+auth.access_token+'&id='+auth.id};
-  }
-
-  if(service === 'foursquare') {
-    var options = {
-        host: 'localhost',
-        port: 8025,
-        path: '/?token='+auth.access_token+'&id='+auth.id};
-  }
+  var options = services[service].options(auth);
 
   var callback = function(res) {
     var str = '';
@@ -160,7 +126,7 @@ function getData(service, auth, cb) {
     });
   };
 
-  http.request(options, callback).end();
+  mod.http.request(options, callback).end();
 }
 
 setInterval(function() {

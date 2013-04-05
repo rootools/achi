@@ -1,239 +1,140 @@
-var async = require('async');
+exports.options = function(auth) {
+  return {
+    host: 'localhost',
+    port: 8085,
+    path: '/?access_token='+auth.access_token+'&uid='+auth.user_id
+  };
+};
 
-function checkVkontakteAchievements(uid, data, db, cb) {
+exports.functions = {
 
-  async.parallel({
-    users: function(callback) {
-             db.collection('users_achievements', function(err, collection) {
-               collection.findOne({uid:uid, service:'vkontakte'}, function(err, doc) {
-                 if(doc.achievements == undefined) { doc.achievements = [];}
-                 callback(null, doc.achievements);
-               });
-             });
-           },
-    all: function(cb) {
-           db.collection('achievements', function(err,collection) {
-             collection.find({service: 'vkontakte'},{aid: 1}).toArray(function(err, docs) {
-               cb(null, docs);
-             });
-           });
-         },
-    }, function(err, res) {
-      res.all = createAIDarray(res.all);
-      res.users = createAIDarray(res.users);
-      if(res.users == undefined || res.users.length == 0) {res.users = [];}
+  // Add 10 friends
+  '0NwF1LKsXAcLNWIdmadLThRksh7k4l': function(data) {
+    return data.friendsCount >= 10;
+  },
 
-      var notRecieved = [];
-      for(var i in res.all) {
-        if(res.users.indexOf(res.all[i]) === -1) {
-          notRecieved.push(res.all[i]);
-        }
-      }
+  // Add 50 friends
+  '3bgyKw50Y0OKG7KJ3UPDL9NwSwNp14': function(data) {
+    return data.friendsCount >= 50;
+  },
 
-      for(var i=0;i<notRecieved.length;i++) {
-        var runTest = eval('vk_'+notRecieved[i]);
-        runTest(uid, data, notRecieved[i], db);
-      }
-      cb('done');
-    });
+  // Add 100 friends
+  'ExX284q5Iz7O4v94JcjaI7uDTZYdHQ': function(data) {
+    return data.friendsCount >= 100;
+  },
 
-}
+  // Add 500 friends
+  'xbELzMG28H5oUA7zvocKcxasDrmvIh': function(data) {
+    return data.friendsCount >= 500;
+  },
 
-// Add 10 friends
-function vk_0NwF1LKsXAcLNWIdmadLThRksh7k4l(uid, data, aid, db) {
-  if(data.friendsCount >= 10) {
-    writeToDB(uid, aid, db);
+  // Add Post
+  'sVb9UmoqbV1iQJzrtgN419bsFOCEhx': function(data) {
+    return data.wallCount >= 1;
+  },
+
+  // Add 100 Post
+  'Qqv6WCsPco3uQXBuB37ZDm6MvXN6J9': function(data) {
+    return data.wallCount >= 100;
+  },
+
+  // Add 500 Post
+  'pDOZyeGIEY6xs8LPZoWeqAM4geKv8i': function(data) {
+    return data.wallCount >= 500;
+  },
+
+  // Add 1000 Post
+  'cXIk4iwKdkvFNu4WpAch9m84RAjbzK': function(data) {
+    return data.wallCount >= 1000;
+  },
+
+  // Add Audio
+  'wZLlqdxSd4FE7S6JXQsAGenVcIq8zC': function(data) {
+    return data.audioCount >= 1;
+  },
+
+  // Add 100 Audio
+  'yiaTkZ8PrzWNGGIgOE1kksWSG1ZJve': function(data) {
+    return data.audioCount >= 100;
+  },
+
+  // Add 500 Audio
+  'OrRp5s2IAevQsh3vNGBfvyYJKDknR1': function(data) {
+    return data.audioCount >= 500;
+  },
+
+  // Add 1000 Audio
+  'bpizS4iRgv2FQijSM3lwxhHNJBuGZH': function(data) {
+    return data.audioCount >= 1000;
+  },
+
+  // Add Photo
+  'kdJHH5dLZ57i0qfH3gsniLSSTEBxQ9': function(data) {
+    return data.photosCount >= 1;
+  },
+
+  // Add 100 Photo
+  'NDFIaAgpKrGIqwO5PXdAAcntqTz8kF': function(data) {
+    return data.photosCount >= 100;
+  },
+
+  // Add 300 Photo
+  'FUZLmAHTPXeCx956ELb6W5FJflotId': function(data) {
+    return data.photosCount >= 300;
+  },
+
+  // Add 300 Photo
+  'FUZLmAHTPXeCx956ELb6W5FJflotId': function(data) {
+    return data.photosCount >= 300;
+  },
+
+  // Add Video
+  'MGTNzcrH5Ufnz1PyEujwQILeY4TgUt': function(data) {
+    return data.videoCount >= 1;
+  },
+
+  // Add 50 Video
+  'ed8EXsl4gtD0rTThhI898ffTrFBL0Z': function(data) {
+    return data.videoCount >= 50;
+  },
+
+  // Add 100 Video
+  'h2gOKmohUKR1LgoXOodZSQ6cQmlMec': function(data) {
+    return data.videoCount >= 100;
+  },
+
+  // Earned Post Like
+  'Ut3pRL5dgWGx5FX0ukhQeEdgUMil6e': function(data) {
+    return data.maxPostLike >= 1;
+  },
+
+  // Earned 50 Post Like
+  'pSeJ999JzZ2SkyD8iWffE34Vv874zu': function(data) {
+    return data.maxPostLike >= 50;
+  },
+
+  // Earned 100 Post Like
+  'IrYhDD22CneQbsvcgclRqlWmTQCLuf': function(data) {
+    return data.maxPostLike >= 100;
+  },
+
+  // Earned Photo Like
+  'NNJ20S3CqA9vIWiJ64fx1FzLp8WmES': function(data) {
+    return data.maxPhotoLike >= 1;
+  },
+
+  // Earned 50 Photo Like
+  'r2F2FQ7OcX8U5ElQMskZwRAwZO8rnV': function(data) {
+    return data.maxPhotoLike >= 50;
+  },
+
+  // Earned 100 Photo Like
+  'ie7bdaVQw0MhHTY008mcVS8EJgYDem': function(data) {
+    return data.maxPhotoLike >= 100;
+  },
+
+  'Kjo7fJlDc41ea2WGfMxs2znDapfCx5': function(data) {
+    return data.is_achivster === 1;
   }
-}
 
-// Add 50 friends
-function vk_3bgyKw50Y0OKG7KJ3UPDL9NwSwNp14(uid, data, aid, db) {
-  if(data.friendsCount >= 50) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 100 friends
-function vk_ExX284q5Iz7O4v94JcjaI7uDTZYdHQ(uid, data, aid, db) {
-  if(data.friendsCount >= 100) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 500 friends
-function vk_xbELzMG28H5oUA7zvocKcxasDrmvIh(uid, data, aid, db) {
-  if(data.friendsCount >= 500) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add Post
-function vk_sVb9UmoqbV1iQJzrtgN419bsFOCEhx(uid, data, aid, db) {
-  if(data.wallCount >= 1) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 100 Post
-function vk_Qqv6WCsPco3uQXBuB37ZDm6MvXN6J9(uid, data, aid, db) {
-  if(data.wallCount >= 100) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 500 Post
-function vk_pDOZyeGIEY6xs8LPZoWeqAM4geKv8i(uid, data, aid, db) {
-  if(data.wallCount >= 500) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 1000 Post
-function vk_cXIk4iwKdkvFNu4WpAch9m84RAjbzK(uid, data, aid, db) {
-  if(data.wallCount >= 1000) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add Audio
-function vk_wZLlqdxSd4FE7S6JXQsAGenVcIq8zC(uid, data, aid, db) {
-  if(data.audioCount >= 1) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 100 Audio
-function vk_yiaTkZ8PrzWNGGIgOE1kksWSG1ZJve(uid, data, aid, db) {
-  if(data.audioCount >= 100) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 500 Audio
-function vk_OrRp5s2IAevQsh3vNGBfvyYJKDknR1(uid, data, aid, db) {
-  if(data.audioCount >= 500) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 1000 Audio
-function vk_bpizS4iRgv2FQijSM3lwxhHNJBuGZH(uid, data, aid, db) {
-  if(data.audioCount >= 1000) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add Photo
-function vk_kdJHH5dLZ57i0qfH3gsniLSSTEBxQ9(uid, data, aid, db) {
-  if(data.photosCount >= 1) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 100 Photo
-function vk_NDFIaAgpKrGIqwO5PXdAAcntqTz8kF(uid, data, aid, db) {
-  if(data.photosCount >= 100) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 300 Photo
-function vk_FUZLmAHTPXeCx956ELb6W5FJflotId(uid, data, aid, db) {
-  if(data.photosCount >= 300) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 300 Photo
-function vk_FUZLmAHTPXeCx956ELb6W5FJflotId(uid, data, aid, db) {
-  if(data.photosCount >= 300) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add Video
-function vk_MGTNzcrH5Ufnz1PyEujwQILeY4TgUt(uid, data, aid, db) {
-  if(data.videoCount >= 1) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 50 Video
-function vk_ed8EXsl4gtD0rTThhI898ffTrFBL0Z(uid, data, aid, db) {
-  if(data.videoCount >= 50) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Add 100 Video
-function vk_h2gOKmohUKR1LgoXOodZSQ6cQmlMec(uid, data, aid, db) {
-  if(data.videoCount >= 100) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Earned Post Like
-function vk_Ut3pRL5dgWGx5FX0ukhQeEdgUMil6e(uid, data, aid, db) {
-  if(data.maxPostLike >= 1) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Earned 50 Post Like
-function vk_pSeJ999JzZ2SkyD8iWffE34Vv874zu(uid, data, aid, db) {
-  if(data.maxPostLike >= 50) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Earned 100 Post Like
-function vk_IrYhDD22CneQbsvcgclRqlWmTQCLuf(uid, data, aid, db) {
-  if(data.maxPostLike >= 100) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Earned Photo Like
-function vk_NNJ20S3CqA9vIWiJ64fx1FzLp8WmES(uid, data, aid, db) {
-  if(data.maxPhotoLike >= 1) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Earned 50 Photo Like
-function vk_r2F2FQ7OcX8U5ElQMskZwRAwZO8rnV(uid, data, aid, db) {
-  if(data.maxPhotoLike >= 50) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-// Earned 100 Photo Like
-function vk_ie7bdaVQw0MhHTY008mcVS8EJgYDem(uid, data, aid, db) {
-  if(data.maxPhotoLike >= 100) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-function vk_Kjo7fJlDc41ea2WGfMxs2znDapfCx5(uid, data, aid, db) {
-  if(data.is_achivster === 1) {
-    writeToDB(uid, aid, db);
-  }
-}
-
-function writeToDB(uid, aid, db) {
-  db.collection('users_achievements', function(err,collection) {
-    collection.update({uid:uid, service: 'vkontakte'}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
-    });
-  });
-}
-
-
-function createAIDarray(data) {
-  var newArray = [];
-  for(var i=0;i<data.length;i++) {
-    newArray.push(data[i].aid);
-  }
-  return newArray;
-}
-
-exports.checkVkontakteAchievements = checkVkontakteAchievements;
+};
