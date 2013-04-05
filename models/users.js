@@ -496,19 +496,3 @@ exports.addSession = function (req, uid, email, cb) {
   req.session.email = email;
   cb();
 };
-
-exports.addAchievement = function(uid, aid, service) {
-  app.db.conn.collection('users_achievements', function(err,collection) {
-    collection.update({uid:uid, service: service}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
-    });
-  });
-};
-
-exports.getAchievementsByService = function(uid, service, cb) {
-  app.db.conn.collection('users_achievements', function(err, collection) {
-    collection.findOne({uid: uid, service: service}, function(err, doc) {
-      if(doc.achievements === undefined) { doc.achievements = [];}
-      cb(err, doc.achievements);
-    });
-  });
-};

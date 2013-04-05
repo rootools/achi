@@ -127,15 +127,6 @@ exports.getByService = function (app_id, cb) {
   });
 };
 
-//GetAchivmentsByService
-exports.getAllByService = function (service, cb) {
-  app.db.conn.collection('achievements', function(err,collection) {
-    collection.find({service: service},{aid: 1}).toArray(function(err, docs) {
-      cb(err, docs);
-    });
-  });
-};
-
 //markedEarnedAchievements
 // private
 function MarkedEarned(uAch, fAch) {

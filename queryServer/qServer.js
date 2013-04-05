@@ -1,7 +1,26 @@
-init = require('../init.js');
-rootdir = __dirname + '/..';
-var app = init.initModels(['db', 'achivments', 'users']);
-var mod = init.initModules(['async', 'http']);
+var async = require("async");
+var http = require("http");
+
+var config = {
+  db: 'achi',
+  port: 27017,
+  host: '127.0.0.1',
+  server_config: {
+    auto_reconnect: true
+  },
+  connector_config: {
+    safe: true
+  }
+}
+
+var db;
+var mongodb = require("mongodb");
+var mongoserver = new mongodb.Server(config.host, config.port, config.server_config);
+var db_connector = new mongodb.Db(config.db, mongoserver, config.connector_config);
+
+db_connector.open(function(err, dbs) {
+  db = dbs;
+});
 
 var services = {
   'twitter': require('./qS_twitter'),
@@ -15,9 +34,33 @@ var services = {
 
 var q;
 
+function addUserAchievement(uid, aid, service) {
+  db.collection('users_achievements', function(err,collection) {
+    collection.update({uid:uid, service: service}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
+    });
+  });
+};
+
+function getUserAchievementsByService(uid, service, cb) {
+  db.collection('users_achievements', function(err, collection) {
+    collection.findOne({uid: uid, service: service}, function(err, doc) {
+      if(doc.achievements === undefined) { doc.achievements = [];}
+      cb(err, doc.achievements);
+    });
+  });
+};
+
+function getAchivmentsByService(service, cb) {
+  db.collection('achievements', function(err,collection) {
+    collection.find({service: service},{aid: 1}).toArray(function(err, docs) {
+      cb(err, docs);
+    });
+  });
+};
+
 function updateQuery(uid, service) {
   var now = new Date().getTime();
-  app.db.conn.collection('services_connections', function(err, collection) {
+  db.collection('services_connections', function(err, collection) {
     collection.update({uid: uid, service:service},{$set: {lastupdate:now}}, function(err, doc) {});
   });
 }
@@ -45,9 +88,9 @@ function dump_unknown(all, list) {
 function createQuery() {
   var now = new Date().getTime();
 
-  app.db.conn.collection('services_connections', function(err, collection) {
+  db.collection('services_connections', function(err, collection) {
     collection.find({type: 'internal', valid: true, lastupdate: {$lt:now - 3600000}, service:{$nin: ['achivster', 'rare']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
-      q = mod.async.queue(function(task, callback) {
+      q = async.queue(function(task, callback) {
 
         if (typeof services[task.service] != "undefined") {
 
@@ -60,9 +103,9 @@ function createQuery() {
               });
             } else {
 
-              mod.async.parallel({
-                users: function(cb) { app.users.getAchievementsByService(task.uid, task.service, cb); },
-                all: function(cb) { app.achivments.getAllByService(task.service, cb); },
+              async.parallel({
+                users: function(cb) { getUserAchievementsByService(task.uid, task.service, cb); },
+                all: function(cb) { getAchivmentsByService(task.service, cb); },
                 }, function(err, res) {
                   res.all = createAIDarray(res.all);
                   res.users = createAIDarray(res.users);
@@ -85,7 +128,7 @@ function createQuery() {
                     var name = notRecieved[i];
                     if (typeof services[task.service].functions[name] == 'function') {
                       if (services[task.service].functions[name](data)) {
-                        app.users.addAchievement(task.uid, aid, task.service);
+                        addUserAchievement(task.uid, aid, task.service);
                       }
                     }
                   }
@@ -126,7 +169,7 @@ function getData(service, auth, cb) {
     });
   };
 
-  mod.http.request(options, callback).end();
+  http.request(options, callback).end();
 }
 
 setInterval(function() {
