@@ -71,22 +71,22 @@ app.all('/logout', authRoutes.logout);
 app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);
-app.all('/dashboard', dashboard.main);
-app.all('/dashboard/:service', dashboard.service);
-app.all('/dashboard/:service/user/:id', dashboard.service_user);
-app.all('/dashboard/user/:id', dashboard.user);
-app.all('/top', top_list.main);
-app.all('/profile', profile.main);
-app.all('/profile/save', profile.save);
-app.all('/profile/invite_friend', profile.invite_friend);
+app.all('/dashboard', checkAuth, dashboard.main);
+app.all('/dashboard/:service', checkAuth, dashboard.service);
+app.all('/dashboard/:service/user/:id', checkAuth, dashboard.service_user);
+app.all('/dashboard/user/:id', checkAuth, dashboard.user);
+app.all('/top', checkAuth, top_list.main);
+app.all('/profile', checkAuth, profile.main);
+app.all('/profile/save', checkAuth, profile.save);
+app.all('/profile/invite_friend', checkAuth, profile.invite_friend);
 app.all('/upload', upload.main);
 app.all('/offer', offer.main);
 app.all('/offer2', offer2.main);
 app.all('/oauth', oauth_route.main);
-app.all('/developers', developers.main);
-app.all('/developers/app/create', developers.app_create);
-app.all('/developers/app/:app_id', developers.app_show);
-app.all('/feed', feed.main);
+app.all('/developers', checkAuth, developers.main);
+app.all('/developers/app/create', checkAuth, developers.app_create);
+app.all('/developers/app/:app_id', checkAuth, developers.app_show);
+app.all('/feed', checkAuth, feed.main);
 
 app.all('/lol', function(req,res) {
   req.session.locale = 'ru';
@@ -94,14 +94,22 @@ app.all('/lol', function(req,res) {
   res.end(a);
 });
 
-app.all('/add_service/vkontakte', add_service.vk);
-app.all('/add_service/twitter', add_service.twitter);
-app.all('/add_service/facebook', add_service.facebook);
-app.all('/add_service/bitbucket', add_service.bitbucket);
-app.all('/add_service/github', add_service.github);
-app.all('/add_service/instagram', add_service.instagram);
-app.all('/add_service/foursquare', add_service.foursquare);
+app.all('/add_service/vkontakte', checkAuth, add_service.vk);
+app.all('/add_service/twitter', checkAuth, add_service.twitter);
+app.all('/add_service/facebook', checkAuth, add_service.facebook);
+app.all('/add_service/bitbucket', checkAuth, add_service.bitbucket);
+app.all('/add_service/github', checkAuth, add_service.github);
+app.all('/add_service/instagram', checkAuth, add_service.instagram);
+app.all('/add_service/foursquare', checkAuth, add_service.foursquare);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
+
+function checkAuth(req, res, next) {
+  if (req.session.auth === false) {
+    res.redirect(config.site.url);
+  } else {
+    next();
+  }
+}

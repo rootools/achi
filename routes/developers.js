@@ -1,4 +1,4 @@
-var app = init.initModels(['config', 'users', 'db', 'achivments']);
+var app = init.initModels(['config', 'db', 'achivments']);
 var mod = init.initModules(['randomstring']);
 
 
@@ -16,7 +16,7 @@ exports.main = function(req, res) {
 			res.render('developers.ect', { title: 'Разработчикам', session:req.session, app_list: app_list});
 		});
 	} else {
-		res.redirect(config.site.url);
+		res.redirect(app.config.site.url);
 	}
 };
 
@@ -30,7 +30,7 @@ exports.app_create = function(req, res) {
         collection.insert({uid: uid, name: req.body.name, url: req.body.url, callback_url: req.body.callback_url, app_id: app_id, app_secret: app_secret}, function(err, doc) {
           app.db.conn.collection('services_info', function(err, collection) {
             collection.insert({icon: '/images/label.png', service: req.body.name, app_id: app_id, type: 'external'}, function(err, doc) {
-              res.redirect(config.site.url+'developers');
+              res.redirect(app.config.site.url+'developers');
             });
           });
         });
@@ -39,7 +39,7 @@ exports.app_create = function(req, res) {
 			res.render('developers_app_create.ect', {title: 'Новое Приложение', session:req.session});
 		}
 	} else {
-		res.redirect(config.site.url);
+		res.redirect(app.config.site.url);
 	}
 };
 
@@ -49,7 +49,7 @@ exports.app_show = function(req, res) {
     if(req.body.url) {
       app.db.conn_api.collection('applications', function(err, collection) {
         collection.update({uid: req.session.uid, app_id: app_id},{$set: {url: req.body.url, callback_url: req.body.callback_url}}, function(err, doc){
-          res.redirect(config.site.url+'developers/app/'+app_id);
+          res.redirect(app.config.site.url+'developers/app/'+app_id);
         });
       });
     } else if(req.body.achiv_name){
@@ -57,7 +57,7 @@ exports.app_show = function(req, res) {
       var descr = req.body.achiv_description;
       var points = parseFloat(req.body.points);
       app.achivments.new(name, descr, points, app_id, function() {
-        res.redirect(config.site.url+'developers/app/'+app_id);
+        res.redirect(app.config.site.url+'developers/app/'+app_id);
       });
     } else if(req.body.edit_achiv_name) {
       var name = req.body.edit_achiv_name;
@@ -67,7 +67,7 @@ exports.app_show = function(req, res) {
 
       app.achivments.uploadIcon(req.files.image, aid, function(path) {
         app.achivments.update(name, descr, points, aid, path, function() {
-          res.redirect(config.site.url+'developers/app/'+app_id);
+          res.redirect(app.config.site.url+'developers/app/'+app_id);
         });
       });
     } else {
@@ -80,6 +80,6 @@ exports.app_show = function(req, res) {
       });
     }
 	} else {
-    res.redirect(config.site.url);
+    res.redirect(app.config.site.url);
 	}
 };
