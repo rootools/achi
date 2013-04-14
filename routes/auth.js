@@ -8,11 +8,6 @@ var red = mod.redis.createClient();
     red.select(6);
 
 exports.login = function(req, res) {
-  /*
-  if(req.session.auth && req.session.auth === true) {
-    res.redirect(app.config.site.url);
-  }*/
-
   if(req.body.nosecurity === 'true') {
     req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
   }

@@ -107,7 +107,7 @@ http.createServer(app).listen(app.get('port'), function(){
 });
 
 function checkAuth(req, res, next) {
-  if (req.session.auth === false) {
+  if(!req.session.auth || req.session.auth === false) {
     res.redirect(config.site.url);
   } else {
     next();

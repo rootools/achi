@@ -3,35 +3,27 @@ var mod = init.initModules(['async']);
 
 
 exports.main = function(req, res) {
-  if(req.session.auth === false) {
-    res.redirect(app.config.site.url);
-  } else {
-    var uid = req.session.uid;
-    app.users.GetServiceList(uid, function(achivList) {
-      var sum = 0;
-      for(var i in achivList) {
-        sum += achivList[i].earnedPoints;
-      }
-      app.users.getStat(uid, sum, function(user_stat) {
-        app.achivments.getLatest(uid, function(last) {
-          res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, lastAchivArray: last});
-        });
-      });  
-    });
-  }
+  var uid = req.session.uid;
+  app.users.GetServiceList(uid, function(achivList) {
+    var sum = 0;
+    for(var i in achivList) {
+      sum += achivList[i].earnedPoints;
+    }
+    app.users.getStat(uid, sum, function(user_stat) {
+      app.achivments.getLatest(uid, function(last) {
+        res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, lastAchivArray: last});
+      });
+    });  
+  });
 };
 
 exports.service = function(req, res) {
-  if(req.session.auth === false) {
-    res.redirect(app.config.site.url);
-  } else {
-    app.achivments.getByServiceUser(req.params.service, req.session.uid, function(data){
-      var service_info_count = app.achivments.getCountFromService(data);
-      app.services.getServiceInfo(req.params.service, function(serviceInfo) {
-        res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
-      });
+  app.achivments.getByServiceUser(req.params.service, req.session.uid, function(data){
+    var service_info_count = app.achivments.getCountFromService(data);
+    app.services.getServiceInfo(req.params.service, function(serviceInfo) {
+      res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
     });
-  }
+  });
 };
 
 exports.user = function(req, res) {
