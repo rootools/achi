@@ -110,7 +110,6 @@ function createQuery() {
                   res.all = createAIDarray(res.all);
                   res.users = createAIDarray(res.users);
                   if(res.users === undefined || res.users.length == 0) {res.users = [];}
-
                   var notRecieved = [];
 
                   if (task.service == 'foursquare') {
@@ -128,7 +127,7 @@ function createQuery() {
                     var name = notRecieved[i];
                     if (typeof services[task.service].functions[name] == 'function') {
                       if (services[task.service].functions[name](data)) {
-                        addUserAchievement(task.uid, aid, task.service);
+                        addUserAchievement(task.uid, name, task.service);
                       }
                     }
                   }
