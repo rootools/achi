@@ -246,6 +246,68 @@ exports.functions = {
       }
     }
     return false;
+  },
+
+  // 'Century Club'
+  '0000004d5ac1585e7788bf97e98f9e': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4d5ac1585e7788bf97e98f9e') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Swarm'
+  '0000004c4f08667a0803bbe1202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbe1202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Flame Broiled'
+  '0000004f0da0207bebfc145ffdad57': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4f0da0207bebfc145ffdad57') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Fried Check-in'
+  '0000004dbae35b4159a4e20f525b96': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4dbae35b4159a4e20f525b96') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'School Night'
+  '0000004c4f08667a0803bbb3202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbb3202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Bender'
+  '0000004c4f08667a0803bbae202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbae202ab7') {
+        return true;
+      }
+    }
+    return false;
   }
+
+
 
 };
