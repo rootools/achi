@@ -19,8 +19,12 @@ http.createServer(function (req, res) {
       // Get Users group
       request.get('http://api.odnoklassniki.ru/fb.do?method=group.getUserGroupsV2&access_token='+access_token+'&application_key=CBAOBPGLABABABABA&sig='+getSig('group.getUserGroupsV2', access_token), function(e, re, b) {
         var groups = JSON.parse(b).groups;
-        console.log(groups);
-        //response.groups = groups;
+        for(var i in groups) {
+          if(groups[i].groupId === '51656121647241') {
+            response.isAchivster = true;
+            break;
+          }
+        }
 
         res.end(JSON.stringify(response));
       });
