@@ -1,5 +1,5 @@
 var app = init.initModels(['config', 'services']);
-var mod = init.initModules(['https', 'querystring', 'request', 'oauth']);
+var mod = init.initModules(['https', 'querystring', 'request', 'oauth', 'crypto']);
 
 var ext_achivster = require('../external/achivster.js');
 
@@ -161,6 +161,24 @@ exports.foursquare = function(req, res) {
       app.services.add(req.session, {access_token: token}, 'foursquare', function(){
         res.redirect(app.config.site.url+'dashboard');
       });
+    });
+  }
+}
+
+exports.odnoklassniki = function(req, res) {
+  if(!req.query.code) {
+    res.redirect('http://www.odnoklassniki.ru/oauth/authorize?client_id=174988544&scope=VALUABLE ACCESS&response_type=code&redirect_uri=http://achivster.com/add_service/odnoklassniki');
+  } else {
+    var code = req.query.code;
+    mod.request.post('http://api.odnoklassniki.ru/oauth/token.do', {form :{
+      code: code,
+      redirect_uri: 'http://localhost:3030/m',
+      grant_type: 'authorization_code',
+      client_id: 174988544,
+      client_secret: '3835C62F2369CCB8E64D3163'
+      }}, function(e, r, body) {
+        console.log(body);
+        res.end();
     });
   }
 }
