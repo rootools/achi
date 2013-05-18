@@ -172,13 +172,17 @@ exports.odnoklassniki = function(req, res) {
     var code = req.query.code;
     mod.request.post('http://api.odnoklassniki.ru/oauth/token.do', {form :{
       code: code,
-      redirect_uri: 'http://localhost:3030/m',
+      redirect_uri: 'http://achivster.com/add_service/odnoklassniki',
       grant_type: 'authorization_code',
       client_id: 174988544,
       client_secret: '3835C62F2369CCB8E64D3163'
       }}, function(e, r, body) {
-        console.log(body);
-        res.end();
+        var body = JSON.parse(body);
+        var access_token = body.access_token;
+        var refresh_token = body.refresh_token;
+        app.services.add(req.session, {refresh_token: refresh_token}, 'odnoklassniki', function(){
+          res.redirect(app.config.site.url+'dashboard');
+        });
     });
   }
 }

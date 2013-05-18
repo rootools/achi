@@ -1,4 +1,5 @@
 var app = init.initModels(['config', 'db', 'users']);
+var mod = init.initModules(['request', 'crypto']);
 
 exports.getServiceInfo = function(service, cb) {
   app.db.conn.collection('services_info', function(err, collection) {
@@ -190,7 +191,7 @@ function get_user_name_by_service(uid, service, account, cb) {
   }
   
   if(service === 'instagram') {
-    request.get('https://api.instagram.com/v1/users/'+account.id+'/?access_token='+account.access_token, function(e, r, body){
+    mod.request.get('https://api.instagram.com/v1/users/'+account.id+'/?access_token='+account.access_token, function(e, r, body){
       name = JSON.parse(body).data.full_name;
       image = JSON.parse(body).data.profile_picture;
       write_name_and_image_from_service(uid, image, name, function() {
@@ -200,8 +201,7 @@ function get_user_name_by_service(uid, service, account, cb) {
   }
 
   if(service === 'foursquare') {
-    console.log(account.access_token);
-    request.get('https://api.foursquare.com/v2/users/self?oauth_token='+account.access_token, function(e,r,body) {
+    mod.request.get('https://api.foursquare.com/v2/users/self?oauth_token='+account.access_token, function(e,r,body) {
       name = JSON.parse(body).response.user.firstName + ' ' + JSON.parse(body).response.user.lastName;
       image = JSON.parse(body).response.user.photo;
       write_name_and_image_from_service(uid, image, name, function() {
@@ -209,6 +209,31 @@ function get_user_name_by_service(uid, service, account, cb) {
       });
     });
   }
+
+  if(service === 'odnoklassniki') {
+    mod.request.post('http://api.odnoklassniki.ru/oauth/token.do', {form: {
+      refresh_token: account.refresh_token,
+      grant_type: 'refresh_token',
+      client_id: 174988544,
+      client_secret: '3835C62F2369CCB8E64D3163'}}, function(e, r, body){
+        var access_token = JSON.parse(body).access_token;
+        var sig = mod.crypto.createHash('md5').update([
+          'application_key=CBAOBPGLABABABABA',
+          'method=users.getCurrentUser',
+          mod.crypto.createHash('md5').update(access_token + '3835C62F2369CCB8E64D3163', 'utf8').digest('hex')
+        ].join(''), 'utf8').digest('hex');
+        
+        mod.request.get('http://api.odnoklassniki.ru/fb.do?method=users.getCurrentUser&access_token='+access_token+'&application_key=CBAOBPGLABABABABA&sig='+sig, function(e, r, body) {
+          body = JSON.parse(body);
+          name = body.name;
+          image = body.pic_2;
+          write_name_and_image_from_service(uid, image, name, function() {
+            cb();
+          });
+        });
+      });
+  }
+
 }
 
 function write_name_and_image_from_service(uid, image, name, cb) {
