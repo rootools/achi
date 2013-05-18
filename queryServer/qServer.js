@@ -133,7 +133,7 @@ function createQuery() {
                     }
                   }
 
-                  //updateQuery(task.uid, task.service);
+                  updateQuery(task.uid, task.service);
                   callback();
 
                 }
