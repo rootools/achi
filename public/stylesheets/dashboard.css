@@ -53,3 +53,7 @@
   cursor: pointer;
   position: relative;
 }
+
+h2.uppercase_first {
+  font-size: 18pt;
+}
