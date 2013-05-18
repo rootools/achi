@@ -29,7 +29,8 @@ var services = {
   'bitbucket': require('./qS_bitbucket'),
   'github': require('./qS_github'),
   'instagram': require('./qS_instagram'),
-  'foursquare': require('./qS_foursquare')
+  'foursquare': require('./qS_foursquare'),
+  'odnoklassniki': require('./qS_odnoklassniki'),
 };
 
 var q;
@@ -132,7 +133,7 @@ function createQuery() {
                     }
                   }
 
-                  updateQuery(task.uid, task.service);
+                  //updateQuery(task.uid, task.service);
                   callback();
 
                 }
