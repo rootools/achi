@@ -306,8 +306,17 @@ exports.functions = {
       }
     }
     return false;
-  }
+  },
 
+  // 'Molto Buono'
+  '0000005177058d011cefa9d2befd7c': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '5177058d011cefa9d2befd7c') {
+        return true;
+      }
+    }
+    return false;
+  }
 
 
 };

@@ -1,5 +1,6 @@
 var app = init.initModels(['db', 'achivments', 'files']);
-var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer']);
+var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring']);
+var ext_achivster = require('../external/achivster.js');
 
 mod.moment.lang('ru');
 
@@ -410,9 +411,9 @@ exports.test = function (email, cb) {
   app.db.conn.collection('users', function(err,collection) {
     collection.findOne({email: email}, function(err, doc) {
       if(doc) { 
-        cb(true, doc.uid);
-      } else {
         cb(false);
+      } else {
+        cb(true);
       }
     });
   });  
