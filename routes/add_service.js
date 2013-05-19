@@ -63,8 +63,7 @@ exports.facebook = function(req, res) {
     var code = req.query.code;
 
     mod.request.get('https://graph.facebook.com/oauth/access_token?client_id=258024554279925&redirect_uri='+app.config.site.url+'add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+code, function(e, r, body){
-      var data = JSON.parse(body).access_token;
-      console.log(data);
+      var data = mod.querystring.parse(body).access_token;
       app.services.add(req.session, data, 'facebook', function(){
         res.redirect(app.config.site.url+'dashboard');
       });
@@ -96,28 +95,15 @@ exports.github = function(req, res) {
   if(!req.query.code) {
     res.redirect('https://github.com/login/oauth/authorize?client_id=1167c7508199dd90ba7c&scope=user,repo:status,gist');
   } else {
-    var options = {
-      host: 'github.com',
-      method: 'POST',
-      path: '/login/oauth/access_token?client_id=1167c7508199dd90ba7c&client_secret=4521cb71a4dd118099810a98028c302b66ad3fa8&code='+req.query.code
-    };
-
-    var callback = function(response) {
-      var str = '';
-
-      response.on('data', function(chunk) {
-        str += chunk;
-      });
-
-      response.on('end', function() {
-        var data = mod.querystring.parse(str);
+    mod.request.post('https://github.com/login/oauth/access_token', {form: {
+      client_id: '1167c7508199dd90ba7c',
+      client_secret: '4521cb71a4dd118099810a98028c302b66ad3fa8',
+      code: req.query.code}}, function(e, r, body) {
+        var data = mod.querystring.parse(body);
         app.services.add(req.session, data, 'github', function(){
           res.redirect(app.config.site.url+'dashboard');
         });
-      });
-    };
-
-    mod.https.request(options, callback).end();
+    });
   }
 };
 
