@@ -63,12 +63,13 @@ exports.facebook = function(req, res) {
     var code = req.query.code;
 
     mod.request.get('https://graph.facebook.com/oauth/access_token?client_id=258024554279925&redirect_uri='+app.config.site.url+'add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+code, function(e, r, body){
-      console.log(body);
       var data = JSON.parse(body).access_token;
+      console.log(data);
       app.services.add(req.session, data, 'facebook', function(){
         res.redirect(app.config.site.url+'dashboard');
       });
     });
+
   }
 };
 
