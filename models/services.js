@@ -113,31 +113,15 @@ function get_user_name_by_service(uid, service, account, cb) {
     query.info = 'SELECT+pic_big,name+FROM+user+WHERE+uid=me()';
     query = JSON.stringify(query);
     
-    var options = {
-      host: 'graph.facebook.com',
-      method: 'GET'
-    };
-
-    options.path = '/fql?q='+query+'&access_token='+account;
-  
-    var callback = function(response) {
-      var str = '';
-      response.on('data', function(chunk) {
-        str += chunk;
+    mod.request.get('https://graph.facebook.com/fql?q='+query+'&access_token='+account, function(e, r, body){
+      body = JSON.parse(body);
+      body = body.data[0].fql_result_set[0];
+      name = body.name;
+      image = body.pic_big;
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
       });
-
-      response.on('end', function() {
-        str = JSON.parse(str);
-        str = str.data[0].fql_result_set[0];
-        name = str.name;
-        image = str.pic_big;
-        write_name_and_image_from_service(uid, image, name, function() {
-          cb();
-        });
-      });
-    };
-
-    https.request(options, callback).end();
+    });
   }
   
   if(service === 'vkontakte') {
@@ -164,30 +148,14 @@ function get_user_name_by_service(uid, service, account, cb) {
   }
 
   if(service === 'github') {
-    var options = {
-      host: 'api.github.com',
-      method: 'GET',
-      path: '/user?access_token='+account.access_token
-    };
-
-    var callback = function(response) {
-      var str = '';
-
-      response.on('data', function(chunk) {
-        str += chunk;
+    mod.request.get('https://api.github.com/user?access_token='+account.access_token, function(e, r, body){
+      var data = JSON.parse(body);
+      image = data.avatar_url;
+      name = data.name;
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
       });
-
-      response.on('end', function() {
-        var data = JSON.parse(str);
-        image = data.avatar_url;
-        name = data.name;
-        write_name_and_image_from_service(uid, image, name, function() {
-          cb();
-        });
-      });
-    };
-
-    https.request(options, callback).end();
+    });
   }
   
   if(service === 'instagram') {
