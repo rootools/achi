@@ -1,6 +1,8 @@
 var app = init.initModels(['config', 'db', 'users']);
 var mod = init.initModules(['request', 'crypto']);
 
+var ext_achivster = require('../external/achivster.js');
+
 exports.getServiceInfo = function(service, cb) {
   app.db.conn.collection('services_info', function(err, collection) {
     collection.findOne({service:service}, {_id: 0}, function(err, doc) {  
@@ -113,8 +115,9 @@ function get_user_name_by_service(uid, service, account, cb) {
     query.info = 'SELECT+pic_big,name+FROM+user+WHERE+uid=me()';
     query = JSON.stringify(query);
     
-    mod.request.get('https://graph.facebook.com/fql?q='+query+'&access_token='+account, function(e, r, body){
+    mod.request.get({url:'https://graph.facebook.com/fql?q='+query+'&access_token='+account, headers: {'User-Agent': 'NodeJS'}}, function(e, r, body){
       body = JSON.parse(body);
+      console.log(body);
       body = body.data[0].fql_result_set[0];
       name = body.name;
       image = body.pic_big;
@@ -150,6 +153,7 @@ function get_user_name_by_service(uid, service, account, cb) {
   if(service === 'github') {
     mod.request.get('https://api.github.com/user?access_token='+account.access_token, function(e, r, body){
       var data = JSON.parse(body);
+      console.log(data);
       image = data.avatar_url;
       name = data.name;
       write_name_and_image_from_service(uid, image, name, function() {

@@ -1,4 +1,4 @@
-var app = init.initModels(['db', 'achivments', 'files']);
+var app = init.initModels(['db', 'achivments', 'files', 'config']);
 var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring']);
 var ext_achivster = require('../external/achivster.js');
 
@@ -364,7 +364,7 @@ exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
     app.files.convertImage(params, function () {
       app.files.createThumbnail(params, function () {
 
-        app.db.collection('users_profile', function(err,profile) {
+        app.db.conn.collection('users_profile', function(err,profile) {
           profile.findOne({uid: uid}, function(err, doc) {
             if(doc === null) {
               profile.insert({uid: uid, photo: app.config.dirs.profileImages+'/'+uid+'.jpg'}, function(err, doc) {
