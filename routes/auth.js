@@ -8,12 +8,11 @@ var red = mod.redis.createClient();
     red.select(6);
 
 exports.login = function(req, res) {
-  if(req.body.nosecurity === 'true') {
+  //if(req.body.nosecurity === 'true') {
     req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
-  }
+  //}
 
   app.db.conn.collection('users', function(err,collection) {
-
     if(req.body.action === 'login' && req.body.pass && req.body.email) {
       collection.findOne({email: req.body.email}, function(err, doc) {
         if(doc !== null) {

@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Achivster</title>
+  <link rel="stylesheet" href="stylesheets/new/libs/bootstrap.css">
+  <link rel="stylesheet" href="stylesheets/new/index.css">
+</head>
+<body>
+  <div class="container-fluid" id="login_main">
+    
+    <div class="row-fluid" id="login_logo">
+      <div class="span5"></div>
+      <div class="span2">
+        <img src="images/logo.svg">
+      </div>
+    </div>
+    
+    <div class="row-fluid" id="login_app">
+      
+      <div class="span1"></div>
+      <div class="span3" id="login_block_left">
+        <div id="login_chooser" class="chooser">Войти</div>
+        <div id="reg_chooser" class="chooser chooser_selected">Регистрация</div>
+        
+        <form id="login_or_reg_form" action="/login" method="POST">
+          <input type="text" placeholder="E-mail" name="email" required>
+          <input type="password" placeholder="Пароль" name="pass" required>
+          <input type="password" placeholder="Еще раз пароль" oninput="check_pass(this)" required>
+          <input type="hidden" name="action" value="reg">
+          <input type="submit" id="login_button_reg" value="Зарегистрироваться">
+        </form>
+
+      </div>
+      
+      <div class="span8" id="login_block_right">
+        Озеро Ньяса притягивает белый саксаул, потому что именно здесь можно попасть из франкоязычной, валлонской части города во фламандскую. Большое Медвежье озеро, несмотря на внешние воздействия, отталкивает небольшой кристаллический фундамент, а к мясу подают подливку, запеченные овощи и пикули.
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="navbar navbar-fixed-bottom">
+    <div id="footer_content">
+      <span class="footer_content_block">&copy; 2013 Achivster.com</span>
+      <span class="footer_content_block"><a href="/">О сервисе</a></span>
+      <span class="footer_content_block"><a href="/">Политика</a></span>
+    </div>
+  </div>
+<script src="javascripts/login_w.js"></script>
+</body>
+</html>
