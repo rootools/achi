@@ -23,7 +23,7 @@ exports.mail = {
 
 exports.dirs = {
   root: rootdir,
-  uploads: rootdir+'/upload',
+  uploads: rootdir+'/uploads',
   views: rootdir+'/views',
   public: rootdir+'/public',
   profileImages: rootdir+'/public/images/users_photo',
