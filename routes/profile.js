@@ -18,7 +18,6 @@ exports.main = function(req, res) {
 };
 
 exports.save = function(req, res) {
-  console.log('a');
   var uid = req.session.uid;
 
   // Remove clear fields
