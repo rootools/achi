@@ -25,11 +25,11 @@ exports.login = function(req, res) {
               }
             });
           } else {
-            res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err1.ru});
+            res.render('login.ect', {error: locale.errors.err1.ru});
             //res.end(JSON.stringify({error: locale.errors.err1.eng}));
           }
         } else {
-          res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err1.ru});
+          res.render('login.ect', {error: locale.errors.err1.ru});
           //res.end(JSON.stringify({error: locale.errors.err1.eng}));
         }
       });
@@ -40,7 +40,7 @@ exports.login = function(req, res) {
             res.redirect(app.config.site.url);
           });
         } else {
-          res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err2.ru});
+          res.render('login.ect', {error: locale.errors.err2.ru});
           //res.end(JSON.stringify({error: locale.errors.err2.eng}));
         } 
       });

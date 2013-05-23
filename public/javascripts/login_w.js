@@ -2,6 +2,15 @@ var login_chooser = document.getElementById('login_chooser');
 var reg_chooser = document.getElementById('reg_chooser');
 
 login_chooser.onclick = function(e) {
+  setLoginChooser();
+};
+
+reg_chooser.onclick = function(e) {
+  setRegisterChooser();
+};
+
+function setLoginChooser() {
+  clearError();
   login_chooser.className = 'chooser chooser_selected';
   reg_chooser.className = 'chooser';
   var form = document.getElementById('login_or_reg_form');
@@ -12,9 +21,10 @@ login_chooser.onclick = function(e) {
              '<span id="login_recover_link"><a href="/">Забыли пароль?</a></span>';
 
   form.innerHTML = html;
-};
+}
 
-reg_chooser.onclick = function(e) {
+function setRegisterChooser() {
+  clearError();
   reg_chooser.className = 'chooser chooser_selected';
   login_chooser.className = 'chooser';
   var form = document.getElementById('login_or_reg_form');
@@ -25,7 +35,14 @@ reg_chooser.onclick = function(e) {
              '<input type="submit" id="login_button_reg" value="Зарегистрироваться">';
 
   form.innerHTML = html;
-};
+}
+
+function clearError() {
+  var error = document.getElementById('login_error');
+  if(error) {
+    error.innerHTML = ''
+  }  
+}
 
 function check_pass(input) {
   if (input.value != document.getElementById('regPass').value) {

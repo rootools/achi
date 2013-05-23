@@ -52,7 +52,7 @@ app.configure('development', function(){
 });
 
 app.all('/', routes.index);
-app.all('/login', authRoutes.login);
+app.all('/login', routes.index);
 app.all('/logout', authRoutes.logout);
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);

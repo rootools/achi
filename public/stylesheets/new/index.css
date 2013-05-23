@@ -152,3 +152,8 @@ input {
   color: #006196;
   border-bottom: 1px dashed #006196;
 }
+#login_error {
+  font-size: 14px;
+  color: #B91D47;
+  margin-bottom: 10px;
+}
