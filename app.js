@@ -23,6 +23,7 @@ var oauth_route = require('./routes/oauth');
 var developers = require('./routes/developers');
 var feed = require('./routes/feed');
 
+// New API routes
 var friends = require('./routes/friends');
 
 var sessionsStorage = require('connect-redis')(express);

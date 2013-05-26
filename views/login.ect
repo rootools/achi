@@ -20,38 +20,51 @@
       
       <div class="span1"></div>
       <div class="span3" id="login_block_left">
-        <div id="login_chooser" class="chooser">Войти</div>
-        <div id="reg_chooser" class="chooser chooser_selected">Регистрация</div>
-        
-        <% if @error : %>
-          <div id="login_error">
-            <%- @error %>
-          </div>
-        <% end %>
 
         <% switch @error_type : %>
           <% when 'register' : %>
+            <div id="login_chooser" class="chooser">Войти</div>
+            <div id="reg_chooser" class="chooser chooser_selected">Регистрация</div>
             <form id="login_or_reg_form" action="/login" method="POST">
               <input type="text" placeholder="E-mail" name="email" required>
               <input type="password" placeholder="Пароль" name="pass" required>
               <input type="password" placeholder="Еще раз пароль" oninput="check_pass(this)" required>
               <input type="hidden" name="action" value="reg">
+              <% if @error : %>
+                <div id="login_error">
+                  <%- @error %>
+                </div>
+              <% end %>              
               <input type="submit" id="login_button_reg" value="Зарегистрироваться">
             </form>
           <% end %><% when 'login' : %>
+            <div id="login_chooser" class="chooser chooser_selected">Войти</div>
+            <div id="reg_chooser" class="chooser">Регистрация</div>
             <form id="login_or_reg_form" action="/login" method="POST">
               <input type="text" placeholder="E-mail" name="email" required>
               <input type="password" placeholder="Пароль" name="pass" required>
+              <% if @error : %>
+                <div id="login_error">
+                  <%- @error %>
+                </div>
+              <% end %>
               <input type="submit" id="login_button_login" value="Войти">
               <input type="hidden" name="action" value="login">
               <span id="login_recover_link"><a href="/">Забыли пароль?</a></span>
             </form>
           <% end %><% else : %>
+            <div id="login_chooser" class="chooser">Войти</div>
+            <div id="reg_chooser" class="chooser chooser_selected">Регистрация</div>
             <form id="login_or_reg_form" action="/login" method="POST">
               <input type="text" placeholder="E-mail" name="email" required>
               <input type="password" placeholder="Пароль" name="pass" required>
               <input type="password" placeholder="Еще раз пароль" oninput="check_pass(this)" required>
               <input type="hidden" name="action" value="reg">
+              <% if @error : %>
+                <div id="login_error">
+                  <%- @error %>
+                </div>
+              <% end %>
               <input type="submit" id="login_button_reg" value="Зарегистрироваться">
             </form>
           <% end%><% end%>
