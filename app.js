@@ -21,10 +21,10 @@ var offer = require('./routes/offer');
 var offer2 = require('./routes/offer2');
 var oauth_route = require('./routes/oauth');
 var developers = require('./routes/developers');
-var feed = require('./routes/feed');
 
 // New API routes
 var friends = require('./routes/friends');
+var feed = require('./routes/feed');
 
 var sessionsStorage = require('connect-redis')(express);
 
@@ -59,7 +59,7 @@ app.all('/login', routes.index);
 app.all('/logout', authRoutes.logout);
 
 app.all('/friends', friends.list);
-
+app.all('/feed', feed.list);
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);
