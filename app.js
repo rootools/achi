@@ -23,6 +23,8 @@ var oauth_route = require('./routes/oauth');
 var developers = require('./routes/developers');
 var feed = require('./routes/feed');
 
+var friends = require('./routes/friends');
+
 var sessionsStorage = require('connect-redis')(express);
 
 var app = express();
@@ -54,6 +56,9 @@ app.configure('development', function(){
 app.all('/', routes.index);
 app.all('/login', routes.index);
 app.all('/logout', authRoutes.logout);
+
+app.all('/friends', friends.list);
+
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);
