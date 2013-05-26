@@ -2,7 +2,6 @@ var ub = require('userbar');
 var underscore = require('underscore');
 
 var config = require('../configs/config.js');
-
 var db;
 
 var query = [];

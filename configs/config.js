@@ -21,6 +21,8 @@ exports.mail = {
   support_pass: 'AO4dtGvORf'
 }
 
+var rootdir = '/var/www/achi';
+
 exports.dirs = {
   root: rootdir,
   uploads: rootdir+'/uploads',
