@@ -81,10 +81,14 @@ function FriendsTop(uid, cb) {
   });
 }
 
-exports.main = function(req, res) {
+exports.world = function(req, res) {
   WorldTop(function(world_list) {
-    FriendsTop(req.session.uid, function(friends_list) {
-      res.render('top.ect', { title: 'Топ', session:req.session, friends_list: friends_list, world_list: world_list});
-    });
+    res.end(JSON.stringify(world_list));
+  });
+};
+
+exports.friends = function(req, res) {
+  FriendsTop(req.session.uid, function(friends_list) {
+    res.end(JSON.stringify(friends_list));
   });
 };

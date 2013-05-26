@@ -14,7 +14,6 @@ var restore = require('./routes/restore');
 var webApi = require('./routes/webApi');
 var dashboard = require('./routes/dashboard');
 var profile = require('./routes/profile');
-var top_list = require('./routes/top');
 var add_service = require('./routes/add_service');
 var upload = require('./routes/upload');
 var offer = require('./routes/offer');
@@ -25,6 +24,7 @@ var developers = require('./routes/developers');
 // New API routes
 var friends = require('./routes/friends');
 var feed = require('./routes/feed');
+var top = require('./routes/top');
 
 var sessionsStorage = require('connect-redis')(express);
 
@@ -37,15 +37,12 @@ app.engine('.ect', ectRenderer.render);
 app.configure(function(){
   app.set('port', process.env.PORT || config.site.port);
   app.set('views', config.dirs.views);
-//  app.set('view engine', 'ect');
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser({keepExtensions: true, uploadDir: config.dirs.uploads}));
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ store: new sessionsStorage({db: 7}), secret: 'lolcat', cookie:{maxAge: 1209600000} }));
-  // Mine locale hack
-
   app.use(app.router);
   app.use(express.static(config.dirs.public));
 });
@@ -60,6 +57,9 @@ app.all('/logout', authRoutes.logout);
 
 app.all('/friends', friends.list);
 app.all('/feed', feed.list);
+app.all('/top/world', top.world);
+app.all('/top/friends', top.friends);
+
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);
