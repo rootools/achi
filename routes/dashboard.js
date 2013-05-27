@@ -11,9 +11,22 @@ exports.main = function(req, res) {
     }
     app.users.getStat(uid, sum, function(user_stat) {
       app.achivments.getLatest(uid, function(last) {
+        console.log(achivList);
         res.render('dashboard.ect', { title: 'Сводка', session: req.session, user_stat: user_stat, achievements: achivList, lastAchivArray: last});
       });
     });  
+  });
+};
+
+exports.latest = function(req, res) {
+  app.achivments.getLatest(req.session.uid, function(last) {
+    res.end(JSON.stringify(last));
+  });
+};
+
+exports.service_list = function(req, res) {
+  app.users.GetServiceList(req.session.uid, function(achivList) {
+    res.end(JSON.stringify(achivList));
   });
 };
 

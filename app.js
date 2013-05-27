@@ -12,7 +12,7 @@ var path = require('path');
 var authRoutes = require('./routes/auth');
 var restore = require('./routes/restore');
 var webApi = require('./routes/webApi');
-var dashboard = require('./routes/dashboard');
+
 var profile = require('./routes/profile');
 var add_service = require('./routes/add_service');
 var upload = require('./routes/upload');
@@ -22,6 +22,7 @@ var oauth_route = require('./routes/oauth');
 var developers = require('./routes/developers');
 
 // New API routes
+var dashboard = require('./routes/dashboard');
 var friends = require('./routes/friends');
 var feed = require('./routes/feed');
 var top = require('./routes/top');
@@ -59,15 +60,16 @@ app.all('/friends', friends.list);
 app.all('/feed', feed.list);
 app.all('/top/world', top.world);
 app.all('/top/friends', top.friends);
+app.all('/dashboard', dashboard.main);
+app.all('/dashboard/latest', dashboard.latest);
+app.all('/dashboard/service_list', dashboard.service_list);
+//app.all('/dashboard/:service', dashboard.service);
+//app.all('/dashboard/:service/user/:id', dashboard.service_user);
+//app.all('/dashboard/user/:id', checkAuth, dashboard.user);
 
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);
-app.all('/dashboard', checkAuth, dashboard.main);
-app.all('/dashboard/:service', checkAuth, dashboard.service);
-app.all('/dashboard/:service/user/:id', checkAuth, dashboard.service_user);
-app.all('/dashboard/user/:id', checkAuth, dashboard.user);
-app.all('/top', checkAuth, top_list.main);
 app.all('/profile', checkAuth, profile.main);
 app.all('/profile/save', checkAuth, profile.save);
 app.all('/profile/invite_friend', checkAuth, profile.invite_friend);
@@ -78,7 +80,6 @@ app.all('/oauth', oauth_route.main);
 app.all('/developers', checkAuth, developers.main);
 app.all('/developers/app/create', checkAuth, developers.app_create);
 app.all('/developers/app/:app_id', checkAuth, developers.app_show);
-app.all('/feed', checkAuth, feed.main);
 
 app.all('/add_service/vkontakte', checkAuth, add_service.vk);
 app.all('/add_service/twitter', checkAuth, add_service.twitter);

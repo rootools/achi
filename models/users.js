@@ -495,6 +495,5 @@ exports.addSession = function (req, uid, email, cb) {
   req.session.auth = true;
   req.session.uid = uid;
   req.session.email = email;
-  console.log(req.session);
   cb();
 };

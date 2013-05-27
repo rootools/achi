@@ -15,6 +15,7 @@ exports.index = function(req, res){
             if(doc !== null) {
               if(req.body.pass === doc.password) {
                 app.users.addSession(req, doc.uid, doc.email, function() {
+                  res.end();
                   /*if(req.body.redirect_params) {
                     res.redirect('http://api.achivster.com/'+req.body.redirect_params);
                   } else {
@@ -32,7 +33,8 @@ exports.index = function(req, res){
           app.users.test(req.body.email, function(flag) {
             if(flag === true) {
               app.users.register(req.body.email, req.body.pass, req, function(){
-                res.redirect(app.config.site.url);
+                res.end();
+                //res.redirect(app.config.site.url);
               });
             } else {
               res.render('login.ect', {error: locale.errors.err2.ru, error_type: 'register'});
@@ -47,6 +49,7 @@ exports.index = function(req, res){
     }
   
   } else {
+    res.end();
     // redirect to SPA app
   }
 };
