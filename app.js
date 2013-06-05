@@ -52,17 +52,17 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.all('/', routes.index);
+//app.all('/', routes.index);
 app.all('/login', routes.index);
 app.all('/logout', authRoutes.logout);
 
-app.all('/friends', friends.list);
-app.all('/feed', feed.list);
-app.all('/top/world', top.world);
-app.all('/top/friends', top.friends);
+app.post('/friends', friends.list);
+app.post('/feed', feed.list);
+app.post('/top/world', top.world);
+app.post('/top/friends', top.friends);
 app.all('/dashboard', dashboard.main);
-app.all('/dashboard/latest', dashboard.latest);
-app.all('/dashboard/service_list', dashboard.service_list);
+app.post('/dashboard/latest', dashboard.latest);
+app.post('/dashboard/service_list', dashboard.service_list);
 //app.all('/dashboard/:service', dashboard.service);
 //app.all('/dashboard/:service/user/:id', dashboard.service_user);
 //app.all('/dashboard/user/:id', checkAuth, dashboard.user);
