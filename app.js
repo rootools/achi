@@ -63,7 +63,7 @@ app.post('/top/friends', top.friends);
 app.all('/dashboard', dashboard.main);
 app.post('/dashboard/latest', dashboard.latest);
 app.post('/dashboard/service_list', dashboard.service_list);
-//app.all('/dashboard/:service', dashboard.service);
+app.post('/dashboard/:service', dashboard.service);
 //app.all('/dashboard/:service/user/:id', dashboard.service_user);
 //app.all('/dashboard/user/:id', checkAuth, dashboard.user);
 

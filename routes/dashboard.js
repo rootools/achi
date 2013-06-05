@@ -34,10 +34,17 @@ req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
 
 exports.service = function(req, res) {
 req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
+  var response = {};
   app.achivments.getByServiceUser(req.params.service, req.session.uid, function(data){
     var service_info_count = app.achivments.getCountFromService(data);
     app.services.getServiceInfo(req.params.service, function(serviceInfo) {
-      res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
+      response.achievements = data;
+      response.info = serviceInfo;
+      for(var i in service_info_count) {
+        response.info[i] = service_info_count[i];
+      }
+      res.end(JSON.stringify(response));
+      //res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
     });
   });
 };
