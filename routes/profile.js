@@ -5,72 +5,47 @@ var red = mod.redis.createClient();
     red.select(6);
 
 
-exports.main = function(req, res) {
-  app.users.getPointSum(req.session.uid, function(points) {
-    app.users.getMessages(req.session.uid, 10, function(messages) {
-      app.users.getProfile(req.session.uid, function(profile) {
-        app.users.getFriendsList(req.session.uid, function(friends) {
-          res.render('profile.ect', { title: 'Профиль', session:req.session, points: points, profile: profile, messages: messages, friends: friends} );
-        });
-      });
-    });
+exports.get = function(req, res) {
+  app.users.getProfile(req.session.uid, function(profile) {
+    res.json(profile);
   });
 };
 
 exports.save = function(req, res) {
   var uid = req.session.uid;
 
-  // Remove clear fields
-  var query = {};
-  var query_users = {};
-  query_users.subscribes = {};
-  query_users.subscribes.news = false;
-  query_users.subscribes.week = false;
-  var query_users_profile = {};
-
-  for(var i in req.body) {
-    if(req.body[i].length > 0) {
-      query[i] = req.body[i];
-    }
+  if(req.body.password && req.body.password_confirm && req.body.password === req.body.password_confirm) {
+    var pass = require('crypto').createHash('md5').update(req.body.password).digest('hex');
+    var users_query = {subscribes: req.body.profile.subscribes, password: pass};
+  } else {
+    var users_query = {subscribes: req.body.profile.subscribes};  
   }
 
-  // Create query to 'users' collection
-  for(var i in query) {
-    if(i === 'password') {
-      query_users[i] = require('crypto').createHash('md5').update(query[i]).digest('hex');
-    }
-    if(i === 'subs_news') {
-      query_users.subscribes.news = true;
-    }
-    if(i === 'subs_week') {
-      query_users.subscribes.week = true;
-    }
-  }
-
-  // Create query to 'users_profile' collection
+  var users_profile_query = {name: req.body.profile.name};
   
-  if(req.files.image.size != 0) {
-    query_users_profile.photo = '/images/users_photo/'+uid+'.jpg';
-  }
-
-  for(var i in query) {
-    if(i === 'name') {
-      query_users_profile[i] = query[i];
-    }
-  }
-
-  app.db.conn.collection('users_profile', function(err, collection) {
-    collection.update({uid: uid}, {$set: query_users_profile}, function(err, doc) {
-      // Upload image
-      app.users.uploadIcon(req.files.image, uid, function() {
-        app.db.conn.collection('users', function(err, collection) {
-          collection.update({uid: uid}, {$set: query_users}, function(err, subs) {
-            res.redirect('/profile');
-          });
+  mod.async.parallel([
+    function(callback) {
+      app.db.conn.collection('users_profile', function(err, collection) {
+        collection.update({uid: uid}, {$set: users_profile_query}, function(err, doc) {
+          callback();
         });
       });
-    });
+    },
+    function(callback) {
+      app.db.conn.collection('users', function(err, collection) {
+        collection.update({uid: uid}, {$set: users_query}, function(err, subs) {
+          callback();
+        });
+      });
+    }], function() {
+      res.json({});
   });
+
+  /*if(req.files.image.size != 0) {
+    query_users_profile.photo = '/images/users_photo/'+uid+'.jpg';
+  }*/
+
+  // app.users.uploadIcon(req.files.image, uid, function() {
 }
 
 exports.invite_friend = function(req, res) {

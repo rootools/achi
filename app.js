@@ -63,6 +63,8 @@ app.all('/dashboard', checkAuth, dashboard.main);
 app.post('/dashboard/latest', checkAuth, dashboard.latest);
 app.post('/dashboard/service_list', checkAuth, dashboard.service_list);
 app.post('/dashboard/:service', checkAuth, dashboard.service);
+app.post('/profile', checkAuth, profile.get);
+app.post('/profile/save', checkAuth, profile.save);
 //app.all('/dashboard/:service/user/:id', dashboard.service_user);
 //app.all('/dashboard/user/:id', checkAuth, dashboard.user);
 
@@ -70,7 +72,7 @@ app.post('/dashboard/:service', checkAuth, dashboard.service);
 app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);
 app.all('/profile', checkAuth, profile.main);
-app.all('/profile/save', checkAuth, profile.save);
+
 app.all('/profile/invite_friend', checkAuth, profile.invite_friend);
 app.all('/upload', upload.main);
 app.all('/offer', offer.main);
