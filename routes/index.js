@@ -3,9 +3,8 @@ var mod = init.initModules(['randomstring']);
 
 var locale = require('../configs/locale/main.js');
 
-exports.index = function(req, res){
+exports.login = function(req, res){
   if(!req.session.auth || req.session.auth === false) {
-    
     if(req.body.action) {
       req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
 
@@ -15,7 +14,7 @@ exports.index = function(req, res){
             if(doc !== null) {
               if(req.body.pass === doc.password) {
                 app.users.addSession(req, doc.uid, doc.email, function() {
-                  res.end();
+                  res.redirect('/');
                   /*if(req.body.redirect_params) {
                     res.redirect('http://api.achivster.com/'+req.body.redirect_params);
                   } else {
@@ -33,15 +32,14 @@ exports.index = function(req, res){
           app.users.test(req.body.email, function(flag) {
             if(flag === true) {
               app.users.register(req.body.email, req.body.pass, req, function(){
-                res.end();
-                //res.redirect(app.config.site.url);
+                res.redirect('/');
               });
             } else {
               res.render('login.ect', {error: locale.errors.err2.ru, error_type: 'register'});
             } 
           });
         } else {
-          res.redirect(app.config.site.url);
+          res.redirect('/');
         }
       });
     } else {
@@ -49,7 +47,11 @@ exports.index = function(req, res){
     }
   
   } else {
-    res.end();
-    // redirect to SPA app
+    res.redirect('/');
   }
+};
+
+exports.logout = function(req, res) {
+  req.session.auth = false;
+  res.redirect('/login');
 };

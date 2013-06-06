@@ -3,7 +3,6 @@ var mod = init.initModules(['async']);
 
 
 exports.main = function(req, res) {
-req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
   var uid = req.session.uid;
   app.users.GetServiceList(uid, function(achivList) {
     var sum = 0;
@@ -19,21 +18,18 @@ req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
 };
 
 exports.latest = function(req, res) {
-req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
   app.achivments.getLatest(req.session.uid, function(last) {
     res.end(JSON.stringify(last));
   });
 };
 
 exports.service_list = function(req, res) {
-req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
   app.users.GetServiceList(req.session.uid, function(achivList) {
     res.end(JSON.stringify(achivList));
   });
 };
 
 exports.service = function(req, res) {
-req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
   var response = {};
   app.achivments.getByServiceUser(req.params.service, req.session.uid, function(data){
     var service_info_count = app.achivments.getCountFromService(data);
@@ -78,7 +74,6 @@ exports.user = function(req, res) {
 };
 
 exports.service_user = function(req, res) {
-  req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
   app.achivments.getByServiceUser(req.params.service, req.params.id, function(data){
     app.services.getServiceInfo(req.params.service, function(serviceInfo) {
       var service_info_count = app.achivments.getCountFromService(data);

@@ -9,11 +9,12 @@ var red = mod.redis.createClient();
 
 exports.login = function(req, res) {
   //if(req.body.nosecurity === 'true') {
-    req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
+  req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
   //}
-
+console.log('a');
   app.db.conn.collection('users', function(err,collection) {
     if(req.body.action === 'login' && req.body.pass && req.body.email) {
+    
       collection.findOne({email: req.body.email}, function(err, doc) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
@@ -21,7 +22,7 @@ exports.login = function(req, res) {
               if(req.body.redirect_params) {
                 res.redirect('http://api.achivster.com/'+req.body.redirect_params);
               } else {
-                res.redirect(app.config.site.url);
+                res.redirect('/');
               }
             });
           } else {
@@ -45,7 +46,7 @@ exports.login = function(req, res) {
         } 
       });
     } else {
-      res.redirect(app.config.site.url);
+      res.redirect('/');
     }
   });
 };

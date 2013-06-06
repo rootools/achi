@@ -88,7 +88,6 @@ exports.world = function(req, res) {
 };
 
 exports.friends = function(req, res) {
-  req.session.uid = 'SW7QtRBCUVgZeelC6DVx';
   FriendsTop(req.session.uid, function(friends_list) {
     res.end(JSON.stringify(friends_list));
   });

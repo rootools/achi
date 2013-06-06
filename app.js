@@ -52,18 +52,17 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-//app.all('/', routes.index);
-app.all('/login', routes.index);
-app.all('/logout', authRoutes.logout);
+app.all('/login', routes.login);
+app.all('/logout', routes.logout);
 
-app.post('/friends', friends.list);
-app.post('/feed', feed.list);
-app.post('/top/world', top.world);
-app.post('/top/friends', top.friends);
-app.all('/dashboard', dashboard.main);
-app.post('/dashboard/latest', dashboard.latest);
-app.post('/dashboard/service_list', dashboard.service_list);
-app.post('/dashboard/:service', dashboard.service);
+app.post('/friends', checkAuth, friends.list);
+app.post('/feed', checkAuth, feed.list);
+app.post('/top/world', checkAuth, top.world);
+app.post('/top/friends', checkAuth, top.friends);
+app.all('/dashboard', checkAuth, dashboard.main);
+app.post('/dashboard/latest', checkAuth, dashboard.latest);
+app.post('/dashboard/service_list', checkAuth, dashboard.service_list);
+app.post('/dashboard/:service', checkAuth, dashboard.service);
 //app.all('/dashboard/:service/user/:id', dashboard.service_user);
 //app.all('/dashboard/user/:id', checkAuth, dashboard.user);
 
@@ -96,7 +95,7 @@ http.createServer(app).listen(app.get('port'), function(){
 
 function checkAuth(req, res, next) {
   if(!req.session.auth || req.session.auth === false) {
-    res.redirect(config.site.url);
+    res.end();
   } else {
     next();
   }
