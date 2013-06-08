@@ -26,6 +26,7 @@ var dashboard = require('./routes/dashboard');
 var friends = require('./routes/friends');
 var feed = require('./routes/feed');
 var top = require('./routes/top');
+var user = require('./routes/user');
 
 var sessionsStorage = require('connect-redis')(express);
 
@@ -67,6 +68,8 @@ app.post('/profile', checkAuth, profile.get);
 app.post('/profile/save', checkAuth, profile.save);
 //app.all('/dashboard/:service/user/:id', dashboard.service_user);
 //app.all('/dashboard/user/:id', checkAuth, dashboard.user);
+
+app.post('/user/getPoints', checkAuth, user.getPoints);
 
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);
