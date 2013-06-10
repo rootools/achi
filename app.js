@@ -83,7 +83,7 @@ app.all('/offer2', offer2.main);
 app.all('/oauth', oauth_route.main);
 app.all('/developers', checkAuth, developers.main);
 app.all('/developers/app/create', checkAuth, developers.app_create);
-app.all('/developers/app/:app_id', checkAuth, developers.app_show);
+app.all('/developers/app/:app_id', checkAuth, developers.app_show);*/
 
 app.all('/add_service/vkontakte', checkAuth, add_service.vk);
 app.all('/add_service/twitter', checkAuth, add_service.twitter);
@@ -93,7 +93,7 @@ app.all('/add_service/github', checkAuth, add_service.github);
 app.all('/add_service/instagram', checkAuth, add_service.instagram);
 app.all('/add_service/foursquare', checkAuth, add_service.foursquare);
 app.all('/add_service/odnoklassniki', checkAuth, add_service.odnoklassniki);
-*/
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });

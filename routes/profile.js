@@ -21,7 +21,7 @@ exports.save = function(req, res) {
     var users_query = {subscribes: req.body.profile.subscribes};  
   }
 
-  var users_profile_query = {name: req.body.profile.name};
+  var users_profile_query = {name: req.body.profile.name, shortname: req.body.profile.shortname};
   
   mod.async.parallel([
     function(callback) {

@@ -18,15 +18,43 @@ exports.main = function(req, res) {
 };
 
 exports.latest = function(req, res) {
-  app.achivments.getLatest(req.session.uid, function(last) {
-    res.end(JSON.stringify(last));
-  });
+
+  if(req.body.shortname) {
+    app.users.getUidByShortname(req.body.shortname, function(uid){
+      if(uid) {
+        app.achivments.getLatest(uid, function(last) {
+          res.json(last);
+        });
+      } else {
+        res.json({error: 'Нет такого профиля'});
+      }
+    });
+  } else {
+    var uid = req.session.uid;
+    app.achivments.getLatest(uid, function(last) {
+      res.json(last);
+    });
+  }
 };
 
 exports.service_list = function(req, res) {
-  app.users.GetServiceList(req.session.uid, function(achivList) {
-    res.end(JSON.stringify(achivList));
-  });
+  
+  if(req.body.shortname) {
+    app.users.getUidByShortname(req.body.shortname, function(uid){
+      if(uid) {
+        app.users.GetServiceList(uid, function(achivList) {
+          res.json(achivList);
+        });
+      } else {
+        res.json({error: 'Нет такого профиля'});
+      }
+    });
+  } else {
+    var uid = req.session.uid;
+    app.users.GetServiceList(uid, function(achivList) {
+      res.json(achivList);
+    });
+  }
 };
 
 exports.service = function(req, res) {
@@ -39,7 +67,7 @@ exports.service = function(req, res) {
       for(var i in service_info_count) {
         response.info[i] = service_info_count[i];
       }
-      res.end(JSON.stringify(response));
+      res.json(response);
       //res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
     });
   });

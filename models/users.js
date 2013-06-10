@@ -66,6 +66,18 @@ exports.getName = function (uid, cb) {
   });
 };
 
+exports.getUidByShortname = function(sn, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.findOne({shortname: sn},{uid: 1, _id: 0}, function(err, doc) {
+      if(doc) {
+        cb(doc.uid);  
+      } else {
+        cb(null);
+      }
+    });
+  });
+};
+
 exports.getProfiles = function(uids, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
     collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, uid: 1}).toArray(function(err, doc) {
@@ -77,7 +89,7 @@ exports.getProfiles = function(uids, cb) {
 //get_user_profile
 exports.getProfile = function (uid, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
-    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
+    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1, shortname: 1}, function(err, doc) {
       app.db.conn.collection('users', function(err, collection) {
         collection.findOne({uid: uid},{subscribes: 1, _id: 0}, function(err, subs) {
           doc.subscribes = subs.subscribes;
