@@ -80,7 +80,7 @@ exports.getUidByShortname = function(sn, cb) {
 
 exports.getProfiles = function(uids, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
-    collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, uid: 1}).toArray(function(err, doc) {
+    collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, uid: 1, shortname: 1}).toArray(function(err, doc) {
       cb(doc);
     });
   });
@@ -178,6 +178,7 @@ exports.getNewsByUids = function(uids, cb) {
             var u = mod.underscore.find(users, function(re) { return re.uid === result[z].uid });
             result[z].name = u.name;
             result[z].photo = u.photo;
+            result[z].shortname = u.shortname;
           }
           
           cb(result);
