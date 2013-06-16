@@ -511,3 +511,51 @@ exports.addSession = function (req, uid, email, cb) {
   req.session.email = email;
   cb();
 };
+
+// TODO: Refactoring
+exports.removeFriendship = function(uid, friend_uid, cb) {
+  mod.async.series([
+    function(callback) {
+
+      app.db.conn.collection('users_profile', function(err,collection) {
+        collection.findOne({uid: uid},{friends: 1, _id:0}, function(err, doc) {
+          var friends_list = doc.friends;
+          var new_friends_list = [];
+          for(var i in friends_list) {
+            if(friends_list[i] !== friend_uid) {
+              new_friends_list.push(friends_list[i]);
+            }
+          }
+          collection.update({uid: uid},{$set: {friends: new_friends_list}}, function(err, doc){
+            callback(null, null);
+          });
+        });
+      });
+    },
+    function(callback) {
+      app.db.conn.collection('users_profile', function(err,collection) {
+        collection.findOne({uid: friend_uid},{friends: 1, _id:0}, function(err, doc) {
+          var friends_list = doc.friends;
+          var new_friends_list = [];
+          for(var i in friends_list) {
+            if(friends_list[i] !== uid) {
+              new_friends_list.push(friends_list[i]);
+            }
+          }
+          collection.update({uid: friend_uid},{$set: {friends: new_friends_list}}, function(err, doc){
+            callback(null, null);
+          });
+        });
+      });
+    }], function(err, res) {
+      cb();
+    });
+}
+
+exports.restoreFriendship = function(uid, friend_uid, cb) {
+  app.db.conn.collection('users_profile', function(err,collection) {
+    collection.update({uid: uid},{$push: {friends: friend_uid}}, function(err, doc){});
+    collection.update({uid: friend_uid},{$push: {friends: uid}}, function(err, doc){});
+    cb();
+  });
+}

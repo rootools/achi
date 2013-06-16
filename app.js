@@ -57,6 +57,8 @@ app.all('/login', routes.login);
 app.all('/logout', routes.logout);
 
 app.post('/friends', checkAuth, friends.list);
+app.post('/friends/remove', checkAuth, friends.remove);
+app.post('/friends/restore', checkAuth, friends.restore);
 app.post('/feed', checkAuth, feed.list);
 app.post('/top/world', checkAuth, top.world);
 app.post('/top/friends', checkAuth, top.friends);

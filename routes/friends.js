@@ -5,3 +5,19 @@ exports.list = function(req, res) {
     res.end(JSON.stringify(friends));
   });
 }
+
+exports.remove = function(req, res) {
+  var uid = req.session.uid;
+  var friend_uid = req.body.friend_uid;
+  app.users.removeFriendship(uid, friend_uid, function(){
+    res.json({});  
+  });
+}
+
+exports.restore = function(req, res) {
+  var uid = req.session.uid;
+  var friend_uid = req.body.friend_uid;
+  app.users.restoreFriendship(uid, friend_uid, function(){
+    res.json({});
+  });
+}
