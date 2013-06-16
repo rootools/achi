@@ -3,5 +3,6 @@ node_modules/
 public/images/users_photo/
 public/images/achievements/
 public/images/userbars/
+uploads/
 .c9revisions
 .settings
