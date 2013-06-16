@@ -1,5 +1,5 @@
 var app = init.initModels(['db', 'achivments', 'files', 'config']);
-var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring']);
+var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring', 'fs']);
 var ext_achivster = require('../external/achivster.js');
 
 mod.moment.lang('ru');
@@ -399,6 +399,7 @@ exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
 
 //UploadIcon
 exports.uploadIcon = function (image, uid, cb) {
+  console.log(image);
   var file = image.path.split('/');
   file = file[file.length-1];
 
@@ -412,7 +413,7 @@ exports.uploadIcon = function (image, uid, cb) {
 
   app.files.convertImage(params, function () {
       app.files.createThumbnail(params, function () {
-        fs.rename(params.path, app.config.dirs.profileImages+'/'+uid+'.jpg', function() {
+        mod.fs.rename(params.path, app.config.dirs.profileImages+'/'+uid+'.jpg', function() {
           cb();
         })
     });

@@ -66,6 +66,7 @@ app.post('/dashboard/service_list', checkAuth, dashboard.service_list);
 app.post('/dashboard/:service', checkAuth, dashboard.service);
 app.post('/profile', checkAuth, profile.get);
 app.post('/profile/save', checkAuth, profile.save);
+app.post('/profile/save/avatar', checkAuth, profile.save_avatar);
 //app.all('/dashboard/:service/user/:id', dashboard.service_user);
 //app.all('/dashboard/user/:id', checkAuth, dashboard.user);
 

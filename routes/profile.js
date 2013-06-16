@@ -40,12 +40,17 @@ exports.save = function(req, res) {
     }], function() {
       res.json({});
   });
+}
 
-  /*if(req.files.image.size != 0) {
-    query_users_profile.photo = '/images/users_photo/'+uid+'.jpg';
-  }*/
-
-  // app.users.uploadIcon(req.files.image, uid, function() {
+exports.save_avatar = function(req, res) {
+  console.log(req.files);
+  app.users.uploadIcon(req.files.file, req.session.uid, function() {
+    app.db.conn.collection('users_profile', function(err, collection) {
+      collection.update({uid: req.session.uid}, {$set: {photo: '/images/users_photo/'+req.session.uid+'.jpg'}}, function(err, doc) {
+        res.redirect('/#/profile');
+      });
+    });
+  });
 }
 
 exports.invite_friend = function(req, res) {
