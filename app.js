@@ -72,7 +72,8 @@ app.post('/profile/save/avatar', checkAuth, profile.save_avatar);
 //app.all('/dashboard/:service/user/:id', dashboard.service_user);
 //app.all('/dashboard/user/:id', checkAuth, dashboard.user);
 
-app.post('/user/getPoints', checkAuth, user.getPoints);
+app.post('/user/points', checkAuth, user.points);
+app.post('/user/info', checkAuth, user.info);
 
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);

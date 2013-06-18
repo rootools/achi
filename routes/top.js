@@ -24,7 +24,7 @@ function WorldTop(cb) {
             app.db.conn.collection('users_profile', function(err, users_profile) {
               users_profile.findOne({uid: row._id}, function(err, profile) {
                 if(profile.name === '') { profile.name = 'anonymous';}
-                world_top.push({uid: row._id, points: sum, name: profile.name, photo: profile.photo});
+                world_top.push({uid: row._id, points: sum, name: profile.name, photo: profile.photo, shortname: profile.shortname});
                 handler--;
                 if(handler === 0) {
                   world_top.sort(function(a,b) {
