@@ -27,6 +27,7 @@ var friends = require('./routes/friends');
 var feed = require('./routes/feed');
 var top = require('./routes/top');
 var user = require('./routes/user');
+var messages = require('./routes/messages');
 
 var sessionsStorage = require('connect-redis')(express);
 
@@ -57,8 +58,11 @@ app.all('/login', routes.login);
 app.all('/logout', routes.logout);
 
 app.post('/friends', checkAuth, friends.list);
+app.post('/friends/accept', checkAuth, friends.accept);
+app.post('/friends/reject', checkAuth, friends.reject);
 app.post('/friends/remove', checkAuth, friends.remove);
 app.post('/friends/restore', checkAuth, friends.restore);
+app.post('/friends/add', checkAuth, friends.add);
 app.post('/feed', checkAuth, feed.list);
 app.post('/top/world', checkAuth, top.world);
 app.post('/top/friends', checkAuth, top.friends);
@@ -75,6 +79,7 @@ app.post('/profile/save/avatar', checkAuth, profile.save_avatar);
 app.post('/user/points', checkAuth, user.points);
 app.post('/user/info', checkAuth, user.info);
 
+app.post('/messages/get', checkAuth, messages.get);
 /*app.all('/restore', restore.main);
 app.all('/restore/code', restore.code);
 app.all('/webapi', webApi.routing);

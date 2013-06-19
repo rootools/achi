@@ -22,6 +22,15 @@ exports.getInfo = function (shortname, cb) {
   });
 };
 
+exports.getByUidsInfo = function (uids, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, shortname: 1, uid: 1}).toArray(function(err, doc) {
+      cb(doc);
+    });
+  });
+};
+
+
 //getUserAchievements
 exports.getAchievements = function (uid, cb) {
   app.db.conn.collection('users_achievements', function(err, collection) {
@@ -498,10 +507,10 @@ exports.register = function (email, pass, req, cb) {
   app.db.conn.collection('users', function(err,collection) {
     collection.insert({email: email, password: pass, uid: uid, subscribes : {week: true, news: true}}, function(err, doc) {
       app.db.conn.collection('users_profile', function(err,profiles) {
-        profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
+        profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: [], shortname: uid}, function(err, doc) {
           addDefaultServices(uid, function() {
             ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
-            ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
+            //ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
               exports.addSession(req, uid, email, function() {
                 cb();
               });
