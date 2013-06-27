@@ -21,14 +21,14 @@ exports.getLatest = function (uid, cb) {
         }
 
           app.db.conn.collection('achievements', function(err, collection) {
-          collection.find({aid: {$in: aids}},{_id: 0, description: 0, position: 0}).toArray(function(err, doc){
-
+          collection.find({aid: {$in: aids}},{_id: 0, position: 0}).toArray(function(err, doc){
             for(var n in lastAchivArray) {
               var tmp_data = mod.underscore.find(doc, function(re) { return re.aid === lastAchivArray[n].aid });
               lastAchivArray[n].name = tmp_data.name;
               lastAchivArray[n].icon = tmp_data.icon;
               lastAchivArray[n].points = tmp_data.points;
               lastAchivArray[n].service = tmp_data.service;
+              lastAchivArray[n].description = tmp_data.description;
               lastAchivArray[n].time = mod.moment(lastAchivArray[n].time).format('DD.MM.YYYY');
             }
 

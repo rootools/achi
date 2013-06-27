@@ -14,32 +14,40 @@ exports.get = function(req, res) {
 exports.save = function(req, res) {
   var uid = req.session.uid;
 
-  if(req.body.password && req.body.password_confirm && req.body.password === req.body.password_confirm) {
-    var pass = require('crypto').createHash('md5').update(req.body.password).digest('hex');
-    var users_query = {subscribes: req.body.profile.subscribes, password: pass};
-  } else {
-    var users_query = {subscribes: req.body.profile.subscribes};  
-  }
-
-  var users_profile_query = {name: req.body.profile.name, shortname: req.body.profile.shortname};
+  var checkName = /^[a-z A-Z а-я А-Я]{3,20}$/.test(req.body.profile.name);
+  var checkShortname = /^[a-z0-9_-]{3,20}$/.test(req.body.profile.shortname);
   
-  mod.async.parallel([
-    function(callback) {
-      app.db.conn.collection('users_profile', function(err, collection) {
-        collection.update({uid: uid}, {$set: users_profile_query}, function(err, doc) {
-          callback();
+  if(checkName && checkShortname) {
+
+    if(req.body.password && req.body.password_confirm && req.body.password === req.body.password_confirm) {
+      var pass = require('crypto').createHash('md5').update(req.body.password).digest('hex');
+      var users_query = {subscribes: req.body.profile.subscribes, password: pass};
+    } else {
+      var users_query = {subscribes: req.body.profile.subscribes};  
+    }
+
+    var users_profile_query = {name: req.body.profile.name, shortname: req.body.profile.shortname};
+    
+    mod.async.parallel([
+      function(callback) {
+        app.db.conn.collection('users_profile', function(err, collection) {
+          collection.update({uid: uid}, {$set: users_profile_query}, function(err, doc) {
+            callback();
+          });
         });
-      });
-    },
-    function(callback) {
-      app.db.conn.collection('users', function(err, collection) {
-        collection.update({uid: uid}, {$set: users_query}, function(err, subs) {
-          callback();
+      },
+      function(callback) {
+        app.db.conn.collection('users', function(err, collection) {
+          collection.update({uid: uid}, {$set: users_query}, function(err, subs) {
+            callback();
+          });
         });
-      });
-    }], function() {
-      res.json({});
-  });
+      }], function() {
+        res.json({});
+    });
+  } else {
+    res.json({});
+  }
 }
 
 exports.save_avatar = function(req, res) {
