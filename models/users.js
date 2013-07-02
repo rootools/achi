@@ -144,6 +144,11 @@ exports.getFriendsList = function (uid, cb) {
             friends_list.push(profile);
             handler--;
             if(handler === 0) {
+              friends_list = friends_list.sort(function(a,b) {
+                if(a.name > b.name) { return 1;} else {
+                  return -1;
+                }
+              });
               cb(friends_list);
             }
           });
