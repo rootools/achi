@@ -62,10 +62,11 @@ exports.createThumbnail = function (params, cb) {
   var defaultParams = {
     src: params.src || params.path,
     dst: params.dst || params.src || params.path,
-    width: 194,
-    height: 194,
+    width: 200,
+    height: 200,
     fill: true
   };
+
   params = mod.extend({}, defaultParams, params);
 
   mod.easyimage.thumbnail(params, function(err, stdout, stderr) {

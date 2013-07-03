@@ -421,7 +421,6 @@ exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
 
 //UploadIcon
 exports.uploadIcon = function (image, uid, cb) {
-  console.log(image);
   var file = image.path.split('/');
   file = file[file.length-1];
 

@@ -51,7 +51,6 @@ exports.save = function(req, res) {
 }
 
 exports.save_avatar = function(req, res) {
-  console.log(req.files);
   app.users.uploadIcon(req.files.file, req.session.uid, function() {
     app.db.conn.collection('users_profile', function(err, collection) {
       collection.update({uid: req.session.uid}, {$set: {photo: '/images/users_photo/'+req.session.uid+'.jpg'}}, function(err, doc) {
