@@ -33,7 +33,7 @@ exports.vk = function(req, res) {
       var data = JSON.parse(body);
       delete data.expires_in;
       app.services.add(req.session, data, 'vkontakte', function() {
-        res.redirect(app.config.site.url+'dashboard');
+        res.redirect(app.config.site.url);
       });
     });
   }
@@ -45,7 +45,7 @@ exports.twitter = function(req, res) {
       var data = {oauth_token: oauth_token, oauth_token_secret: oauth_token_secret, user_id: results.user_id, screen_name: results.screen_name };
       app.services.add(req.session, data, 'twitter', function(){
         delete req.session.twitter_request_oauth_token_secret;
-        res.redirect(app.config.site.url+'dashboard');
+        res.redirect(app.config.site.url);
       });
     });
   } else {
@@ -65,7 +65,7 @@ exports.facebook = function(req, res) {
     mod.request.get('https://graph.facebook.com/oauth/access_token?client_id=258024554279925&redirect_uri='+app.config.site.url+'add_service/facebook&client_secret=7ae18b84811c2b811dd11d31050f2e4e&code='+code, function(e, r, body){
       var data = mod.querystring.parse(body).access_token;
       app.services.add(req.session, data, 'facebook', function(){
-        res.redirect(app.config.site.url+'dashboard');
+        res.redirect(app.config.site.url);
       });
     });
 
@@ -79,7 +79,7 @@ exports.bitbucket = function(req, res) {
       app.services.add(req.session, data, 'bitbucket', function(){
         delete req.session.request_oauth_token;
         delete req.session.request_oauth_token_secret;
-        res.redirect(app.config.site.url+'dashboard');
+        res.redirect(app.config.site.url);
       });
     });
   } else {
@@ -101,7 +101,7 @@ exports.github = function(req, res) {
       code: req.query.code}}, function(e, r, body) {
         var data = mod.querystring.parse(body);
         app.services.add(req.session, data, 'github', function(){
-          res.redirect(app.config.site.url+'dashboard');
+          res.redirect(app.config.site.url);
         });
     });
   }
@@ -117,7 +117,7 @@ exports.instagram = function(req, res) {
       var token = JSON.parse(body).access_token;
       var id = JSON.parse(body).user.id;
       app.services.add(req.session, {access_token: token, id: id}, 'instagram', function(){
-        res.redirect(app.config.site.url+'dashboard');
+        res.redirect(app.config.site.url);
       });
     });
   } 
@@ -131,7 +131,7 @@ exports.foursquare = function(req, res) {
     mod.request.post('https://foursquare.com/oauth2/access_token', {form:{client_id: 'ZJ3Q5X3NIYGJNBMWC1Q5KZC0RLDNNBNIJ5Y2V4X0GIQTMK3J', client_secret: 'NJ4PUMNEO3ZVKYCML1V5CSMN5TJAPDYDHF4TRQLLITKZKC2R', grant_type: 'authorization_code', redirect_uri: 'http://achivster.com/add_service/foursquare',code:code}}, function(e, r, body){
       var token = JSON.parse(body).access_token;
       app.services.add(req.session, {access_token: token}, 'foursquare', function(){
-        res.redirect(app.config.site.url+'dashboard');
+        res.redirect(app.config.site.url);
       });
     });
   }
@@ -153,7 +153,7 @@ exports.odnoklassniki = function(req, res) {
         var access_token = body.access_token;
         var refresh_token = body.refresh_token;
         app.services.add(req.session, {refresh_token: refresh_token}, 'odnoklassniki', function(){
-          res.redirect(app.config.site.url+'dashboard');
+          res.redirect(app.config.site.url);
         });
     });
   }
