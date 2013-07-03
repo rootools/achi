@@ -8,13 +8,13 @@ var red = mod.redis.createClient();
     red.select(6);
 
 exports.login = function(req, res) {
-  if(req.body.nosecurity === 'true') {
-    req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
-  }
-
+  //if(req.body.nosecurity === 'true') {
+  req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
+  //}
+console.log('a');
   app.db.conn.collection('users', function(err,collection) {
-
     if(req.body.action === 'login' && req.body.pass && req.body.email) {
+    
       collection.findOne({email: req.body.email}, function(err, doc) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
@@ -22,15 +22,15 @@ exports.login = function(req, res) {
               if(req.body.redirect_params) {
                 res.redirect('http://api.achivster.com/'+req.body.redirect_params);
               } else {
-                res.redirect(app.config.site.url);
+                res.redirect('/');
               }
             });
           } else {
-            res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err1.ru});
+            res.render('login.ect', {error: locale.errors.err1.ru});
             //res.end(JSON.stringify({error: locale.errors.err1.eng}));
           }
         } else {
-          res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err1.ru});
+          res.render('login.ect', {error: locale.errors.err1.ru});
           //res.end(JSON.stringify({error: locale.errors.err1.eng}));
         }
       });
@@ -41,12 +41,12 @@ exports.login = function(req, res) {
             res.redirect(app.config.site.url);
           });
         } else {
-          res.render('index.ect', { title: 'Ачивстер', session: req.session, error: locale.errors.err2.ru});
+          res.render('login.ect', {error: locale.errors.err2.ru});
           //res.end(JSON.stringify({error: locale.errors.err2.eng}));
         } 
       });
     } else {
-      res.redirect(app.config.site.url);
+      res.redirect('/');
     }
   });
 };

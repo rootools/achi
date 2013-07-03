@@ -24,7 +24,7 @@ function WorldTop(cb) {
             app.db.conn.collection('users_profile', function(err, users_profile) {
               users_profile.findOne({uid: row._id}, function(err, profile) {
                 if(profile.name === '') { profile.name = 'anonymous';}
-                world_top.push({uid: row._id, points: sum, name: profile.name, photo: profile.photo});
+                world_top.push({uid: row._id, points: sum, name: profile.name, photo: profile.photo, shortname: profile.shortname});
                 handler--;
                 if(handler === 0) {
                   world_top.sort(function(a,b) {
@@ -81,10 +81,14 @@ function FriendsTop(uid, cb) {
   });
 }
 
-exports.main = function(req, res) {
+exports.world = function(req, res) {
   WorldTop(function(world_list) {
-    FriendsTop(req.session.uid, function(friends_list) {
-      res.render('top.ect', { title: 'Топ', session:req.session, friends_list: friends_list, world_list: world_list});
-    });
+    res.end(JSON.stringify(world_list));
+  });
+};
+
+exports.friends = function(req, res) {
+  FriendsTop(req.session.uid, function(friends_list) {
+    res.end(JSON.stringify(friends_list));
   });
 };

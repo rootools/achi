@@ -1,5 +1,5 @@
 var app = init.initModels(['db', 'achivments', 'files', 'config']);
-var mod = init.initModules(['fs', 'underscore', 'moment', 'async', 'nodemailer', 'randomstring']);
+var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring', 'fs']);
 var ext_achivster = require('../external/achivster.js');
 
 mod.moment.lang('ru');
@@ -13,6 +13,23 @@ exports.getStat = function (uid, points, cb) {
     });
   });
 };
+
+exports.getInfo = function (shortname, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.findOne({shortname: shortname},{name: 1, _id: 0, photo: 1, uid: 1, friends: 1}, function(err, doc) {
+      cb(doc);
+    });
+  });
+};
+
+exports.getByUidsInfo = function (uids, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, shortname: 1, uid: 1}).toArray(function(err, doc) {
+      cb(doc);
+    });
+  });
+};
+
 
 //getUserAchievements
 exports.getAchievements = function (uid, cb) {
@@ -66,9 +83,21 @@ exports.getName = function (uid, cb) {
   });
 };
 
+exports.getUidByShortname = function(sn, cb) {
+  app.db.conn.collection('users_profile', function(err, collection) {
+    collection.findOne({shortname: sn},{uid: 1, _id: 0}, function(err, doc) {
+      if(doc) {
+        cb(doc.uid);  
+      } else {
+        cb(null);
+      }
+    });
+  });
+};
+
 exports.getProfiles = function(uids, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
-    collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, uid: 1}).toArray(function(err, doc) {
+    collection.find({uid: {$in: uids}}, {_id: 0, name: 1, photo: 1, uid: 1, shortname: 1}).toArray(function(err, doc) {
       cb(doc);
     });
   });
@@ -77,7 +106,7 @@ exports.getProfiles = function(uids, cb) {
 //get_user_profile
 exports.getProfile = function (uid, cb) {
   app.db.conn.collection('users_profile', function(err, collection) {
-    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1}, function(err, doc) {
+    collection.findOne({uid: uid},{name: 1, _id: 0, photo: 1, shortname: 1, uid: 1}, function(err, doc) {
       app.db.conn.collection('users', function(err, collection) {
         collection.findOne({uid: uid},{subscribes: 1, _id: 0}, function(err, subs) {
           doc.subscribes = subs.subscribes;
@@ -115,6 +144,11 @@ exports.getFriendsList = function (uid, cb) {
             friends_list.push(profile);
             handler--;
             if(handler === 0) {
+              friends_list = friends_list.sort(function(a,b) {
+                if(a.name > b.name) { return 1;} else {
+                  return -1;
+                }
+              });
               cb(friends_list);
             }
           });
@@ -166,6 +200,7 @@ exports.getNewsByUids = function(uids, cb) {
             var u = mod.underscore.find(users, function(re) { return re.uid === result[z].uid });
             result[z].name = u.name;
             result[z].photo = u.photo;
+            result[z].shortname = u.shortname;
           }
           
           cb(result);
@@ -476,10 +511,10 @@ exports.register = function (email, pass, req, cb) {
   app.db.conn.collection('users', function(err,collection) {
     collection.insert({email: email, password: pass, uid: uid, subscribes : {week: true, news: true}}, function(err, doc) {
       app.db.conn.collection('users_profile', function(err,profiles) {
-        profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: []}, function(err, doc) {
+        profiles.insert({uid: uid, name: '', photo: '/images/label.png', friends: [], shortname: uid}, function(err, doc) {
           addDefaultServices(uid, function() {
             ext_achivster.main(uid, 'klxNE51gc8k3jGZYd2i0wAZAPMDviG');
-            ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
+            //ext_achivster.rare(uid, 'JdEJC9eomkzMExo7OOYleilpYhlekc');
               exports.addSession(req, uid, email, function() {
                 cb();
               });
@@ -497,3 +532,51 @@ exports.addSession = function (req, uid, email, cb) {
   req.session.email = email;
   cb();
 };
+
+// TODO: Refactoring
+exports.removeFriendship = function(uid, friend_uid, cb) {
+  mod.async.series([
+    function(callback) {
+
+      app.db.conn.collection('users_profile', function(err,collection) {
+        collection.findOne({uid: uid},{friends: 1, _id:0}, function(err, doc) {
+          var friends_list = doc.friends;
+          var new_friends_list = [];
+          for(var i in friends_list) {
+            if(friends_list[i] !== friend_uid) {
+              new_friends_list.push(friends_list[i]);
+            }
+          }
+          collection.update({uid: uid},{$set: {friends: new_friends_list}}, function(err, doc){
+            callback(null, null);
+          });
+        });
+      });
+    },
+    function(callback) {
+      app.db.conn.collection('users_profile', function(err,collection) {
+        collection.findOne({uid: friend_uid},{friends: 1, _id:0}, function(err, doc) {
+          var friends_list = doc.friends;
+          var new_friends_list = [];
+          for(var i in friends_list) {
+            if(friends_list[i] !== uid) {
+              new_friends_list.push(friends_list[i]);
+            }
+          }
+          collection.update({uid: friend_uid},{$set: {friends: new_friends_list}}, function(err, doc){
+            callback(null, null);
+          });
+        });
+      });
+    }], function(err, res) {
+      cb();
+    });
+}
+
+exports.restoreFriendship = function(uid, friend_uid, cb) {
+  app.db.conn.collection('users_profile', function(err,collection) {
+    collection.update({uid: uid},{$push: {friends: friend_uid}}, function(err, doc){});
+    collection.update({uid: friend_uid},{$push: {friends: uid}}, function(err, doc){});
+    cb();
+  });
+}

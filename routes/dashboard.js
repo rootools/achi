@@ -17,11 +17,62 @@ exports.main = function(req, res) {
   });
 };
 
+exports.latest = function(req, res) {
+
+  if(req.body.shortname) {
+    app.users.getUidByShortname(req.body.shortname, function(uid){
+      if(uid) {
+        app.achivments.getLatest(uid, function(last) {
+          res.json(last);
+        });
+      } else {
+        res.json({error: 'Нет такого профиля'});
+      }
+    });
+  } else {
+    var uid = req.session.uid;
+    app.achivments.getLatest(uid, function(last) {
+      res.json(last);
+    });
+  }
+};
+
+exports.service_list = function(req, res) {
+  
+  if(req.body.shortname) {
+    app.users.getUidByShortname(req.body.shortname, function(uid){
+      if(uid) {
+        app.users.GetServiceList(uid, function(achivList) {
+          res.json(achivList);
+        });
+      } else {
+        res.json({error: 'Нет такого профиля'});
+      }
+    });
+  } else {
+    var uid = req.session.uid;
+    app.users.GetServiceList(uid, function(achivList) {
+      res.json(achivList);
+    });
+  }
+};
+
 exports.service = function(req, res) {
-  app.achivments.getByServiceUser(req.params.service, req.session.uid, function(data){
-    var service_info_count = app.achivments.getCountFromService(data);
-    app.services.getServiceInfo(req.params.service, function(serviceInfo) {
-      res.render('dashboard_service.ect', { title: 'Сводка', list:data, service_info:serviceInfo, service_info_count: service_info_count,session: req.session});
+  var response = {};
+  app.users.getUidByShortname(req.body.shortname, function(uid) {
+    if(uid === null) {
+      uid = req.session.uid;
+    }
+    app.achivments.getByServiceUser(req.params.service, uid, function(data){
+      var service_info_count = app.achivments.getCountFromService(data);
+      app.services.getServiceInfo(req.params.service, function(serviceInfo) {
+        response.achievements = data;
+        response.info = serviceInfo;
+        for(var i in service_info_count) {
+          response.info[i] = service_info_count[i];
+        }
+        res.json(response);
+      });
     });
   });
 };
