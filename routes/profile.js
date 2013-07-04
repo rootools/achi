@@ -15,7 +15,7 @@ exports.save = function(req, res) {
   var uid = req.session.uid;
 
   var checkName = /^[a-z A-Z а-я А-Я]{3,20}$/.test(req.body.profile.name);
-  var checkShortname = /^[a-z0-9_-]{3,20}$/.test(req.body.profile.shortname);
+  var checkShortname = /^[a-zA-Z0-9_-]{3,20}$/.test(req.body.profile.shortname);
   
   if(checkName && checkShortname) {
 

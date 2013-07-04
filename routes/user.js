@@ -1,7 +1,12 @@
 var app = init.initModels(['config', 'db', 'users']);
 
 exports.points = function(req, res) {
-  app.users.getPointSum(req.session.uid, function(points) {
+  if(req.body.uid) {
+    var uid = req.body.uid;
+  } else {
+    var uid = req.session.uid;
+  }
+  app.users.getPointSum(uid, function(points) {
     res.json(points);
   });
 };
