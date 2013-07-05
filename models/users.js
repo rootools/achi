@@ -367,6 +367,7 @@ exports.GetServiceList = function(uid, cb) {
       if(data[i].service === 'rare' && data[i].earned === 0) {
         data.splice(i, 1);
       } else if(data[i].service === 'rare') {
+        data[i].full = data[i].earned;
         var rare = data.splice(i,1);
         data.push(rare[0]);
         break;
