@@ -103,6 +103,7 @@ app.all('/add_service/github', checkAuth, add_service.github);
 app.all('/add_service/instagram', checkAuth, add_service.instagram);
 app.all('/add_service/foursquare', checkAuth, add_service.foursquare);
 app.all('/add_service/odnoklassniki', checkAuth, add_service.odnoklassniki);
+app.all('/add_service/steam', checkAuth, add_service.steam);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
