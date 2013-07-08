@@ -403,11 +403,11 @@ exports.uploadProfilePhotoFromUrl = function(url, uid, cb) {
         app.db.conn.collection('users_profile', function(err,profile) {
           profile.findOne({uid: uid}, function(err, doc) {
             if(doc === null) {
-              profile.insert({uid: uid, photo: app.config.dirs.profileImages+'/'+uid+'.jpg'}, function(err, doc) {
+              profile.insert({uid: uid, photo: app.config.dirs.writibleProfileImages+'/'+uid+'.jpg'}, function(err, doc) {
                 cb({});
               });
             } else {
-              profile.update({uid: uid},{$set: {photo: app.config.dirs.profileImages+'/'+uid+'.jpg'}}, function(err, doc) {
+              profile.update({uid: uid},{$set: {photo: app.config.dirs.writibleProfileImages+'/'+uid+'.jpg'}}, function(err, doc) {
                 cb({});
               });
             }

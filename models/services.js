@@ -204,6 +204,17 @@ function get_user_name_by_service(uid, service, account, cb) {
       });
   }
 
+  if(service === 'steam') {
+    mod.request.get('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=B977C593721D51DF5CD96704FCD8DAD7&steamids='+account.steamid, function(e, r, b) {
+      name = JSON.parse(b).response.players[0].personaname;
+      image = JSON.parse(b).response.players[0].avatarfull;
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
+      });
+
+    });
+  }
+
 }
 
 function write_name_and_image_from_service(uid, image, name, cb) {

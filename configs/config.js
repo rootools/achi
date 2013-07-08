@@ -29,6 +29,7 @@ exports.dirs = {
   views: rootdir+'/views',
   public: rootdir+'/public',
   profileImages: rootdir+'/public/images/users_photo',
+  writibleProfileImages: '/images/users_photo',
   achievementImages: rootdir+'/public/images/achievements',
   locale: rootdir+'/configs/locale'
 }
