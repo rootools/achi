@@ -31,6 +31,7 @@ var services = {
   'instagram': require('./qS_instagram'),
   'foursquare': require('./qS_foursquare'),
   'odnoklassniki': require('./qS_odnoklassniki'),
+  'steam': require('./qS_steam')
 };
 
 var q;
@@ -94,7 +95,7 @@ function createQuery() {
       q = async.queue(function(task, callback) {
 
         if (typeof services[task.service] != "undefined") {
-
+          
           getData(task.service, task.service_login, function(data) {
             if(data.error) {
               updateQuery(task.uid, task.service);
