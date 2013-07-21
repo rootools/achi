@@ -27,7 +27,7 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
 
 setTimeout(function(){
 	db.collection('users', function(err, collection) {
-		collection.find({"subscribes.week": true},{_id: 0, email: 1}).toArray(function(err, data) {
+		collection.find({"subscribes.news": true},{_id: 0, email: 1}).toArray(function(err, data) {
 			for(var i in data) {
 				sendMail(data[i].email);
 			}			
@@ -36,7 +36,6 @@ setTimeout(function(){
 }, 500);
 
 function sendMail(email) {
-	
 	juice('./mail.html', function(err, html) {
 		var mailOptions = {
 	    from: "Achivster Support <support@achivster.com>",

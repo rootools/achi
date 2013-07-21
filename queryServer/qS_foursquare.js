@@ -316,7 +316,46 @@ exports.functions = {
       }
     }
     return false;
+  },
+  
+  // 'Shutterbug'
+  '000000502ae142011c88ba3d9bfe5b': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '502ae142011c88ba3d9bfe5b') {
+        return true;
+      }
+    }
+    return false;
+  },
+  
+  // 'Baker`s Dozen'
+  '0000004e454b72922ee4def2921e93': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4e454b72922ee4def2921e93') {
+        return true;
+      }
+    }
+    return false;
+  },
+  
+  // 'Earl of Sandwich'
+  '0000005177053f011cefa9d2beb127': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '5177053f011cefa9d2beb127') {
+        return true;
+      }
+    }
+    return false;
+  },
+  
+  // 'Red Square'
+  '0000004f3c466d7beba248202a9c8f': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4f3c466d7beba248202a9c8f') {
+        return true;
+      }
+    }
+    return false;
   }
-
 
 };
