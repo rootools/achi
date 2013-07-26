@@ -13,7 +13,7 @@ http.createServer(function (req, res) {
 
   request.get({url: 'https://api.twitch.tv/kraken/user', headers: headers},function(e,r,b) {
     var name = JSON.parse(b).name;
-    request.get({url: 'https://api.twitch.tv/kraken/channels/'+name+'/videos?limit=100', headers: headers},function(e,r,b) {
+    request.get({url: 'https://api.twitch.tv/kraken/channels/'+name+'/videos?broadcasts=true', headers: headers},function(e,r,b) {
       response.videos_count = JSON.parse(b)._total;
       res.end(JSON.stringify(response));
     });
