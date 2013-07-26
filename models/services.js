@@ -215,6 +215,24 @@ function get_user_name_by_service(uid, service, account, cb) {
     });
   }
 
+  if(service === 'twitch') {
+    var headers = {
+      'Accept': 'application/vnd.twitchtv.v2+json',
+      'Authorization': 'OAuth '+account.access_token
+    };
+
+    mod.request.get({url: 'https://api.twitch.tv/kraken/user', headers: headers},function(e,r,b) {
+      name = JSON.parse(b).name;
+      image = JSON.parse(b).logo;
+      if(image === null) {
+        image = '/images/label.png';
+      }
+      write_name_and_image_from_service(uid, image, name, function() {
+        cb();
+      });
+    });
+  }
+
 }
 
 function write_name_and_image_from_service(uid, image, name, cb) {

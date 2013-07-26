@@ -31,7 +31,8 @@ var services = {
   'instagram': require('./qS_instagram'),
   'foursquare': require('./qS_foursquare'),
   'odnoklassniki': require('./qS_odnoklassniki'),
-  'steam': require('./qS_steam')
+  'steam': require('./qS_steam'),
+  'twitch': require('./qS_twitch'),
 };
 
 var q;

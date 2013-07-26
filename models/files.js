@@ -5,7 +5,6 @@ var mod = init.initModules(['fs', 'easyimage', 'url', 'http', 'extend']);
 exports.downloadFromUrl = function (url, path, cb) {
   var upload_path, file_name, file, options;
 
-  console.log(url, path);
   options = {
     host: mod.url.parse(url).host,
     port: 80,

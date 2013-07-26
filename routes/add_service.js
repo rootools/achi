@@ -169,3 +169,23 @@ exports.steam = function(req, res) {
     });
   }
 }
+
+exports.twitch = function(req, res) {
+  if(!req.query.code) {
+    res.redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id=rkmk6ddqb2otmtmjdhxxq71jpzfrq40&redirect_uri=http://achi:8080/add_service/twitch&scope=user_read+channel_read+channel_subscriptions+user_subscriptions');
+  } else {
+    var code = req.query.code;
+    mod.request.post('https://api.twitch.tv/kraken/oauth2/token', {form: {
+      client_id: 'rkmk6ddqb2otmtmjdhxxq71jpzfrq40',
+      client_secret: 'ct8o4s24nohwbx164m66u4i35yh8t5h',
+      grant_type: 'authorization_code',
+      redirect_uri: 'http://achi:8080/add_service/twitch',
+      code: code
+    }}, function(e,r, body) {
+      var access_token = JSON.parse(body).access_token;
+      app.services.add(req.session, {access_token: access_token}, 'twitch', function(){
+        res.redirect(app.config.site.url);
+      });
+    });
+  }
+}
