@@ -1,6 +1,8 @@
 var async = require("async");
 var http = require("http");
 
+var ext_achivster = require('../external/achivster.js');
+
 var config = {
   db: 'achi',
   port: 27017,
@@ -40,9 +42,10 @@ var q;
 function addUserAchievement(uid, aid, service) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: service}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
+      ext_achivster.thousand(uid);
     });
   });
-};
+}
 
 function getUserAchievementsByService(uid, service, cb) {
   db.collection('users_achievements', function(err, collection) {
@@ -51,7 +54,7 @@ function getUserAchievementsByService(uid, service, cb) {
       cb(err, doc.achievements);
     });
   });
-};
+}
 
 function getAchivmentsByService(service, cb) {
   db.collection('achievements', function(err,collection) {
@@ -59,7 +62,7 @@ function getAchivmentsByService(service, cb) {
       cb(err, docs);
     });
   });
-};
+}
 
 function updateQuery(uid, service) {
   var now = new Date().getTime();
@@ -77,7 +80,7 @@ function createAIDarray(data) {
 }
 
 function dump_unknown(all, list) {
-  var dump = []
+  var dump = [];
   // Ban badges
 //  all.push('000000510ad6a2011c1712eb17a700');
   for(var n in list) {
@@ -112,7 +115,7 @@ function createQuery() {
                 }, function(err, res) {
                   res.all = createAIDarray(res.all);
                   res.users = createAIDarray(res.users);
-                  if(res.users === undefined || res.users.length == 0) {res.users = [];}
+                  if(res.users === undefined || res.users.length === 0) {res.users = [];}
                   var notRecieved = [];
 
                   if (task.service == 'foursquare') {
