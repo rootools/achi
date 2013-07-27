@@ -15,7 +15,10 @@ http.createServer(function (req, res) {
     var name = JSON.parse(b).name;
     request.get({url: 'https://api.twitch.tv/kraken/channels/'+name+'/videos?broadcasts=true', headers: headers},function(e,r,b) {
       response.videos_count = JSON.parse(b)._total;
-      res.end(JSON.stringify(response));
+      request.get({url: 'https://api.twitch.tv/kraken/users/'+name+'/follows/channels', headers: headers}, function(e, r, b) {
+        response.follows = JSON.parse(b)._total;
+        res.end(JSON.stringify(response));
+      });
     });
   });
 

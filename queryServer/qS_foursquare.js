@@ -358,7 +358,7 @@ exports.functions = {
     return false;
   },
   
-  // 'Red Square'
+  // 'Munchies'
   '0000004c61a7048c2103bbe546ff35': function(data) {
     for(var n in data) {
       if(data[n].badgeId === '4c61a7048c2103bbe546ff35') {

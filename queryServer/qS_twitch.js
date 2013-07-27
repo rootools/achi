@@ -31,5 +31,20 @@ exports.functions = {
   // Record 100 video
   'BRmiMapQGE4MfzclUst9BaFOBTe7xK': function(data) {
     return data.videos_count >= 100;
+  },
+  
+  // Follow 5 people
+  'x8Cn4j5IedzQ4b3niDtzhXp5O7dZ5V': function(data) {
+    return data.follows >= 5;
+  },
+  
+  // Follow 10 people
+  'tC4e6NaTtFJ0sW51vHRPbpMHZBqPAp': function(data) {
+    return data.follows >= 10;
+  },
+  
+  // Follow 25 people
+  'vGeiV7fK2Om2TskxdjxfyYHpoA2ZvR': function(data) {
+    return data.follows >= 25;
   }
 };
