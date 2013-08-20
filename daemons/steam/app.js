@@ -11,17 +11,22 @@ http.createServer(function (req, res) {
   response.maxTime = 0;
   
   request.get('http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key='+steamAppID+'&steamid='+query.steamid+'&format=json', function(e, r, b) {
-    var games = JSON.parse(b).response;
-    var games_array = games.games;
+    try {
+      var games = JSON.parse(b).response;
+      var games_array = games.games;
     
-    for(var i in games_array) {
-      if(games_array[i].playtime_forever > response.maxTime) {
-        response.maxTime = games_array[i].playtime_forever;
+      for(var i in games_array) {
+        if(games_array[i].playtime_forever > response.maxTime) {
+          response.maxTime = games_array[i].playtime_forever;
+        }
       }
+      response.maxTime = Math.floor(response.maxTime / 60);
+      response.games = games.game_count;
+      res.end(JSON.stringify(response));
+    } catch(e) {
+      response.notavailable = true;
+      res.end(JSON.stringify(response));
     }
-    response.maxTime = Math.floor(response.maxTime / 60);
-    response.games = games.game_count;
-    res.end(JSON.stringify(response));
   });
 
 }).listen(process.env.VCAP_APP_PORT || 8095);

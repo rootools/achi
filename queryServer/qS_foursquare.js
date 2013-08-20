@@ -366,6 +366,67 @@ exports.functions = {
       }
     }
     return false;
+  },
+
+  // 'Animal House'
+  '0000004c4f08667a0803bbb9202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbb9202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Gym Rat'
+  '0000004c4f08667a0803bbd0202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbd0202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Super Swarm'
+  '0000004c4f08667a0803bb1c212ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bb1c212ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Players Club'
+  '0000004f4585997beb15d09255d46e': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4f4585997beb15d09255d46e') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Ten Hundred'
+  '0000004e0b9719922ec2dafe5c06c2': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4e0b9719922ec2dafe5c06c2') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Epic Swarm'
+  '0000004c4f08677a0803bb4d212ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08677a0803bb4d212ab7') {
+        return true;
+      }
+    }
+    return false;
   }
+
 
 };

@@ -30,6 +30,8 @@ var top = require('./routes/top');
 var user = require('./routes/user');
 var messages = require('./routes/messages');
 
+var mobile_auth = require('./routes/mobile_auth');
+
 var sessionsStorage = require('connect-redis')(express);
 
 var app = express();
@@ -58,6 +60,9 @@ app.configure('development', function(){
 app.all('/login', routes.login);
 app.all('/logout', routes.logout);
 
+app.all('/mobile/islogin', mobile_auth.islogin);
+app.all('/mobile/login', mobile_auth.login);
+
 app.post('/friends', checkAuth, friends.list);
 app.post('/friends/accept', checkAuth, friends.accept);
 app.post('/friends/reject', checkAuth, friends.reject);
@@ -67,7 +72,7 @@ app.post('/friends/add', checkAuth, friends.add);
 app.post('/feed', checkAuth, feed.list);
 app.post('/top/world', checkAuth, top.world);
 app.post('/top/friends', checkAuth, top.friends);
-app.all('/dashboard', checkAuth, dashboard.main);
+app.post('/dashboard', checkAuth, dashboard.main);
 app.post('/dashboard/latest', checkAuth, dashboard.latest);
 app.post('/dashboard/service_list', checkAuth, dashboard.service_list);
 app.post('/dashboard/:service', checkAuth, dashboard.service);

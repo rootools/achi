@@ -1,3 +1,5 @@
+init = require('../init.js');
+
 var async = require("async");
 var http = require("http");
 
@@ -13,7 +15,7 @@ var config = {
   connector_config: {
     safe: true
   }
-}
+};
 
 var db;
 var mongodb = require("mongodb");
@@ -42,7 +44,7 @@ var q;
 function addUserAchievement(uid, aid, service) {
   db.collection('users_achievements', function(err,collection) {
     collection.update({uid:uid, service: service}, {$push: {achievements:{aid:aid, time:new Date().getTime()}} }, function(err, doc) {
-      ext_achivster.thousand(uid);
+//      ext_achivster.thousand(uid);
     });
   });
 }
@@ -107,6 +109,9 @@ function createQuery() {
                 console.log('Set valid=false: '+task.uid+' '+task.service);
                 callback();
               });
+            } else if(data.notavailable) {
+              updateQuery(task.uid, task.service);
+              callback();
             } else {
 
               async.parallel({
