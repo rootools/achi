@@ -1,6 +1,8 @@
 var app = init.initModels(['config', 'db', 'users']);
 var mod = init.initModules(['randomstring']);
 
+var ext_achivster = require('../external/achivster.js');
+
 exports.login = function(req, res) {
   req.body.pass = require('crypto').createHash('md5').update(req.body.pass).digest('hex');
 
@@ -10,6 +12,7 @@ exports.login = function(req, res) {
         if(doc !== null) {
           if(req.body.pass === doc.password) {
             app.users.addSession(req, doc.uid, doc.email, function() {
+              ext_achivster.main(doc.uid, 'kbzp1reQEXHxqCqTM0uxAQ57IAFURd');
               res.json({status: 'ok'});
             });
           } else {

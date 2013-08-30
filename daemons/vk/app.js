@@ -31,12 +31,20 @@ function getData(access_token, uid, cb) {
     },
     function(callback) {
       getMaxLike('wall.get', {count:100}, vk, uid, function(data) {
-        callback(null, data);
+        if(data === 'error') {
+          callback('error', null);
+        } else {
+          callback(null, data);
+        }
       });
     },
     function(callback) {
       getMaxLike('photos.getAll', {count:100, extended:1}, vk, uid, function(data) {
-        callback(null, data);
+        if(data === 'error') {
+          callback('error', null);
+        } else {
+          callback(null, data);
+        }
       });
     }], function(err, data) {
       if(err) {
@@ -79,7 +87,9 @@ function getMaxLike(method, options, vk, uid, cb) {
   var dirtyArray = [];
   var cb_obj = {};
   vk(method, options, function(err, data) {
-    console.log(err);
+    if(err) {
+      cb('error');
+    } else {
     dirtyArray.push(data);
 
     var queue = data[0] / 100;
@@ -122,6 +132,7 @@ function getMaxLike(method, options, vk, uid, cb) {
       }
       return maxLike;
     }
+  }
 
   });
 

@@ -98,6 +98,7 @@ function createQuery() {
 
   db.collection('services_connections', function(err, collection) {
     collection.find({type: 'internal', valid: true, lastupdate: {$lt:now - 3600000}, service:{$nin: ['achivster', 'rare']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
+      console.log(doc.length);
       q = async.queue(function(task, callback) {
 
         if (typeof services[task.service] != "undefined") {

@@ -426,7 +426,76 @@ exports.functions = {
       }
     }
     return false;
-  }
+  }, 
 
+  // 'Monkey Bars'
+  '0000004c4f08667a0803bbe0202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbe0202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Campus Explorer'
+  '0000004c61a7098c2103bbe646ff35': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c61a7098c2103bbe646ff35') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Hot Tamale'
+  '0000004ebb078f7bebd6a83f1176bd': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4ebb078f7bebd6a83f1176bd') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Super Duper Swarm'
+  '0000004c4f08677a0803bb4c212ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08677a0803bb4c212ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Player Please!'
+  '0000004c4f08667a0803bbb2202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbb2202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // 'Ziggy's Wagon'
+  '0000004c4f08667a0803bbce202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbce202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  // '16 Candles'
+  '0000004c4f08667a0803bbdb202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbdb202ab7') {
+        return true;
+      }
+    }
+    return false;
+  }
 
 };
