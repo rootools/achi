@@ -3,7 +3,7 @@ exports.options = function(auth) {
     host: 'localhost',
     port: 8095,
     path: '/?steamid='+auth.steamid
-  }
+  };
 };
 
 exports.functions = {
@@ -76,5 +76,21 @@ exports.functions = {
   // Spent 1000 hours
   '8PauzohdUvbF6Vn9xxJNtwbqopy9ao': function(data) {
     return data.maxTime >= 1000;
+  },
+  
+  // Add 5 friends
+  'cQdalOmbbiEHcYbaHmWPIqmAPYlGRM': function(data) {
+    return data.friends >= 5;
+  },
+  
+  // Add 10 friends
+  '993miCr5rukdgRSp07sKzpXojHSXxQ': function(data) {
+    return data.friends >= 10;
+  },
+  
+  // Add 20 friends
+  '0ICY8ay5QmsJhkoBi6hb9ov4CmPtzt': function(data) {
+    return data.friends >= 20;
   }
+  
 };

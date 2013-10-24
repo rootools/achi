@@ -496,6 +496,16 @@ exports.functions = {
       }
     }
     return false;
+  },
+  
+  // 'Don\'t Stop Believin\''
+  '0000004c4f08667a0803bbcf202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbcf202ab7') {
+        return true;
+      }
+    }
+    return false;
   }
 
 };
