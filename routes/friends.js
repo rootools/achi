@@ -72,3 +72,10 @@ exports.add = function(req, res) {
     });
   });
 }
+
+exports.social_find = function(req, res) {
+  var uid = req.session.uid;
+  app.users.getFriendsBySocial(uid, function(friends_list){
+    res.json(friends_list);
+  });
+};
