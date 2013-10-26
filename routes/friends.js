@@ -49,7 +49,7 @@ exports.restore = function(req, res) {
   app.users.restoreFriendship(uid, friend_uid, function(){
     res.json({});
   });
-}
+};
 
 exports.add = function(req, res) {
   var target_uid = req.body.uid;
@@ -71,7 +71,7 @@ exports.add = function(req, res) {
       });
     });
   });
-}
+};
 
 exports.social_find = function(req, res) {
   var uid = req.session.uid;
