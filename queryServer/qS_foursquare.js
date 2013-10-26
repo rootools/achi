@@ -506,6 +506,16 @@ exports.functions = {
       }
     }
     return false;
+  },
+  
+  // 'Service'
+  '0000004ebc16637bebd6a83f30ab2c': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4ebc16637bebd6a83f30ab2c') {
+        return true;
+      }
+    }
+    return false;
   }
 
 };
