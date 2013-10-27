@@ -1,6 +1,18 @@
 var app = init.initModels(['db', 'achivments', 'files', 'config']);
-var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring', 'fs']);
+var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring', 'fs', 'oauth']);
 var ext_achivster = require('../external/achivster.js');
+
+var oauth = mod.oauth.OAuth;
+
+var twitterOA = new oauth(
+  'https://api.twitter.com/oauth/request_token',
+  'https://api.twitter.com/oauth/access_token',
+  'CXWNIxTwg8vyTmtETDbPMA',
+  'd4rgsi9dvbMhUgYVT3kbQD0L9lZ8I8NO8dG2oqOHY',
+  '1.0',
+  app.config.site.url+'add_service/twitter',
+  'HMAC-SHA1'
+);
 
 mod.moment.lang('ru');
 
@@ -604,6 +616,22 @@ exports.getFriendsBySocial = function(uid, cb) {
                   }
                   var vk_not_friends = mod.underscore.difference(vk_friends_list, uid_friends);
                   not_friends = mod.underscore.union(vk_not_friends, not_friends);
+                  cback(null, null);
+                });
+              });
+            } else if(data.service === 'twitter'){
+              twitterOA.get('https://api.twitter.com/1.1/friends/ids.json', data.service_login.oauth_token, data.service_login.oauth_token_secret, function(err, response) {
+                var twitter_friends_list = [];
+                response = JSON.parse(response).ids;
+                for(var i in response) {
+                  response[i] = response[i]+'';
+                }
+                collection.find({service: 'twitter', 'service_login.user_id': {$in: response}}, {_id: 0, uid: 1}).toArray(function(err, doc) {
+                  for(var i in doc) {
+                    twitter_friends_list.push(doc[i].uid);
+                  }
+                  var twitter_not_friends = mod.underscore.difference(twitter_friends_list, uid_friends);
+                  not_friends = mod.underscore.union(twitter_not_friends, not_friends);
                   cback(null, null);
                 });
               });
