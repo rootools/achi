@@ -580,7 +580,7 @@ exports.restoreFriendship = function(uid, friend_uid, cb) {
     collection.update({uid: friend_uid},{$push: {friends: uid}}, function(err, doc){});
     cb();
   });
-}
+};
 
 exports.getFriendsBySocial = function(uid, cb) {
   app.db.conn.collection('users_profile', function(err, collection_profile) {
@@ -590,10 +590,12 @@ exports.getFriendsBySocial = function(uid, cb) {
       app.db.conn.collection('services_connections', function(err, collection){
         collection.find({uid: uid, valid: true}, {_id: 0, addtime: 0, lastupdate: 0, valid: 0}).toArray(function(err, doc) {
           
-          for(var i in doc) {
+          var not_friends = [];
+          
+          function callback(data, cback) {
             
-            if(doc[i].service === 'vkontakte') {
-              var vkontakte = require('vkontakte')(doc[i].service_login.access_token);
+            if(data.service === 'vkontakte') {
+              var vkontakte = require('vkontakte')(data.service_login.access_token);
               vkontakte('friends.get', {}, function(err, data) {
                 collection.find({service: 'vkontakte', 'service_login.user_id': {$in: data}}, {_id: 0, uid: 1}).toArray(function(err, doc) {
                   var vk_friends_list = [];
@@ -601,14 +603,23 @@ exports.getFriendsBySocial = function(uid, cb) {
                     vk_friends_list.push(doc[z].uid);
                   }
                   var vk_not_friends = mod.underscore.difference(vk_friends_list, uid_friends);
-                  collection_profile.find({uid: {$in: vk_not_friends}}, {_id: 0, friends: 0}).toArray(function(err, doc) {
-                    cb(doc);
-                  });
+                  not_friends = mod.underscore.union(vk_not_friends, not_friends);
+                  cback(null, null);
                 });
               });
+            } else {
+              cback(null, null);
             }
-            
+          
           }
+          
+          
+
+          mod.async.forEach(doc, callback, function(err) {
+            exports.getProfiles(not_friends, function(data) {
+              cb(data);
+            });
+          });
           
         });
       });
