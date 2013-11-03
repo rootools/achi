@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+
+<html lang="en" ng-app="editor">
+<head>
+  <meta charset="utf-8">
+  <title>Editor</title>
+  <link rel="stylesheet" href="app.css">
+  <link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <div id="menu">
+    
+    <a href="#/stat" class="clear">
+      <div class="menu_elem" style="background-color: #2980B9;">Статистика</div>
+    </a>
+    
+    <a href="#/achivs" class="clear">
+      <div class="menu_elem" style="background-color: #27AE60;">Достижения</div>
+    </a>
+    
+  </div>
+  
+  <div id="content">
+    <ng-view></ng-view>
+  </div>
+  
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+</body>
+</html>

@@ -98,7 +98,6 @@ function createQuery() {
 
   db.collection('services_connections', function(err, collection) {
     collection.find({type: 'internal', valid: true, lastupdate: {$lt:now - 3600000}, service:{$nin: ['achivster', 'rare']}},{service:1, service_login:1, lastupdate:1, uid:1}).toArray(function(err, doc) {
-      console.log(doc.length);
       q = async.queue(function(task, callback) {
 
         if (typeof services[task.service] != "undefined") {
@@ -106,7 +105,7 @@ function createQuery() {
           getData(task.service, task.service_login, function(data) {
             if(data.error) {
               updateQuery(task.uid, task.service);
-              collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(){
+              collection.update({uid: task.uid, service: task.service},{$set: {valid: false}}, function(err,d){
                 console.log('Set valid=false: '+task.uid+' '+task.service);
                 callback();
               });
@@ -135,8 +134,8 @@ function createQuery() {
                     }
                   }
 
-                  for(var i=0;i<notRecieved.length;i++) {
-                    var name = notRecieved[i];
+                  for(var f=0;f<notRecieved.length;f++) {
+                    var name = notRecieved[f];
                     if (typeof services[task.service].functions[name] == 'function') {
                       if (services[task.service].functions[name](data)) {
                         addUserAchievement(task.uid, name, task.service);

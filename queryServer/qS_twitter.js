@@ -47,6 +47,11 @@ exports.functions = {
   'fefK09G9al1in69GhGVqqeXmY19tCx': function(data) {
     return data.followers_count >= 100;
   },
+  
+  // Earn 500 Followers
+  '6Bece1Bs2dLNeGPZpAYaS7gRslwXn3': function(data) {
+    return data.followers_count >= 500;
+  },
 
   // Add 10 Friends
   'uXi2CRNFJzxZShZOnveug3B9WCVeed': function(data) {

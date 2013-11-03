@@ -49,7 +49,7 @@ exports.restore = function(req, res) {
   app.users.restoreFriendship(uid, friend_uid, function(){
     res.json({});
   });
-}
+};
 
 exports.add = function(req, res) {
   var target_uid = req.body.uid;
@@ -71,4 +71,17 @@ exports.add = function(req, res) {
       });
     });
   });
-}
+};
+
+exports.social_find = function(req, res) {
+  var uid = req.session.uid;
+  app.users.getFriendsBySocial(uid, function(friends_list){
+    res.json(friends_list);
+  });
+};
+
+exports.requests_get = function(req, res) {
+  app.users.getFriendsRequests(req.session.uid, function(data) {
+    res.json(data);
+  });
+};

@@ -496,6 +496,26 @@ exports.functions = {
       }
     }
     return false;
+  },
+  
+  // 'Don\'t Stop Believin\''
+  '0000004c4f08667a0803bbcf202ab7': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4c4f08667a0803bbcf202ab7') {
+        return true;
+      }
+    }
+    return false;
+  },
+  
+  // 'Service'
+  '0000004ebc16637bebd6a83f30ab2c': function(data) {
+    for(var n in data) {
+      if(data[n].badgeId === '4ebc16637bebd6a83f30ab2c') {
+        return true;
+      }
+    }
+    return false;
   }
 
 };

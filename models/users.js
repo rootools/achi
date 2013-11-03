@@ -1,6 +1,18 @@
 var app = init.initModels(['db', 'achivments', 'files', 'config']);
-var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring', 'fs']);
+var mod = init.initModules(['underscore', 'moment', 'async', 'nodemailer', 'randomstring', 'fs', 'oauth']);
 var ext_achivster = require('../external/achivster.js');
+
+var oauth = mod.oauth.OAuth;
+
+var twitterOA = new oauth(
+  'https://api.twitter.com/oauth/request_token',
+  'https://api.twitter.com/oauth/access_token',
+  'CXWNIxTwg8vyTmtETDbPMA',
+  'd4rgsi9dvbMhUgYVT3kbQD0L9lZ8I8NO8dG2oqOHY',
+  '1.0',
+  app.config.site.url+'add_service/twitter',
+  'HMAC-SHA1'
+);
 
 mod.moment.lang('ru');
 
@@ -580,4 +592,79 @@ exports.restoreFriendship = function(uid, friend_uid, cb) {
     collection.update({uid: friend_uid},{$push: {friends: uid}}, function(err, doc){});
     cb();
   });
-}
+};
+
+exports.getFriendsBySocial = function(uid, cb) {
+  app.db.conn.collection('users_profile', function(err, collection_profile) {
+    collection_profile.findOne({uid: uid}, {_id: 0, friends: 1}, function(err, doc) {
+      var uid_friends = doc.friends;
+              
+      app.db.conn.collection('services_connections', function(err, collection){
+        collection.find({uid: uid, valid: true}, {_id: 0, addtime: 0, lastupdate: 0, valid: 0}).toArray(function(err, doc) {
+          
+          var not_friends = [];
+          
+          function callback(data, cback) {
+            
+            if(data.service === 'vkontakte') {
+              var vkontakte = require('vkontakte')(data.service_login.access_token);
+              vkontakte('friends.get', {}, function(err, data) {
+                collection.find({service: 'vkontakte', 'service_login.user_id': {$in: data}}, {_id: 0, uid: 1}).toArray(function(err, doc) {
+                  var vk_friends_list = [];
+                  for(var z in doc) {
+                    vk_friends_list.push(doc[z].uid);
+                  }
+                  var vk_not_friends = mod.underscore.difference(vk_friends_list, uid_friends);
+                  not_friends = mod.underscore.union(vk_not_friends, not_friends);
+                  cback(null, null);
+                });
+              });
+            } else if(data.service === 'twitter'){
+              twitterOA.get('https://api.twitter.com/1.1/friends/ids.json', data.service_login.oauth_token, data.service_login.oauth_token_secret, function(err, response) {
+                var twitter_friends_list = [];
+                response = JSON.parse(response).ids;
+                for(var i in response) {
+                  response[i] = response[i]+'';
+                }
+                collection.find({service: 'twitter', 'service_login.user_id': {$in: response}}, {_id: 0, uid: 1}).toArray(function(err, doc) {
+                  for(var i in doc) {
+                    twitter_friends_list.push(doc[i].uid);
+                  }
+                  var twitter_not_friends = mod.underscore.difference(twitter_friends_list, uid_friends);
+                  not_friends = mod.underscore.union(twitter_not_friends, not_friends);
+                  cback(null, null);
+                });
+              });
+            } else {
+              cback(null, null);
+            }
+          
+          }
+          
+          
+
+          mod.async.forEach(doc, callback, function(err) {
+            exports.getProfiles(not_friends, function(data) {
+              cb(data);
+            });
+          });
+          
+        });
+      });
+    });
+  });
+};
+
+exports.getFriendsRequests = function(uid, cb) {
+  app.db.conn.collection('messages', function(err, collection) {
+    collection.find({target_uid: uid}, {_id:0, owner_uid:1}).toArray(function(err, doc) {
+      var uids = [];
+      for(var i in doc) {
+        uids.push(doc[i].owner_uid);
+      }
+      exports.getProfiles(uids, function(data) {
+        cb(data);
+      });
+    });
+  });
+};

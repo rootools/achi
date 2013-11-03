@@ -22,7 +22,14 @@ http.createServer(function (req, res) {
       }
       response.maxTime = Math.floor(response.maxTime / 60);
       response.games = games.game_count;
-      res.end(JSON.stringify(response));
+      request.get('http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key='+steamAppID+'&steamid='+query.steamid+'&relationship=friend', function(e, r, b) {
+        if(JSON.parse(b).friendslist) {
+          response.friends = JSON.parse(b).friendslist.friends.length;
+        } else {
+          response.friends = 0;
+        }
+        res.end(JSON.stringify(response));
+      });
     } catch(e) {
       response.notavailable = true;
       res.end(JSON.stringify(response));
