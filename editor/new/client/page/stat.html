@@ -1,0 +1,13 @@
+<div id="content_stat">
+  <div class="stat_elem" style="background-color: #F39C12;">Пользователей: {{stat.users}}</div>
+  <div class="stat_elem_holder"></div>
+  <div class="stat_elem" style="background-color: #1ABC9C;">Достижений: {{stat.achivs}}</div>
+  <div class="stat_elem_holder"></div>
+  <div class="stat_elem" style="background-color: #C0392B;">Сервисов: {{stat.service.internal + stat.service.external}}</div>
+  <div class="stat_elem stat_elem_2" style="background-color: #E74C3C;">Internal Сервисов: {{stat.service.internal}}</div>
+  <div class="stat_elem stat_elem_2" style="background-color: #E67E22;">External Сервисов: {{stat.service.external}}</div>
+  <div class="stat_elem_holder"></div>
+  <div class="stat_elem" style="background-color: #2980B9;">Связей: {{stat.sc_valid.valid + stat.sc_valid.invalid}}</div>
+  <div class="stat_elem stat_elem_2" style="background-color: #3498DB;">Действующих связей: {{stat.sc_valid.valid}}</div>
+  <div class="stat_elem stat_elem_2" style="background-color: #2ECC71;">Недействующих связей: {{stat.sc_valid.invalid}}</div>
+</div>

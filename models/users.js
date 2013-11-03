@@ -654,3 +654,17 @@ exports.getFriendsBySocial = function(uid, cb) {
     });
   });
 };
+
+exports.getFriendsRequests = function(uid, cb) {
+  app.db.conn.collection('messages', function(err, collection) {
+    collection.find({target_uid: uid}, {_id:0, owner_uid:1}).toArray(function(err, doc) {
+      var uids = [];
+      for(var i in doc) {
+        uids.push(doc[i].owner_uid);
+      }
+      exports.getProfiles(uids, function(data) {
+        cb(data);
+      });
+    });
+  });
+};

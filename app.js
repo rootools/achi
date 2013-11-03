@@ -70,6 +70,7 @@ app.post('/friends/remove', checkAuth, friends.remove);
 app.post('/friends/restore', checkAuth, friends.restore);
 app.post('/friends/add', checkAuth, friends.add);
 app.post('/friends/social/find', checkAuth, friends.social_find);
+app.post('/friends/requests/get', checkAuth, friends.requests_get);
 app.post('/feed', checkAuth, feed.list);
 app.post('/top/world', checkAuth, top.world);
 app.post('/top/friends', checkAuth, top.friends);

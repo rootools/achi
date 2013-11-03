@@ -79,3 +79,9 @@ exports.social_find = function(req, res) {
     res.json(friends_list);
   });
 };
+
+exports.requests_get = function(req, res) {
+  app.users.getFriendsRequests(req.session.uid, function(data) {
+    res.json(data);
+  });
+};
