@@ -51,6 +51,7 @@ app.configure(function(){
   app.use(express.session({ store: new sessionsStorage({db: 7}), secret: 'lolcat', cookie:{maxAge: 1209600000} }));
   app.use(app.router);
   app.use(express.static(config.dirs.public));
+  app.use(express.favicon('public/images/favicon.png'));
 });
 
 app.configure('development', function(){
