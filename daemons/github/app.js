@@ -27,7 +27,10 @@ function getData(query, access_token, cb) {
 
   var options = {
       host: 'api.github.com',
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Achivster'
+      }
   }
 
   options.path = query+'?access_token='+access_token;

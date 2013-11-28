@@ -150,7 +150,7 @@ function get_user_name_by_service(uid, service, account, cb) {
   }
 
   if(service === 'github') {
-    mod.request.get({url: 'https://api.github.com/user?access_token='+account.access_token, headers: {'User-Agent': 'NodeJS'}}, function(e, r, body){
+    mod.request.get({url: 'https://api.github.com/user?access_token='+account.access_token, headers: {'User-Agent': 'Achivster'}}, function(e, r, body){
       var data = JSON.parse(body);
       image = data.avatar_url;
       name = data.name;
