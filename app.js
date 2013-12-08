@@ -30,6 +30,8 @@ var top = require('./routes/top');
 var user = require('./routes/user');
 var messages = require('./routes/messages');
 
+var payment = require('./routes/payment');
+
 var mobile_auth = require('./routes/mobile_auth');
 
 var sessionsStorage = require('connect-redis')(express);
@@ -113,6 +115,9 @@ app.all('/add_service/foursquare', checkAuth, add_service.foursquare);
 app.all('/add_service/odnoklassniki', checkAuth, add_service.odnoklassniki);
 app.all('/add_service/steam', checkAuth, add_service.steam);
 app.all('/add_service/twitch', checkAuth, add_service.twitch);
+
+app.all('/payment/special1', checkAuth, payment.special1);
+app.all('/payment/robokassa/:status', checkAuth, payment.robokassa);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
