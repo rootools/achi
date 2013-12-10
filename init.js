@@ -10,7 +10,7 @@ exports.initModels = function(models) {
     mails: './models/mails',
     db: './models/db',
     files: './models/files',
-    mails: './models/mails'
+    payment: './models/payment',
   };
 
   var initModels = {};
