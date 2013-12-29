@@ -1,13 +1,13 @@
 var app = init.initModels(['db']);
 
-exports.addPayment = function(uid, cb) {
+exports.addPayment = function(uid, address, cb) {
   var time = new Date().getTime();
-  var address = '';
-  
+  console.log(address);
+
   app.db.conn.collection('payment', function(err, collection) {
     collection.find({},{_id: 0, invoiceID: 1}).sort({invoiceID: -1}).limit(1).toArray(function(err, doc) {
       var last_invoiceID = doc[0].invoiceID;
-        collection.insert({uid: uid, time: time, status: null, invoiceID: last_invoiceID + 1}, function(err, doc){
+        collection.insert({uid: uid, time: time, status: null, invoiceID: last_invoiceID + 1, address: address}, function(err, doc){
           cb(last_invoiceID + 1);
         });
     });

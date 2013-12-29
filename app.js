@@ -118,6 +118,7 @@ app.all('/add_service/twitch', checkAuth, add_service.twitch);
 
 app.all('/payment/special1', checkAuth, payment.special1);
 app.all('/payment/robokassa/:status', checkAuth, payment.robokassa);
+app.all('/payment/getPrice', checkAuth, payment.getPrice);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
